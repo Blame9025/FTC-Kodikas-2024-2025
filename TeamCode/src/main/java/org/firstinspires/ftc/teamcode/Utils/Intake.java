@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
+
 public class Intake {
     private DcMotor intakeMotor;
+
     private boolean alreadyInAction = false;
+    IntakeLift intakeLift = new IntakeLift();
 
     public enum Position {
         DEFAULT(0),
@@ -17,8 +22,9 @@ public class Intake {
         }
     }
 
-    public void IntakeController(DcMotor definedIntakeMotor) {
+    public void IntakeController(DcMotor definedIntakeMotor, Servo servo1, Servo servo2) {
         this.intakeMotor = definedIntakeMotor;
+        intakeLift.IntakeLiftController(servo1, servo2);
 
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -29,6 +35,7 @@ public class Intake {
         if (alreadyInAction) return;
 
         alreadyInAction = true;
+
         intakeMotor.setTargetPosition(target.val);
         intakeMotor.setPower(0.5);
 
@@ -38,16 +45,26 @@ public class Intake {
                 break;
             }
         }
-
         intakeMotor.setPower(0);
         alreadyInAction = false;
     }
 
     public void extendIntake() {
+        if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
+            intakeLift.prepareIntakeLift();
+
         setPosition(Position.EXTENDED);
+
+        intakeLift.extractIntakeLift();
+
     }
 
     public void retractIntake() {
+
+        intakeLift.prepareIntakeLift();
+
         setPosition(Position.DEFAULT);
+
+        intakeLift.retractIntakeLift();
     }
 }

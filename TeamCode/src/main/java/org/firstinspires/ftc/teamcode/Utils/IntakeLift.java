@@ -8,11 +8,15 @@ import java.util.concurrent.TimeUnit;
 public class IntakeLift {
     private Servo servo1, servo2;
     private boolean alreadyInAction = false;
+    private Position currentPosition = Position.DEFAULT;
+
     Timing.Timer delay = new Timing.Timer(1000, TimeUnit.MILLISECONDS);
+
     public enum Position {
         DEFAULT(0),
         UP(0.5),
         EXTRACT(1);
+
         public final double val;
 
         Position(double val) {
@@ -34,16 +38,24 @@ public class IntakeLift {
         servo2.setPosition(target.val);
 
         delay.start();
-        while(!delay.done()){}
+        while (!delay.done()) {}
+
+        currentPosition = target; // Update the current position
         alreadyInAction = false;
+    }
+
+    public Position getCurrentPosition() {
+        return currentPosition; // Return the stored position
     }
 
     public void retractIntakeLift() {
         setPosition(Position.DEFAULT);
     }
-    public void prepareIntakeLift(){
+
+    public void prepareIntakeLift() {
         setPosition(Position.UP);
     }
+
     public void extractIntakeLift() {
         setPosition(Position.EXTRACT);
     }
