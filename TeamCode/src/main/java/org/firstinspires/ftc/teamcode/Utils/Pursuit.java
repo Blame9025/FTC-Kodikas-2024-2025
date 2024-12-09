@@ -39,7 +39,7 @@ public class Pursuit {
         }
         return path.get(0);
     }
-    public void followPathWithActions(List<Waypoint> path, Odometry odometry) {
+    public void followPathWithActions(List<Waypoint> path) {
         while (!path.isEmpty()) {
             odometry.update();
             Pose2d currentPose = odometry.getPose();
