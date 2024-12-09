@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,12 +55,18 @@ public class TeleOpTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        MecanumDrive drive = new MecanumDrive(
+                new Motor(hardwareMap, "leftFrontMotor"),
+                new Motor(hardwareMap, "rightFrontMotor"),
+                new Motor(hardwareMap, "leftRearMotor"),
+                new Motor(hardwareMap, "rightRearMotor")
+        );
 
-        // Inițializarea hardware-ului pentru motoare
         frontLeftMotor = hardwareMap.dcMotor.get("leftFrontMotor");
         backLeftMotor = hardwareMap.dcMotor.get("leftRearMotor");
         frontRightMotor = hardwareMap.dcMotor.get("rightFrontMotor");
         backRightMotor = hardwareMap.dcMotor.get("rightRearMotor");
+
         motorIntake = hardwareMap.dcMotor.get("motorIntake");
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
         motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
@@ -104,14 +113,22 @@ public class TeleOpTest extends LinearOpMode {
         debounceTimerRT.start();
         debounceTimerArrow1.start();
         debounceTimerArrow3.start();
+        GamepadEx driverOp = new GamepadEx(gamepad1);
 
         waitForStart(); // Așteaptă apăsarea butonului "Start" din Driver Station
 
         // Bucla principală
         while (opModeIsActive()) {
-            double lt = gamepad1.left_trigger; // Actualizează constant valorile lui lt și rt
-            double rt = gamepad1.right_trigger;
 
+            double lt = gamepad2.left_trigger; // Actualizează constant valorile lui lt și rt
+            double rt = gamepad2.right_trigger;
+
+            drive.driveRobotCentric(
+                driverOp.getLeftX(),
+                driverOp.getLeftY(),
+                driverOp.getRightX(),
+                false
+            );
             intakeMove(lt, rt); // Control continuu pentru intake / BUTTON 'RT' AND 'LT'
             armGrabberMove(); // Daca apesi RB bratul de pe outtake se va ridica pentru a lasa piesa in cos / BUTTON 'RB'
 
