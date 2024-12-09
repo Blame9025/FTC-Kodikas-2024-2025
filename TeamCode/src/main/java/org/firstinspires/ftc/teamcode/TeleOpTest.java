@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -35,6 +38,7 @@ public class TeleOpTest extends LinearOpMode {
     boolean activeArmGrabberUp = false;
     boolean activeBasketPosition = false;
     boolean activeInitialBasketPosition = false;
+    boolean intakeStop = true;
     Timing.Timer delay = new Timing.Timer(200, TimeUnit.MILLISECONDS); // Timer pentru debounce
     Timing.Timer debounceTimer = new Timing.Timer(500, TimeUnit.MILLISECONDS); // Timer pentru debounceA
     Timing.Timer debounceTimerB = new Timing.Timer(500, TimeUnit.MILLISECONDS); // Timer pentru debounceB
@@ -44,14 +48,22 @@ public class TeleOpTest extends LinearOpMode {
     Timing.Timer debounceTimerArrow1 = new Timing.Timer(500, TimeUnit.MILLISECONDS); //
     Timing.Timer debounceTimerArrow3 = new Timing.Timer(500, TimeUnit.MILLISECONDS); //
     Timing.Timer outakeTimer = new Timing.Timer(1000,TimeUnit.MILLISECONDS); //TImer pentru ridicare outake-ului inaite sa plece intake-ul
-    final int forwardPosition = 1600; // Poziția extinsă
+    final int forwardPosition = 170; // Poziția extinsă
     final int backwardPosition = 0; // Poziția retrasă
     final int positionOuttakeUpForIntake = 50; // Pozitia pana la care se ridica outtake ul ca s aiba loc glisiera de la intake sa se deschida
-    final int basketPosition = 150; // pozitie outtake pentru cosul de sus
+    final int basketPosition = 200; // pozitie outtake pentru cosul de sus
     final int initialOuttakePosition = 0;
+    final double powerForCorehex = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        MecanumDrive drive = new MecanumDrive(
+                new Motor(hardwareMap, "leftFrontMotor"),
+                new Motor(hardwareMap, "rightFrontMotor"),
+                new Motor(hardwareMap, "leftRearMotor"),
+                new Motor(hardwareMap, "rightRearMotor")
+        );
 
         // Inițializarea hardware-ului pentru motoare
         frontLeftMotor = hardwareMap.dcMotor.get("leftFrontMotor");
@@ -104,6 +116,7 @@ public class TeleOpTest extends LinearOpMode {
         debounceTimerRT.start();
         debounceTimerArrow1.start();
         debounceTimerArrow3.start();
+        GamepadEx driverOp = new GamepadEx(gamepad1);
 
         waitForStart(); // Așteaptă apăsarea butonului "Start" din Driver Station
 
@@ -112,23 +125,73 @@ public class TeleOpTest extends LinearOpMode {
             double lt = gamepad1.left_trigger; // Actualizează constant valorile lui lt și rt
             double rt = gamepad1.right_trigger;
 
+            drive.driveRobotCentric(
+                    driverOp.getLeftX(),
+                    driverOp.getLeftY(),
+                    driverOp.getRightX(),
+                    false
+            );
+
             intakeMove(lt, rt); // Control continuu pentru intake / BUTTON 'RT' AND 'LT'
             armGrabberMove(); // Daca apesi RB bratul de pe outtake se va ridica pentru a lasa piesa in cos / BUTTON 'RB'
 
             handleGlisiera();  // Extinde glisisera pana la pozitia maxima si la a 2 a apasare se inchide pana la pozitia 0 / BUTTON 'A'
-            runIntake(); // Control continuu pentru periile de pe intake la tragerea elementelor din intake (pull) / BUTTON 'X'
+            runIntake(powerForCorehex); // Control continuu pentru periile de pe intake la tragerea elementelor din intake (pull) / BUTTON 'X'
             reverseIntake(); // Control continuu pentru periile de pe intake la impingerea elementelor din intake (push) / BUTTON 'B'
-            outtakeGrabber(); // Daca apesi X prinde piesa iar la a 2 apasare il lasa jos / BUTTON 'Y'
+            outtakeGrabber(); // Daca apesi Y prinde piesa iar la a 2 apasare il lasa jos / BUTTON 'Y'
             arrowMove1(); // Cand apas dpadUp se va ridica pana la pozitia de cos, dar daca vreau sa l las jos trebuie sa apas pe dpadDown
             arrowMove3(); // Cand apas dpadDown prima oara se lasa pana la pozitia la care se poate extinde glisera de intake , iar a doua oara se duce pana la pozitia 0
 
-            if(motorOutake1.getCurrentPosition() >= basketPosition-5 && motorOutake2.getCurrentPosition() >= basketPosition-5){
-                activeBasketPosition = true;
+            //START BOOLEAN SECTION
+
+            if(motorIntake.getCurrentPosition() >= forwardPosition - 10){
+                active = true;
             } else{
+                active = false;
+            }
+
+            /*if(coreHexIntake.getPower() > 0){
+                activeIntakePush = true;
+                intakeStop = false;
+            } else if(coreHexIntake.getPower() == 0){
+                activeIntakePush = false;
+                activeIntakePull = false;
+                intakeStop = true;
+            } else if(!intakeStop && !activeIntakePush){
+                activeIntakePull = true; // posibil e gresit pentru ca puterea motorului va fi data tot cu 1 nu cu -1
+            }*/
+
+            if((motorOutake1.getCurrentPosition() >= positionOuttakeUpForIntake - 5 && motorOutake2.getCurrentPosition() >= positionOuttakeUpForIntake - 5) || (motorOutake1.getCurrentPosition() <= positionOuttakeUpForIntake + 5 && motorOutake2.getCurrentPosition() <= positionOuttakeUpForIntake + 5)){
+                activeOutakeLiftForIntake = true;
+            } else if((motorOutake1.getCurrentPosition() < positionOuttakeUpForIntake - 5 && motorOutake2.getCurrentPosition() < positionOuttakeUpForIntake - 5) || (motorOutake1.getCurrentPosition() > positionOuttakeUpForIntake + 5 && motorOutake2.getCurrentPosition() > positionOuttakeUpForIntake + 5)){
+                activeOutakeLiftForIntake = false;
+            }
+
+            if(servoGrabber.getPosition() > 0){
+                activeGrabber = true;
+            } else{
+                activeGrabber = false;
+            }
+
+            if(servoArmGrabber.getPosition() > 0){
+                activeArmGrabberUp = true;
+            } else{
+                activeArmGrabberUp = false;
+            }
+
+            if(motorOutake1.getCurrentPosition() >= basketPosition-5 && motorOutake2.getCurrentPosition() >= basketPosition-5){ // (195)
+                activeBasketPosition = true;
+            } else if(motorOutake1.getCurrentPosition() < basketPosition-5 && motorOutake2.getCurrentPosition() < basketPosition-5){
                 activeBasketPosition = false;
             }
 
+            if(motorOutake1.getCurrentPosition() <= 5 && motorOutake2.getCurrentPosition() <= 5){ // (45,55)
+                activeInitialBasketPosition = true;
+            } else{
+                activeInitialBasketPosition = false;
+            }
 
+            //END BOOLEAN SECTION
 
             telemetry.addData("Glisiera Intake Active: ", active);
             telemetry.addData("Outake Lift For Intake: ",activeOutakeLiftForIntake);
@@ -282,14 +345,14 @@ public class TeleOpTest extends LinearOpMode {
 
     //START SECTION BUTTON 'X' // trage intake | pull = trage
 
-    public void runIntake(){
+    public void runIntake(double power){
 
         if (gamepad1.x && debounceTimerX.done()) {
 
             debounceTimerX.start();
             if (!activeIntakePull && !activeIntakePush) {
 
-                coreHexIntake.setPower(1);
+                coreHexIntake.setPower(power);
                 activeIntakePull = true;
 
             } else if (activeIntakePull && !activeIntakePush) {
@@ -314,11 +377,13 @@ public class TeleOpTest extends LinearOpMode {
 
                 coreHexIntake.setPower(-1);
                 activeIntakePush = true;
+                intakeStop = false;
 
             } else if(activeIntakePush && !activeIntakePull){
 
                 coreHexIntake.setPower(0);
                 activeIntakePush = false;
+                intakeStop = true;
             }
         }
 
@@ -428,13 +493,13 @@ public class TeleOpTest extends LinearOpMode {
         if(gamepad1.dpad_down && debounceTimerArrow3.done()){
 
             debounceTimerArrow3.start();
-            if(!activeInitialBasketPosition && debounceTimerArrow3.done() && motorOutake1.getCurrentPosition() > positionOuttakeUpForIntake){
+            if(!activeInitialBasketPosition && debounceTimerArrow3.done() && motorOutake1.getCurrentPosition() > positionOuttakeUpForIntake-5){
 
                 moveToPositionOuttake(positionOuttakeUpForIntake);
                 activeInitialBasketPosition = false;
                 activeOutakeLiftForIntake = true;
 
-            } else if(!activeInitialBasketPosition && debounceTimerArrow3.done() && motorOutake1.getCurrentPosition() <= positionOuttakeUpForIntake){
+            } else if(!activeInitialBasketPosition && debounceTimerArrow3.done() && motorOutake1.getCurrentPosition() <= positionOuttakeUpForIntake+5){
 
                 moveToPositionOuttake(initialOuttakePosition);
                 activeInitialBasketPosition = true;
