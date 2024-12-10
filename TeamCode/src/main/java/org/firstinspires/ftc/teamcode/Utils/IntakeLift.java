@@ -24,7 +24,7 @@ public class IntakeLift {
         }
     }
 
-    public void IntakeLiftController(Servo servo1, Servo servo2) {
+    public IntakeLift(Servo servo1, Servo servo2) {
         this.servo1 = servo1;
         this.servo2 = servo2;
         servo1.setDirection(Servo.Direction.REVERSE);

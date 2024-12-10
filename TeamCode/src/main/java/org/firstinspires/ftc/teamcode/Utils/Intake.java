@@ -9,7 +9,7 @@ public class Intake {
     private DcMotor intakeMotor;
 
     private boolean alreadyInAction = false;
-    IntakeLift intakeLift = new IntakeLift();
+    IntakeLift intakeLift;
 
     public enum Position {
         DEFAULT(0),
@@ -22,10 +22,8 @@ public class Intake {
         }
     }
 
-    public Intake(DcMotor definedIntakeMotor, Servo servo1, Servo servo2) {
+    public Intake(DcMotor definedIntakeMotor) {
         this.intakeMotor = definedIntakeMotor;
-        intakeLift.IntakeLiftController(servo1, servo2);
-
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeMotor.setTargetPosition(Position.DEFAULT.val);
@@ -50,6 +48,7 @@ public class Intake {
     }
 
     public void extendIntake() {
+        //if()
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
             intakeLift.prepareIntakeLift();
 

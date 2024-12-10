@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Utils.Intake;
+import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 
 @TeleOp
 public class Measurement extends LinearOpMode {
@@ -56,8 +57,16 @@ public class Measurement extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHw();
-        Intake intake = new Intake(motorIntake, servoIntake1, servoIntake2);
+        KodikasRobot robot = new KodikasRobot(
+            motorIntake,
+            servoIntake1,
+            servoIntake2,
+            motorOutake1,
+            motorOutake2
+        );
         waitForStart();
+        Intake intake = robot.getIntakeSession();
+        intake.extendIntake();
     }
 
 

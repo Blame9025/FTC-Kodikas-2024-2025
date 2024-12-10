@@ -6,8 +6,7 @@ public class Outake {
 
     private DcMotor motorOuttake1,motorOuttake2;
     private boolean alreadyInActionOuttake = false;
-    private boolean upForIntake = false;
-    private boolean fullOuttakeExtended = false;
+    private Position currentPosition = Position.DEFAULT;
 
     public enum Position {
         DEFAULT(0),
@@ -21,7 +20,7 @@ public class Outake {
         }
     }
 
-    public void OuttakeController(DcMotor definedIntakeMotor1, DcMotor definedIntakeMotor2) {
+    public Outake(DcMotor definedIntakeMotor1, DcMotor definedIntakeMotor2) {
         this.motorOuttake1 = definedIntakeMotor1;
         this.motorOuttake2 = definedIntakeMotor2;
 
@@ -54,10 +53,14 @@ public class Outake {
                 break;
             }
         }
-
+        currentPosition = target;
 
         alreadyInActionOuttake = true;
 
     }
+    public Position getCurrentPosition() {
+        return currentPosition; // Return the stored position
+    }
+
 
 }

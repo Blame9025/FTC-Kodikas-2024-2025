@@ -74,6 +74,5 @@ public class AutoTemplate extends LinearOpMode {
             })
         );
         pursuit.followPathWithActions(path);
-
     }
 }
