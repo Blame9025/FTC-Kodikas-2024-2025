@@ -15,11 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 public class TeleOpTest extends LinearOpMode {
 
-
-    DcMotor frontLeftMotor; // roata fata dreapta
-    DcMotor backLeftMotor; // roata spate dreapta
-    DcMotor frontRightMotor; // roata fata dreapta
-    DcMotor backRightMotor; // roata spate dreapta
     DcMotor motorIntake; // motorul care extinde glisiera de intake
     DcMotor motorOutake1; /// motor glisiera outtake 2
     DcMotor motorOutake2; // motor glisiera outtake 2
@@ -29,6 +24,9 @@ public class TeleOpTest extends LinearOpMode {
             servoArmGrabber; // ridica gheara
 
     IMU imu;
+
+    GamepadEx driverOp;
+    MecanumDrive drive;
 
     boolean active = false; // Starea glisierei (extins/retras)
     boolean activeIntakePull = false; // Stare intake pull (aprins/inchis)
@@ -55,17 +53,12 @@ public class TeleOpTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(
+        drive = new MecanumDrive(
                 new Motor(hardwareMap, "leftFrontMotor"),
                 new Motor(hardwareMap, "rightFrontMotor"),
                 new Motor(hardwareMap, "leftRearMotor"),
                 new Motor(hardwareMap, "rightRearMotor")
         );
-
-        frontLeftMotor = hardwareMap.dcMotor.get("leftFrontMotor");
-        backLeftMotor = hardwareMap.dcMotor.get("leftRearMotor");
-        frontRightMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-        backRightMotor = hardwareMap.dcMotor.get("rightRearMotor");
 
         motorIntake = hardwareMap.dcMotor.get("motorIntake");
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
@@ -78,22 +71,13 @@ public class TeleOpTest extends LinearOpMode {
         servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         servoIntake1.setDirection(Servo.Direction.REVERSE); // de la stanga la dreapta cum te uiti spre intake
 
-
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         coreHexIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorOutake1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorOutake2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -113,7 +97,7 @@ public class TeleOpTest extends LinearOpMode {
         debounceTimerRT.start();
         debounceTimerArrow1.start();
         debounceTimerArrow3.start();
-        GamepadEx driverOp = new GamepadEx(gamepad1);
+        driverOp = new GamepadEx(gamepad1);
 
         waitForStart(); // Așteaptă apăsarea butonului "Start" din Driver Station
 
