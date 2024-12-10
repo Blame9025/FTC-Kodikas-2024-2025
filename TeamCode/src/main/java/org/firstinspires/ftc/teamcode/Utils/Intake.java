@@ -22,7 +22,7 @@ public class Intake {
         }
     }
 
-    public void IntakeController(DcMotor definedIntakeMotor, Servo servo1, Servo servo2) {
+    public Intake(DcMotor definedIntakeMotor, Servo servo1, Servo servo2) {
         this.intakeMotor = definedIntakeMotor;
         intakeLift.IntakeLiftController(servo1, servo2);
 
