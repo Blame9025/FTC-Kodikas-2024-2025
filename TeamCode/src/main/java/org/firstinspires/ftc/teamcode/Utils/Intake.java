@@ -9,6 +9,7 @@ public class Intake {
     private DcMotor intakeMotor;
 
     private boolean alreadyInAction = false;
+    private Position currentPosition = Position.DEFAULT;
     IntakeLift intakeLift;
     KodikasRobot robot;
     public enum Position {
@@ -44,22 +45,25 @@ public class Intake {
                 break;
             }
         }
+        currentPosition = target;
         intakeMotor.setPower(0);
         alreadyInAction = false;
     }
 
     public void extendIntake() {
         //if()
-
-        if(robot.getIntakeLiftSession().getCurrentPosition() == IntakeLift.Position.DEFAULT)
-            robot.getIntakeLiftSession().prepareIntakeLift();
+        IntakeLift intakeLift = robot.getIntakeLiftSession();
+        if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
+            intakeLift.prepareIntakeLift();
         long startTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - startTime < 5000) {
         }
         //setPosition(Position.EXTENDED);
 
-        robot.getIntakeLiftSession().extractIntakeLift();
-
+        intakeLift.extractIntakeLift();
+        startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < 10000) {
+        }
     }
 
     public void retractIntake() {
@@ -69,5 +73,13 @@ public class Intake {
         setPosition(Position.DEFAULT);
 
         robot.getIntakeLiftSession().retractIntakeLift();
+    }
+    public void stop(){
+        intakeMotor.setTargetPosition(Position.DEFAULT.val);
+        intakeMotor.setPower(0.0);
+        currentPosition = Position.DEFAULT;
+    }
+    public Position getPosition(){
+        return currentPosition;
     }
 }

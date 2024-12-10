@@ -14,9 +14,9 @@ public class IntakeLift {
     Timing.Timer delay = new Timing.Timer(1000, TimeUnit.MILLISECONDS);
 
     public enum Position {
-        DEFAULT(0),
-        UP(0.5),
-        EXTRACT(1);
+        DEFAULT(0.2),
+        UP(0.6),
+        EXTRACT(0.9);
 
         public final double val;
 

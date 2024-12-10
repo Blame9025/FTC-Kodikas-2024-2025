@@ -32,7 +32,10 @@ public class Measurement extends LinearOpMode {
        // servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         //servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
-        servoIntake1.setDirection(Servo.Direction.REVERSE); // de la stanga la dreapta cum te uiti spre intake
+        //servoIntake1.setDirection(Servo.Direction.REVERSE); // de la stanga la dreapta cum te uiti spre intake
+        servoIntake2.setDirection(Servo.Direction.REVERSE);
+        servoIntake1.setDirection(Servo.Direction.FORWARD);
+
 
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -65,8 +68,22 @@ public class Measurement extends LinearOpMode {
             motorOutake2
         );
         waitForStart();
+
+        //while (opModeIsActive()) {
+        //    telemetry.addData("SERVO 1 POS", servoIntake1.getPosition());
+        //    telemetry.addData("SERVO 2 POS", servoIntake2.getPosition());
+//
+  //          servoIntake1.setPosition(0.2);
+    //        servoIntake2.setPosition(0.2);
+      //      telemetry.update();
+        //}
+
         Intake intake = robot.getIntakeSession();
+        telemetry.addData("Intake pos inainte", intake.getPosition());
+        telemetry.update();
         intake.extendIntake();
+        telemetry.addData("Intake pos dupa", intake.getPosition());
+        telemetry.update();
     }
 
 
