@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Utils;
 
 import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.robot.Robot;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,7 +10,7 @@ public class IntakeLift {
     private Servo servo1, servo2;
     private boolean alreadyInAction = false;
     private Position currentPosition = Position.DEFAULT;
-
+    KodikasRobot robot;
     Timing.Timer delay = new Timing.Timer(1000, TimeUnit.MILLISECONDS);
 
     public enum Position {
@@ -24,9 +25,10 @@ public class IntakeLift {
         }
     }
 
-    public IntakeLift(Servo servo1, Servo servo2) {
+    public IntakeLift(KodikasRobot robot, Servo servo1, Servo servo2) {
         this.servo1 = servo1;
         this.servo2 = servo2;
+        this.robot = robot;
         servo1.setDirection(Servo.Direction.REVERSE);
     }
 

@@ -7,7 +7,7 @@ public class Outake {
     private DcMotor motorOuttake1,motorOuttake2;
     private boolean alreadyInActionOuttake = false;
     private Position currentPosition = Position.DEFAULT;
-
+    KodikasRobot robot;
     public enum Position {
         DEFAULT(0),
         UPFORINTAKE(50),
@@ -20,10 +20,10 @@ public class Outake {
         }
     }
 
-    public Outake(DcMotor definedIntakeMotor1, DcMotor definedIntakeMotor2) {
+    public Outake(KodikasRobot robot,DcMotor definedIntakeMotor1, DcMotor definedIntakeMotor2) {
         this.motorOuttake1 = definedIntakeMotor1;
         this.motorOuttake2 = definedIntakeMotor2;
-
+        this.robot = robot;
         motorOuttake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOuttake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

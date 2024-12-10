@@ -10,7 +10,7 @@ public class Intake {
 
     private boolean alreadyInAction = false;
     IntakeLift intakeLift;
-
+    KodikasRobot robot;
     public enum Position {
         DEFAULT(0),
         EXTENDED(170);
@@ -22,8 +22,9 @@ public class Intake {
         }
     }
 
-    public Intake(DcMotor definedIntakeMotor) {
+    public Intake(KodikasRobot robot, DcMotor definedIntakeMotor) {
         this.intakeMotor = definedIntakeMotor;
+        this.robot = robot;
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeMotor.setTargetPosition(Position.DEFAULT.val);
@@ -49,21 +50,24 @@ public class Intake {
 
     public void extendIntake() {
         //if()
-        if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
-            intakeLift.prepareIntakeLift();
 
-        setPosition(Position.EXTENDED);
+        if(robot.getIntakeLiftSession().getCurrentPosition() == IntakeLift.Position.DEFAULT)
+            robot.getIntakeLiftSession().prepareIntakeLift();
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < 5000) {
+        }
+        //setPosition(Position.EXTENDED);
 
-        intakeLift.extractIntakeLift();
+        robot.getIntakeLiftSession().extractIntakeLift();
 
     }
 
     public void retractIntake() {
 
-        intakeLift.prepareIntakeLift();
+        robot.getIntakeLiftSession().prepareIntakeLift();
 
         setPosition(Position.DEFAULT);
 
-        intakeLift.retractIntakeLift();
+        robot.getIntakeLiftSession().retractIntakeLift();
     }
 }

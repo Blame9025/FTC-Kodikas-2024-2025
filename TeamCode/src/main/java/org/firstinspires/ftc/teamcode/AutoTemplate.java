@@ -61,18 +61,18 @@ public class AutoTemplate extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHw();
-        Pursuit pursuit = new Pursuit(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, leftEncoder, rightEncoder);
-        List<Waypoint> path = Arrays.asList(
-            new Waypoint(new Pose2d(0, 0, new Rotation2d(0)), null),
-            new Waypoint(new Pose2d(5, 0, new Rotation2d(0)), () -> {
-                telemetry.addData("Wapoint", "1");
-                telemetry.update();
-            }),
-            new Waypoint(new Pose2d(0, 5, new Rotation2d(Math.toRadians(45))), () -> {
-                telemetry.addData("Wapoint", "2");
-                telemetry.update();
-            })
-        );
-        pursuit.followPathWithActions(path);
+        //Pursuit pursuit = new Pursuit(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, leftEncoder, rightEncoder);
+        //List<Waypoint> path = Arrays.asList(
+        //    new Waypoint(new Pose2d(0, 0, new Rotation2d(0)), null),
+        //    new Waypoint(new Pose2d(5, 0, new Rotation2d(0)), () -> {
+        //        telemetry.addData("Wapoint", "1");
+        //        telemetry.update();
+        //    }),
+        //    new Waypoint(new Pose2d(0, 5, new Rotation2d(Math.toRadians(45))), () -> {
+        //        telemetry.addData("Wapoint", "2");
+        //        telemetry.update();
+        //    })
+        //);
+        //pursuit.followPathWithActions(path);
     }
 }
