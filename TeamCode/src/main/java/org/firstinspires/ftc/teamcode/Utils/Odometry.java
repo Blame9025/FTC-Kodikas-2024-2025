@@ -1,34 +1,43 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
+import com.arcrobotics.ftclib.command.OdometrySubsystem;
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class Odometry {
-    private DcMotor leftEncoder, rightEncoder;
-    private double robotX, robotY, robotHeading;
+    MotorEx verticalEncoder, horizontalEncoder;
+    HolonomicOdometry holoOdometry;
+    OdometrySubsystem odometry;
+    IMU imu;
+    public Odometry(Drive drive, GamepadEx driverOp, IMU imu) {
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.DOWN,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
-    public Odometry(DcMotor leftEncoder, DcMotor rightEncoder) {
-        this.leftEncoder = leftEncoder;
-        this.rightEncoder = rightEncoder;
+        imu.initialize(parameters);
+
+        holoOdometry = new HolonomicOdometry(
+                () -> (verticalEncoder.getCurrentPosition() +
+                        imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS).firstAngle) * Config.TICKS_TO_CM,
+                () -> (verticalEncoder.getCurrentPosition() -
+                        imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS).firstAngle) * Config.TICKS_TO_CM,
+                () -> horizontalEncoder.getCurrentPosition() * Config.TICKS_TO_CM,
+                Config.TRACKWIDTH, Config.CENTER_WHEEL_OFFSET
+        );
+
+        odometry = new OdometrySubsystem(holoOdometry);
     }
 
-    public void update() {
-        int leftTicks = leftEncoder.getCurrentPosition();
-        int rightTicks = rightEncoder.getCurrentPosition();
-
-        double leftDistance = leftTicks * Config.TICKS_TO_CM;
-        double rightDistance = rightTicks * Config.TICKS_TO_CM;
-
-        double deltaX = (leftDistance + rightDistance) / 2.0 * Math.cos(robotHeading);
-        double deltaY = (leftDistance + rightDistance) / 2.0 * Math.sin(robotHeading);
-
-        robotX += deltaX;
-        robotY += deltaY;
-        robotHeading = Math.atan2(deltaY, deltaX);
-    }
-
-    public Pose2d getPose() {
-        return new Pose2d(robotX, robotY, new Rotation2d(robotHeading));
-    }
 }

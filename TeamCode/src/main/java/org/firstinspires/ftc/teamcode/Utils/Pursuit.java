@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.Utils.Waypoint;
 import org.firstinspires.ftc.teamcode.Utils.Odometry;
@@ -16,9 +19,9 @@ public class Pursuit {
 
     Odometry odometry;
     Drive drive;
-    public Pursuit(DcMotor frontLeftDrive,DcMotor backLeftDrive, DcMotor frontRightDrive,DcMotor backRightDrive, DcMotor leftEncoder, DcMotor rightEncoder) {
-        this.drive = new Drive(frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive);
-        this.odometry = new Odometry(leftEncoder, rightEncoder);
+    public Pursuit(Drive drive, GamepadEx gamepad, IMU imu) {
+        this.drive = drive;
+        this.odometry = new Odometry(drive, gamepad, imu);
     }
     private boolean isWithinRange(Pose2d currentPose, Pose2d targetPose) {
         double distance = Math.hypot(
@@ -41,9 +44,7 @@ public class Pursuit {
     }
     public void followPathWithActions(List<Waypoint> path) {
         while (!path.isEmpty()) {
-            odometry.update();
-            Pose2d currentPose = odometry.getPose();
-
+            
             Waypoint targetWaypoint = findLookAheadWaypoint(path, currentPose);
 
             if (isWithinRange(currentPose, targetWaypoint.getPosition())) {
