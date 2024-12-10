@@ -55,6 +55,17 @@ public class TeleOpTest extends LinearOpMode {
     final int initialOuttakePosition = 0;
     final double powerForCorehex = 0.5;
     final double power = 0.2;
+    public enum PositionForServo {
+        DEFAULT(0),
+        UP(0.5),
+        EXTENDED(1);
+
+        public final double val;
+
+        PositionForServo(double val) {
+            this.val = val;
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -260,12 +271,12 @@ public class TeleOpTest extends LinearOpMode {
 
         while (motorIntake.isBusy() && opModeIsActive()) {
 
-            if (motorIntake.getCurrentPosition() >= 80){
-                servoIntake1.setPosition(1);
-                servoIntake2.setPosition(1);
-            } else if (motorIntake.getCurrentPosition() < 80){
-                servoIntake1.setPosition(0.5);
-                servoIntake2.setPosition(0.5);
+            if (motorIntake.getCurrentPosition() >= positionOuttakeUpForIntake){
+                servoIntake1.setPosition(PositionForServo.EXTENDED.val);
+                servoIntake2.setPosition(PositionForServo.EXTENDED.val);
+            } else if (motorIntake.getCurrentPosition() < positionOuttakeUpForIntake){
+                servoIntake1.setPosition(PositionForServo.DEFAULT.val);
+                servoIntake2.setPosition(PositionForServo.DEFAULT.val);
             }
 
             telemetry.addData("Motor Position", motorIntake.getCurrentPosition());
@@ -399,14 +410,14 @@ public class TeleOpTest extends LinearOpMode {
         if(gamepad1.y && debounceTimerY.done()){
 
             debounceTimerY.start();
-            if (!activeGrabber) {
+            if (!activeGrabber && debounceTimerY.done()) {
 
-                servoGrabber.setPosition(0);
+                servoGrabber.setPosition(PositionForServo.DEFAULT.val);
                 activeGrabber = true;
 
-            } else {
+            } else if(activeGrabber && debounceTimerY.done()){
 
-                servoGrabber.setPosition(0.5);
+                servoGrabber.setPosition(PositionForServo.UP.val);
                 activeGrabber = false;
             }
 
@@ -423,12 +434,12 @@ public class TeleOpTest extends LinearOpMode {
         if(gamepad1.right_bumper && debounceTimerRT.done()) {
 
             debounceTimerRT.start();
-            if (!activeArmGrabberUp) {
+            if (!activeArmGrabberUp && debounceTimerRT.done()) {
 
-                servoArmGrabber.setPosition(0.5);
+                servoArmGrabber.setPosition(PositionForServo.UP.val);
                 activeArmGrabberUp = true;
-            } else {
-                servoArmGrabber.setPosition(0);
+            } else if(activeArmGrabberUp && debounceTimerRT.done()){
+                servoArmGrabber.setPosition(PositionForServo.DEFAULT.val);
                 activeArmGrabberUp = false;
             }
         }
