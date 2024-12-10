@@ -8,13 +8,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Utils.Intake;
+
 @TeleOp
 public class Measurement extends LinearOpMode {
-
-    DcMotor frontLeftMotor;
-    DcMotor backLeftMotor;
-    DcMotor frontRightMotor;
-    DcMotor backRightMotor;
     DcMotor motorIntake;
     DcMotor motorGlisiera;
     DcMotor motorOutake1;
@@ -22,13 +19,6 @@ public class Measurement extends LinearOpMode {
     Servo servoIntake1,servoIntake2;
     DcMotor coreHexIntake;
     public void initHw(){
-        // Inițializarea hardware-ului
-        // Inițializarea hardware-ului pentru motoare
-        frontLeftMotor = hardwareMap.dcMotor.get("leftFrontMotor");
-        backLeftMotor = hardwareMap.dcMotor.get("leftRearMotor");
-        frontRightMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-        backRightMotor = hardwareMap.dcMotor.get("rightRearMotor");
-
 
         motorIntake = hardwareMap.dcMotor.get("motorIntake");
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
@@ -41,15 +31,8 @@ public class Measurement extends LinearOpMode {
        // servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         //servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         servoIntake1.setDirection(Servo.Direction.REVERSE); // de la stanga la dreapta cum te uiti spre intake
 
-
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -73,32 +56,8 @@ public class Measurement extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHw();
-
-        // Resetează encoderul înainte de a începe
-        motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Configurează motorul pe RUN_TO_POSITION
-        motorIntake.setTargetPosition(0);
-        motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorIntake.setPower(0);
-
+        Intake intake = new Intake(motorIntake, servoIntake1, servoIntake2);
         waitForStart();
-
-        int i = 0;
-        int max = 170;
-        //motorIntake.setPower(0.); // Aplicăm puterea
-        motorIntake.setTargetPosition(max);
-        int pos = motorIntake.getCurrentPosition();
-        while (opModeIsActive() && pos < max) {
-            pos = motorIntake.getCurrentPosition();
-
-            motorIntake.setPower(1.0 - pos/max);
-            telemetry.addData("Current Position", pos);
-            telemetry.addData("Power", motorIntake.getPower());
-            telemetry.update();
-        }
-
-        motorIntake.setPower(0);
     }
 
 
