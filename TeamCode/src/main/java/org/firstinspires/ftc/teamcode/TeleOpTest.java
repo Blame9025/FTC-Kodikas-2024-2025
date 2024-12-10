@@ -54,6 +54,7 @@ public class TeleOpTest extends LinearOpMode {
     final int basketPosition = 200; // pozitie outtake pentru cosul de sus
     final int initialOuttakePosition = 0;
     final double powerForCorehex = 0.5;
+    final double power = 0.2;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -252,7 +253,7 @@ public class TeleOpTest extends LinearOpMode {
 
         motorIntake.setTargetPosition(targetPosition);
         motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorIntake.setPower(1);
+        motorIntake.setPower(power);
 
         servoIntake1.setPosition(0);
         servoIntake2.setPosition(0);
@@ -290,8 +291,8 @@ public class TeleOpTest extends LinearOpMode {
         motorOutake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorOutake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        motorOutake1.setPower(1);
-        motorOutake2.setPower(1);
+        motorOutake1.setPower(power);
+        motorOutake2.setPower(power);
 
         while (motorOutake1.isBusy() && motorOutake2.isBusy() && opModeIsActive()) {
             telemetry.addData("Outtake Position", motorOutake1.getCurrentPosition());
@@ -324,8 +325,8 @@ public class TeleOpTest extends LinearOpMode {
         motorOutake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorOutake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        motorOutake1.setPower(1);
-        motorOutake2.setPower(1);
+        motorOutake1.setPower(power);
+        motorOutake2.setPower(power);
 
         while (motorOutake1.isBusy() && motorOutake2.isBusy() && opModeIsActive()) {
             telemetry.addData("Outtake Position", motorOutake1.getCurrentPosition());
@@ -375,7 +376,7 @@ public class TeleOpTest extends LinearOpMode {
             debounceTimerB.start();
             if (!activeIntakePush && !activeIntakePull) {
 
-                coreHexIntake.setPower(-1);
+                coreHexIntake.setPower(-power);
                 activeIntakePush = true;
                 intakeStop = false;
 
@@ -465,8 +466,8 @@ public class TeleOpTest extends LinearOpMode {
         motorOutake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorOutake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        motorOutake1.setPower(1);
-        motorOutake2.setPower(1);
+        motorOutake1.setPower(power);
+        motorOutake2.setPower(power);
 
         while (motorOutake1.isBusy() && motorOutake2.isBusy() && opModeIsActive()) {
             telemetry.addData("Outtake Position", motorOutake1.getCurrentPosition());
