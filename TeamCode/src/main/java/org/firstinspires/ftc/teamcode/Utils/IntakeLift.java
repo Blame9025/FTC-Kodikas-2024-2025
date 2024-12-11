@@ -11,7 +11,7 @@ public class IntakeLift {
     private boolean alreadyInAction = false;
     private Position currentPosition = Position.DEFAULT;
     KodikasRobot robot;
-    Timing.Timer delay = new Timing.Timer(1000, TimeUnit.MILLISECONDS);
+    Timing.Timer delay = new Timing.Timer(200, TimeUnit.MILLISECONDS);
 
     public enum Position {
         DEFAULT(0.2),

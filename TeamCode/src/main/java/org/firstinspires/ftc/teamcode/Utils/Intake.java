@@ -14,7 +14,7 @@ public class Intake {
     KodikasRobot robot;
     public enum Position {
         DEFAULT(0),
-        EXTENDED(170);
+        EXTENDED(140);
 
         public final int val;
 
@@ -27,21 +27,25 @@ public class Intake {
         this.intakeMotor = definedIntakeMotor;
         this.robot = robot;
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setTargetPosition(Position.DEFAULT.val);
+
     }
 
     public void setPosition(Position target) {
         if (alreadyInAction) return;
 
-        alreadyInAction = true;
-
         intakeMotor.setTargetPosition(target.val);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intakeMotor.setPower(0.5);
+        if(currentPosition == target) return;
+        alreadyInAction = true;
 
         long startTime = System.currentTimeMillis();
         while (intakeMotor.isBusy()) {
-            if (System.currentTimeMillis() - startTime > 5000) {
+            if(intakeMotor.getCurrentPosition() == 70)
+                intakeMotor.setPower(0.2);
+            if (System.currentTimeMillis() - startTime > 10000) {
                 break;
             }
         }
@@ -49,30 +53,27 @@ public class Intake {
         intakeMotor.setPower(0);
         alreadyInAction = false;
     }
-
+    public int getMotorPosition(){
+        return intakeMotor.getCurrentPosition();
+    }
     public void extendIntake() {
         //if()
         IntakeLift intakeLift = robot.getIntakeLiftSession();
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
             intakeLift.prepareIntakeLift();
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < 5000) {
-        }
-        //setPosition(Position.EXTENDED);
+
+        setPosition(Position.EXTENDED);
 
         intakeLift.extractIntakeLift();
-        startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < 10000) {
-        }
     }
 
     public void retractIntake() {
-
-        robot.getIntakeLiftSession().prepareIntakeLift();
+        IntakeLift intakeLift = robot.getIntakeLiftSession();
+        intakeLift.prepareIntakeLift();
 
         setPosition(Position.DEFAULT);
 
-        robot.getIntakeLiftSession().retractIntakeLift();
+        intakeLift.retractIntakeLift();
     }
     public void stop(){
         intakeMotor.setTargetPosition(Position.DEFAULT.val);

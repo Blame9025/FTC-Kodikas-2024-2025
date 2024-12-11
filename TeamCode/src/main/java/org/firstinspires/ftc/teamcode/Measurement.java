@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -59,6 +61,8 @@ public class Measurement extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         initHw();
         KodikasRobot robot = new KodikasRobot(
             motorIntake,
@@ -68,22 +72,16 @@ public class Measurement extends LinearOpMode {
             motorOutake2
         );
         waitForStart();
-
-        //while (opModeIsActive()) {
-        //    telemetry.addData("SERVO 1 POS", servoIntake1.getPosition());
-        //    telemetry.addData("SERVO 2 POS", servoIntake2.getPosition());
-//
-  //          servoIntake1.setPosition(0.2);
-    //        servoIntake2.setPosition(0.2);
-      //      telemetry.update();
-        //}
-
         Intake intake = robot.getIntakeSession();
-        telemetry.addData("Intake pos inainte", intake.getPosition());
-        telemetry.update();
-        intake.extendIntake();
-        telemetry.addData("Intake pos dupa", intake.getPosition());
-        telemetry.update();
+        long startTime = System.currentTimeMillis();
+        while (opModeIsActive()) {
+            intake.extendIntake();
+            //telemetry.addData("intake motor pos",intake.getMotorPosition());
+            if (System.currentTimeMillis() - startTime > 7500) {
+                break;
+            }
+        }
+        intake.retractIntake();
     }
 
 
