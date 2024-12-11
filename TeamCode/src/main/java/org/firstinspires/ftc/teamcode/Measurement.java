@@ -19,7 +19,7 @@ public class Measurement extends LinearOpMode {
     DcMotor motorGlisiera;
     DcMotor motorOutake1;
     DcMotor motorOutake2;
-    Servo servoIntake1,servoIntake2;
+    Servo servoIntake1,servoIntake2, servoGrabber, servoArmGrabber;
     DcMotor coreHexIntake;
     public void initHw(){
 
@@ -31,8 +31,8 @@ public class Measurement extends LinearOpMode {
         // Inițializarea hardware-ului pentru servo
         servoIntake1 = hardwareMap.servo.get("servoIntake1");
         servoIntake2 = hardwareMap.servo.get("servoIntake2");
-       // servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
-        //servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
+        servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
+        servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
         //servoIntake1.setDirection(Servo.Direction.REVERSE); // de la stanga la dreapta cum te uiti spre intake
         servoIntake2.setDirection(Servo.Direction.REVERSE);
@@ -69,7 +69,9 @@ public class Measurement extends LinearOpMode {
             servoIntake1,
             servoIntake2,
             motorOutake1,
-            motorOutake2
+            motorOutake2,
+            servoGrabber,
+            servoArmGrabber
         );
         waitForStart();
         Intake intake = robot.getIntakeSession();
@@ -82,10 +84,11 @@ public class Measurement extends LinearOpMode {
                 intake.extendIntake();
             //intake.extendIntake();
             telemetry.addData("intake motor pos",intake.getMotorPosition());
+            telemetry.update();
             if (System.currentTimeMillis() - startTime > 7500 && !retract) {
                 retract = true;
             }
-            telemetry.update();
+
         }
 
     }

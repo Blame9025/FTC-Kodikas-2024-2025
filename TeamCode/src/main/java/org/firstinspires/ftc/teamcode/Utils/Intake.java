@@ -33,31 +33,22 @@ public class Intake {
     }
 
     public void setPosition(Position target) {
-        if (alreadyInAction) return;
 
+        if(intakeMotor.isBusy()) return;
         intakeMotor.setTargetPosition(target.val);
         intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intakeMotor.setPower(0.5);
+        boolean isHalfWayThere = intakeMotor.getCurrentPosition() > Position.EXTENDED.val / 2;
+        intakeMotor.setPower(isHalfWayThere ? 0.2 : 0.5);
         if(currentPosition == target) return;
-        alreadyInAction = true;
-
-        long startTime = System.currentTimeMillis();
-        while (intakeMotor.isBusy()) {
-            if(intakeMotor.getCurrentPosition() == 70)
-                intakeMotor.setPower(0.2);
-            if (System.currentTimeMillis() - startTime > 10000) {
-                break;
-            }
-        }
         currentPosition = target;
-        intakeMotor.setPower(0);
-        alreadyInAction = false;
+
     }
     public int getMotorPosition(){
         return intakeMotor.getCurrentPosition();
     }
     public void extendIntake() {
         //if()
+        if(currentPosition == Position.EXTENDED) return;
         IntakeLift intakeLift = robot.getIntakeLiftSession();
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
             intakeLift.prepareIntakeLift();
@@ -68,6 +59,7 @@ public class Intake {
     }
 
     public void retractIntake() {
+        if(currentPosition == Position.DEFAULT) return;
         IntakeLift intakeLift = robot.getIntakeLiftSession();
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
             intakeLift.prepareIntakeLift();

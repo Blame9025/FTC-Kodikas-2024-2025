@@ -22,9 +22,9 @@ public class Outake {
         }
     }
 
-    public Outake(KodikasRobot robot, DcMotor definedIntakeMotor1, DcMotor definedIntakeMotor2, Servo servoArmGrabber, Servo servoArm) {
-        this.motorOuttake1 = definedIntakeMotor1;
-        this.motorOuttake2 = definedIntakeMotor2;
+    public Outake(KodikasRobot robot, DcMotor definedOuttakeMotor1, DcMotor definedOuttakeMotor2, Servo servoArmGrabber, Servo servoArm) {
+        this.motorOuttake1 = definedOuttakeMotor1;
+        this.motorOuttake2 = definedOuttakeMotor2;
         this.servoArm = servoArm;
         this.servArmGrabber = servoArmGrabber;
         this.robot = robot;
