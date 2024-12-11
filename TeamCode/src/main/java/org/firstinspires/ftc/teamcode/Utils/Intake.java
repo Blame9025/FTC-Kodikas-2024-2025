@@ -69,8 +69,8 @@ public class Intake {
 
     public void retractIntake() {
         IntakeLift intakeLift = robot.getIntakeLiftSession();
-        intakeLift.prepareIntakeLift();
-
+        if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
+            intakeLift.prepareIntakeLift();
         setPosition(Position.DEFAULT);
 
         intakeLift.retractIntakeLift();

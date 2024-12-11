@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Outake {
 
     private DcMotor motorOuttake1,motorOuttake2;
+    private Servo servoArm, servArmGrabber;
     private boolean alreadyInActionOuttake = false;
     private Position currentPosition = Position.DEFAULT;
     KodikasRobot robot;
@@ -20,9 +22,11 @@ public class Outake {
         }
     }
 
-    public Outake(KodikasRobot robot,DcMotor definedIntakeMotor1, DcMotor definedIntakeMotor2) {
+    public Outake(KodikasRobot robot, DcMotor definedIntakeMotor1, DcMotor definedIntakeMotor2, Servo servoArmGrabber, Servo servoArm) {
         this.motorOuttake1 = definedIntakeMotor1;
         this.motorOuttake2 = definedIntakeMotor2;
+        this.servoArm = servoArm;
+        this.servArmGrabber = servoArmGrabber;
         this.robot = robot;
         motorOuttake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOuttake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

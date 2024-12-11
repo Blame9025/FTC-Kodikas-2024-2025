@@ -8,10 +8,10 @@ public class KodikasRobot {
     IntakeLift intakeLift;
     Outake outake;
 
-    public KodikasRobot(DcMotor motorIntake, Servo servo1, Servo servo2, DcMotor outakeMotor1, DcMotor outakeMotor2){
+    public KodikasRobot(DcMotor motorIntake, Servo servo1, Servo servo2, DcMotor outakeMotor1, DcMotor outakeMotor2, Servo servoArm, Servo servoArmGrabber){
         this.intake = new Intake(this,motorIntake);
         this.intakeLift = new IntakeLift(this,servo1, servo2);
-        this.outake = new Outake(this,outakeMotor1, outakeMotor2);
+        this.outake = new Outake(this,outakeMotor1, outakeMotor2,servoArm, servoArmGrabber);
     }
     public Intake getIntakeSession(){
         return intake;
