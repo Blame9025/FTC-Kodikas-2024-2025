@@ -5,16 +5,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Utils.Intake;
+import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
 import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
-
 @TeleOp
-public class Measurement extends LinearOpMode {
+public class test2 extends LinearOpMode {
     DcMotor motorIntake;
     DcMotor motorGlisiera;
     DcMotor motorOutake1;
@@ -34,24 +31,15 @@ public class Measurement extends LinearOpMode {
         servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
+        //servoIntake1.setDirection(Servo.Direction.REVERSE); // de la stanga la dreapta cum te uiti spre intake
+        servoIntake2.setDirection(Servo.Direction.REVERSE);
+        servoIntake1.setDirection(Servo.Direction.FORWARD);
+
 
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         coreHexIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-       // backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // motorIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // motorOutake1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // motorOutake2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // coreHexIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-        //MotorEx encoderLeft, encoderRight;
-        //encoderLeft = new MotorEx(hardwareMap, "leftEncoder");
-        //encoderRight = new MotorEx(hardwareMap, "rightEncoder");
 
     }
 
@@ -61,25 +49,31 @@ public class Measurement extends LinearOpMode {
 
         initHw();
         KodikasRobot robot = new KodikasRobot(
-            motorIntake,
-            servoIntake1,
-            servoIntake2,
-            motorOutake1,
-            motorOutake2,
-            servoGrabber,
-            servoArmGrabber
+                motorIntake,
+                servoIntake1,
+                servoIntake2,
+                motorOutake1,
+                motorOutake2,
+                servoGrabber,
+                servoArmGrabber
         );
         waitForStart();
         Intake intake = robot.getIntakeSession();
+        IntakeLift intakeLift = robot.getIntakeLiftSession();
         boolean extract = false;
         long startTime = System.currentTimeMillis();
-        intake.extendIntake();
+        motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        while (opModeIsActive()) {
+            servoIntake1.setPosition(0.6);
+            servoIntake2.setPosition(0.6);
+            if(System.currentTimeMillis() - startTime > 500)
+                motorIntake.setPower(0.0);
+            else
+                motorIntake.setPower(-1.0);
 
-        while (System.currentTimeMillis() - startTime < 5000) {
+
+            //intake.extendIntake();
         }
-        intake.retractIntake();
+
     }
-
-
-
 }

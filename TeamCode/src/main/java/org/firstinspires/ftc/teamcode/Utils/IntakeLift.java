@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
-import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
-
-import java.util.concurrent.TimeUnit;
 
 public class IntakeLift {
     private Servo servo1, servo2;
-    private boolean alreadyInAction = false;
-    private Position currentPosition = Position.DEFAULT;
-    KodikasRobot robot;
-    Timing.Timer delay = new Timing.Timer(200, TimeUnit.MILLISECONDS);
-
+    private volatile Position targetPosition = Position.DEFAULT;
+    private Thread positionThread;
+    private volatile boolean isRunning = false;
+    private KodikasRobot robot;
     public enum Position {
         DEFAULT(0.2),
         UP(0.6),
@@ -29,25 +24,53 @@ public class IntakeLift {
         this.servo1 = servo1;
         this.servo2 = servo2;
         this.robot = robot;
-        servo1.setDirection(Servo.Direction.REVERSE);
+        this.servo1.setDirection(Servo.Direction.REVERSE);
     }
 
-    public void setPosition(Position target) {
-        if (alreadyInAction) return;
+    public synchronized void setPosition(Position target) {
+        // Update the target position
+        targetPosition = target;
 
-        alreadyInAction = true;
-        servo1.setPosition(target.val);
-        servo2.setPosition(target.val);
+        // If a thread is already running, stop it before starting a new one
+        if (isRunning) {
+            stopPositionThread();
+        }
 
-        delay.start();
-        while (!delay.done()) {}
+        // Start a new thread to handle the position update
+        startPositionThread();
+    }
 
-        currentPosition = target; // Update the current position
-        alreadyInAction = false;
+    private synchronized void startPositionThread() {
+        isRunning = true;
+        positionThread = new Thread(() -> {
+            while (isRunning) {
+                // Continuously set the servos to the target position
+                servo1.setPosition(targetPosition.val);
+                servo2.setPosition(targetPosition.val);
+
+                try {
+                    Thread.sleep(50); // Adjust frequency as needed
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Handle thread interruption
+                }
+            }
+        });
+        positionThread.start();
+    }
+
+    public synchronized void stopPositionThread() {
+        isRunning = false;
+        if (positionThread != null) {
+            try {
+                positionThread.join(); // Wait for the thread to finish
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     public Position getCurrentPosition() {
-        return currentPosition; // Return the stored position
+        return targetPosition;
     }
 
     public void retractIntakeLift() {
