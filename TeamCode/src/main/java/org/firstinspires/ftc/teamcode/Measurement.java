@@ -74,14 +74,20 @@ public class Measurement extends LinearOpMode {
         waitForStart();
         Intake intake = robot.getIntakeSession();
         long startTime = System.currentTimeMillis();
+        boolean retract = false;
         while (opModeIsActive()) {
-            intake.extendIntake();
-            //telemetry.addData("intake motor pos",intake.getMotorPosition());
-            if (System.currentTimeMillis() - startTime > 7500) {
-                break;
+            if(retract)
+                intake.retractIntake();
+            else
+                intake.extendIntake();
+            //intake.extendIntake();
+            telemetry.addData("intake motor pos",intake.getMotorPosition());
+            if (System.currentTimeMillis() - startTime > 7500 && !retract) {
+                retract = true;
             }
+            telemetry.update();
         }
-        intake.retractIntake();
+
     }
 
 
