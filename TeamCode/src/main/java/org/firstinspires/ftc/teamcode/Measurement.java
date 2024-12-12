@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Utils.Intake;
+import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
 import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 
 @TeleOp
@@ -34,6 +35,8 @@ public class Measurement extends LinearOpMode {
         servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
+        servoIntake1.setDirection(Servo.Direction.FORWARD);
+        servoIntake2.setDirection(Servo.Direction.REVERSE);
 
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -61,23 +64,32 @@ public class Measurement extends LinearOpMode {
 
         initHw();
         KodikasRobot robot = new KodikasRobot(
-            motorIntake,
-            servoIntake1,
-            servoIntake2,
-            motorOutake1,
-            motorOutake2,
-            servoGrabber,
-            servoArmGrabber
+                telemetry,
+                motorIntake,
+                servoIntake1,
+                servoIntake2,
+                motorOutake1,
+                motorOutake2,
+                servoGrabber,
+                servoArmGrabber
         );
         waitForStart();
         Intake intake = robot.getIntakeSession();
-        boolean extract = false;
-        long startTime = System.currentTimeMillis();
+        IntakeLift intakeLift = robot.getIntakeLiftSession();
         intake.extendIntake();
-
-        while (System.currentTimeMillis() - startTime < 5000) {
+        while(intake.getIntakeMotor().isBusy() && opModeIsActive()){
+            telemetry.addData("INTAKE MOTOR POS",intake.getIntakeMotor().getCurrentPosition());
+            telemetry.update();
         }
+        intake.stop();
+        sleep(5000);
         intake.retractIntake();
+        while(intake.getIntakeMotor().isBusy() && opModeIsActive()){
+            telemetry.addData("INTAKE MOTOR POS",intake.getIntakeMotor().getCurrentPosition());
+            telemetry.update();
+        }
+        intake.stop();
+        intakeLift.retractIntakeLift();
     }
 
 

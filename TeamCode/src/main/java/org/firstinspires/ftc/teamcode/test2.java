@@ -49,6 +49,7 @@ public class test2 extends LinearOpMode {
 
         initHw();
         KodikasRobot robot = new KodikasRobot(
+                telemetry,
                 motorIntake,
                 servoIntake1,
                 servoIntake2,
