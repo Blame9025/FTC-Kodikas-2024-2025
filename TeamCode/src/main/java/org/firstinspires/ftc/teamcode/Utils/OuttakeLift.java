@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,24 +11,13 @@ import java.util.concurrent.TimeUnit;
 public class OuttakeLift {
 
     private Servo servoArmGrabber , servoGrabber;//de adaugat dupa ce e pus in fisierul KodikasRobot
-    private boolean alreadyInAction = false;
-    private OuttakeLift.Position currentPositionForOuttake = OuttakeLift.Position.DEFAULT;
-    private OuttakeLift.Position currentPositionForGrabber = OuttakeLift.Position.DEFAULT;
-    private OuttakeLift.Position currentPositionForArmGrabber = OuttakeLift.Position.DEFAULT;
+    private boolean alreadyInActionGrabber = false;
+    private boolean alreadyInActionArmGrabber = false;
+    private OuttakeLift.PositionGrabber currentPositionForGrabber = OuttakeLift.PositionGrabber.CLOSE;
+    private OuttakeLift.PositionArmGrabber currentPositionForArmGrabber = OuttakeLift.PositionArmGrabber.DEFAULT;
     KodikasRobot robot;
-    Timing.Timer delay = new Timing.Timer(200, TimeUnit.MILLISECONDS);
-
-    public enum Position {
-        DEFAULT(0),
-        UP(50), // pentru a avea loc sa treaca intake ul
-        EXTRACT(200); // pana la cos
-
-        public final double val;
-
-        Position(double val) {
-            this.val = val;
-        }
-    }
+    Timing.Timer delayForGrabber = new Timing.Timer(2000, TimeUnit.MILLISECONDS);
+    Timing.Timer delayForArmGrabber = new Timing.Timer(2000, TimeUnit.MILLISECONDS);
 
     public enum PositionArmGrabber {
         DEFAULT(0),
@@ -51,23 +42,79 @@ public class OuttakeLift {
     }
 
     public OuttakeLift(KodikasRobot robot, Servo servoGrabber, Servo servoArmGrabber) {
-        this.servoGrabber = servoGrabber; // prinde/lasa game element
+        this.servoGrabber = servoGrabber; // prinde lasa game element
         this.servoArmGrabber = servoArmGrabber; // ridica bratul cu gheara
         this.robot = robot;
 
     }
 
-    public void setPositionForGrabber(OuttakeLift.Position target) { // pentru
-        if (alreadyInAction) return;
+    public void setPositionForGrabber(PositionGrabber target) { // pentru gheara care prinde game elementul
+        if (alreadyInActionGrabber) return;
+        if(servoGrabber.getPosition() == target.val) return;
 
-        alreadyInAction = true;
+        alreadyInActionGrabber = true;
         servoGrabber.setPosition(target.val);
 
-        delay.start();
-        while (!delay.done()) {}
+        delayForGrabber.start();
+        while (!delayForGrabber.done()) {
+            telemetry.addData("Grabber: ", alreadyInActionGrabber);
+            telemetry.update();
+
+        }
 
         currentPositionForGrabber = target; // Update the current position
-        alreadyInAction = false;
+        alreadyInActionGrabber = false;
+    }
+
+    public void setPositionForArmGrabber(PositionArmGrabber target) { // pentru gheara care prinde game elementul
+        if (alreadyInActionArmGrabber) return;
+        if(servoArmGrabber.getPosition() == target.val) return;
+
+        alreadyInActionArmGrabber = true;
+        servoArmGrabber.setPosition(target.val);
+
+        delayForArmGrabber.start();
+        while (!delayForArmGrabber.done()) {
+            telemetry.addData("Grabber: ", alreadyInActionArmGrabber);
+            telemetry.update();
+
+        }
+
+        currentPositionForArmGrabber = target; // Update the current position
+        alreadyInActionArmGrabber = false;
+    }
+
+    public void closeGrabber(){
+        if(currentPositionForGrabber == PositionGrabber.CLOSE){
+            return;
+        }else{
+            setPositionForGrabber(PositionGrabber.CLOSE);
+        }
+
+    }
+
+    public void openGrabber(){
+        if(currentPositionForGrabber == PositionGrabber.OPEN){
+            return;
+        }else{
+            setPositionForGrabber(PositionGrabber.OPEN);
+        }
+    }
+
+    public void downArmGrabber(){
+        if(currentPositionForArmGrabber == PositionArmGrabber.DEFAULT){
+            return;
+        } else{
+            setPositionForArmGrabber(PositionArmGrabber.DEFAULT);
+        }
+    }
+
+    public void upArmGrabber(){
+        if(currentPositionForArmGrabber == PositionArmGrabber.UP){
+            return;
+        } else{
+            setPositionForArmGrabber(PositionArmGrabber.UP);
+        }
     }
 
 }

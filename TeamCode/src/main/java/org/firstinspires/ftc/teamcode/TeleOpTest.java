@@ -56,9 +56,9 @@ public class TeleOpTest extends LinearOpMode {
     final double powerForCorehex = 0.5;
     final double power = 0.2;
     public enum PositionForServo {
-        DEFAULT(0),
-        UP(0.5),
-        EXTENDED(1);
+        DEFAULT(0.2),
+        UP(0.6),
+        EXTENDED(0.9);
 
         public final double val;
 
