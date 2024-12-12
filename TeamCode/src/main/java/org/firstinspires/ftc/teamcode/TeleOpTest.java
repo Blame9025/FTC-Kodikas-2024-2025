@@ -243,7 +243,9 @@ public class TeleOpTest extends LinearOpMode {
             debounceTimer.start(); // Repornește timer-ul pentru următorul ciclu
             if(!active){
 
-                liftOutakeForIntake();
+                if(motorOutake1.getCurrentPosition() < positionOuttakeUpForIntake -5 || motorOutake2.getCurrentPosition() < positionOuttakeUpForIntake -5){
+                    liftOutakeForIntake();
+                }
                 if(motorOutake1.getCurrentPosition() >= positionOuttakeUpForIntake-5){
                     moveToPosition(forwardPosition);
                     active = true;
@@ -296,8 +298,8 @@ public class TeleOpTest extends LinearOpMode {
         telemetry.addData("Status Outake: ", "Lifting outtake for intake!");
         telemetry.update();
 
-        motorOutake1.setTargetPosition(800);
-        motorOutake2.setTargetPosition(800);
+        motorOutake1.setTargetPosition(positionOuttakeUpForIntake);
+        motorOutake2.setTargetPosition(positionOuttakeUpForIntake);
 
         motorOutake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorOutake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
