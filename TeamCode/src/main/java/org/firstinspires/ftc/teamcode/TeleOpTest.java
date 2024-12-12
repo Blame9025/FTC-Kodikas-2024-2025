@@ -191,6 +191,17 @@ public class TeleOpTest extends LinearOpMode {
                 activeArmGrabberUp = false;
             }
 
+            if(coreHexIntake.getPower() == 0){
+                activeIntakePull = false;
+                activeIntakePush = false;
+            } else if(coreHexIntake.getPower() > 0){
+                activeIntakePull = true;
+                activeIntakePush = false;
+            } else{
+                activeIntakePull = false;
+                activeIntakePush = true;
+            }
+
             if(motorOutake1.getCurrentPosition() >= basketPosition-5 && motorOutake2.getCurrentPosition() >= basketPosition-5){ // (195)
                 activeBasketPosition = true;
             } else if(motorOutake1.getCurrentPosition() < basketPosition-5 && motorOutake2.getCurrentPosition() < basketPosition-5){
