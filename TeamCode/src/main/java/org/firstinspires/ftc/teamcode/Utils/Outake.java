@@ -15,7 +15,7 @@ public class Outake {
     double power = 0.5;
     public enum Position {
         DEFAULT(0),
-        UPFORINTAKE(50),
+        UPFOROUTTAKE(50),
         EXTENDED(250);
 
         public final int val;
@@ -67,16 +67,13 @@ public class Outake {
         }
 
         while(motorOuttake1.isBusy() && motorOuttake2.isBusy()){
-            telemetry.addData("Outtake Position", motorOuttake1.getCurrentPosition());
+            telemetry.addData("Outtake Position: ", motorOuttake1.getCurrentPosition());
             telemetry.update();
 
         }
 
-        if(motorOuttake1.getCurrentPosition() >= target - 5 && motorOuttake2.getCurrentPosition() >= target - 5){
-            motorOuttake1.setPower(0);
-            motorOuttake2.setPower(0);
-
-        }
+        motorOuttake1.setPower(0);
+        motorOuttake2.setPower(0);
 
         currentPosition = target;
 
@@ -84,9 +81,9 @@ public class Outake {
 
     }
 
-    public void goToZeroPositionOuttake(){
+    /*public void goToZeroPositionOuttake(){ // X nu o folosim X
 
-        if(motorOuttake1.getCurrentPosition() >= Position.DEFAULT + 5 && motorOuttake2.getCurrentPosition() >= Position.DEFAULT + 5){
+        if(motorOuttake1.getCurrentPosition() >= Position.DEFAULT.val + 5 && motorOuttake2.getCurrentPosition() >= Position.DEFAULT.val + 5){
 
             motorOuttake1.setTargetPosition(Intake.Position.DEFAULT.val);
             motorOuttake2.setTargetPosition(Intake.Position.DEFAULT.val);
@@ -97,7 +94,7 @@ public class Outake {
             motorOuttake1.setPower(power);
             motorOuttake2.setPower(power);
 
-            while(motorOuttake1.getCurrentPosition() > Position.DEFAULT + 5 && motorOuttake1.getCurrentPosition() > Position.DEFAULT + 5){
+            while(motorOuttake1.getCurrentPosition() > Position.DEFAULT.val + 5 && motorOuttake1.getCurrentPosition() > Position.DEFAULT.val + 5){
 
                 telemetry.addData("Outtake Position", motorOuttake1.getCurrentPosition());
                 telemetry.update();
@@ -111,6 +108,31 @@ public class Outake {
         }
 
 
+    }*/
+
+    public void extendOuttake(){
+        if(currentPosition == Position.EXTENDED){
+            return;
+        }else{
+            setPosition(Position.EXTENDED);
+        }
+
+    }
+
+    public void retractOuttake(){
+        if(currentPosition == Position.DEFAULT){
+            return;
+        }else{
+            setPosition(Position.DEFAULT);
+        }
+    }
+
+    public void outtakeUpForIntake(){
+        if(currentPosition == Position.UPFOROUTTAKE){
+            return;
+        }else{
+            setPosition(Position.UPFOROUTTAKE);
+        }
     }
 
     public int getMotorPositionOuttake1(){
@@ -123,5 +145,11 @@ public class Outake {
 
     public Position getCurrentPositionOuttake() {
         return currentPosition; // Return the stored position
+    }
+
+    public void stopMotorOuttake(){
+        motorOuttake1.setPower(0);
+        motorOuttake2.setPower(0);
+
     }
 }
