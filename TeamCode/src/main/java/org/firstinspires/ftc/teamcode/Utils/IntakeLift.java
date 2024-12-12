@@ -8,9 +8,6 @@ public class IntakeLift {
     private Thread updateThread;
 
 
-
-
-
     public enum Position {
         DEFAULT(0.2),
         UP(0.6),

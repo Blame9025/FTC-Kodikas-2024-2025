@@ -12,8 +12,8 @@ public class Intake {
     private IntakeLift intakeLift;
 
     public enum Position {
-        DEFAULT(-80),
-        EXTENDED(200);
+        DEFAULT(0),
+        EXTENDED(500);
 
         public final int val;
 
@@ -33,7 +33,7 @@ public class Intake {
         if (currentPosition != target) {
             intakeMotor.setTargetPosition(target.val);
             intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            intakeMotor.setPower(1.0);
+            intakeMotor.setPower(0.6);
             currentPosition = target;
         }
     }

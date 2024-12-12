@@ -48,13 +48,13 @@ public class MovementTest extends LinearOpMode {
             );
 
             // Opțional: Dacă ambele sunt necesare, lasă și driveFieldCentric
-            drive.driveFieldCentric(
-                    driverOp.getLeftX() * CHASSIS_SPEED,
-                    driverOp.getLeftY() * CHASSIS_SPEED,
-                    driverOp.getRightX() * CHASSIS_SPEED,
-                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS),
-                    true
-            );
+            //drive.driveFieldCentric(
+            //        driverOp.getLeftX() * CHASSIS_SPEED,
+            //        driverOp.getLeftY() * CHASSIS_SPEED,
+            //        driverOp.getRightX() * CHASSIS_SPEED,
+            //        imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS),
+            //        true
+            //);
         }
     }
 }

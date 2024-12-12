@@ -16,8 +16,8 @@ public class calibrareIntake extends LinearOpMode {
         servoIntake1.setDirection(Servo.Direction.FORWARD);
         waitForStart();
         while(opModeIsActive()) {
-            servoIntake1.setPosition(0.9);
-            servoIntake2.setPosition(0.9);
+            servoIntake1.setPosition(0.6);
+            servoIntake2.setPosition(0.6);
         }
     }
 }
