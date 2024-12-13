@@ -12,7 +12,7 @@ public class Intake {
     private IntakeLift intakeLift;
 
     public enum Position {
-        DEFAULT(0),
+        DEFAULT(-350),
         EXTENDED(500);
 
         public final int val;
@@ -27,13 +27,14 @@ public class Intake {
         this.robot = robot;
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 
     public void setPosition(Position target) {
         if (currentPosition != target) {
             intakeMotor.setTargetPosition(target.val);
             intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            intakeMotor.setPower(0.6);
+            intakeMotor.setPower(1.0);
             currentPosition = target;
         }
     }

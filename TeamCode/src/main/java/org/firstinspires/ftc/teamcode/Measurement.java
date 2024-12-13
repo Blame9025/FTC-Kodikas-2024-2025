@@ -28,7 +28,7 @@ public class Measurement extends LinearOpMode {
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
         motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
         coreHexIntake = hardwareMap.dcMotor.get("coreHexIntake");
-
+        motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Inițializarea hardware-ului pentru servo
         servoIntake1 = hardwareMap.servo.get("servoIntake1");
         servoIntake2 = hardwareMap.servo.get("servoIntake2");
@@ -42,7 +42,7 @@ public class Measurement extends LinearOpMode {
         motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         coreHexIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        coreHexIntake.setDirection(DcMotor.Direction.REVERSE);
        // backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
        // frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
        // motorIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -76,20 +76,50 @@ public class Measurement extends LinearOpMode {
         waitForStart();
         Intake intake = robot.getIntakeSession();
         IntakeLift intakeLift = robot.getIntakeLiftSession();
-        intake.extendIntake();
-        while(intake.getIntakeMotor().isBusy() && opModeIsActive()){
-            telemetry.addData("INTAKE MOTOR POS",intake.getIntakeMotor().getCurrentPosition());
+        try{
+            intake.extendIntake();
+            while(intake.getIntakeMotor().isBusy() && opModeIsActive()){
+                telemetry.addData("INTAKE MOTOR POS",intake.getIntakeMotor().getCurrentPosition());
+                telemetry.update();
+            }
+            intake.stop();
+            telemetry.addData("INTAKE MOTOR STOPPED", intake.getIntakeMotor().getPower());
+            telemetry.update();
+            long startTime = System.currentTimeMillis();
+            while(System.currentTimeMillis() - startTime < 2500 && opModeIsActive())
+            {
+                coreHexIntake.setPower(1);
+            }
+            telemetry.addData("Retracting from position",intake.getIntakeMotor().getCurrentPosition());
+            telemetry.update();
+            intake.retractIntake();
+            sleep(500 );
+            while(intake.getIntakeMotor().isBusy() && opModeIsActive()){
+                telemetry.addData("INTAKE MOTOR POS 2",intake.getIntakeMotor().getCurrentPosition());
+                telemetry.update();
+            }
+            telemetry.addData("Retracted",true);
+            telemetry.update();
+            intake.stop();
+            sleep(50);
+            intakeLift.retractIntakeLift();
+            sleep(200);
+            startTime = System.currentTimeMillis();
+            while(System.currentTimeMillis() - startTime <  && opModeIsActive())
+            {
+                coreHexIntake.setPower(-1.0);
+            }
+            coreHexIntake.setPower(0);
+            throw new InterruptedException();
+        }catch(InterruptedException e){
+            intake.getIntakeMotor().setTargetPosition(0);
+            intake.stop();
+            intakeLift.stopContinuousUpdate();
+            telemetry.addData("OPRIM TOT", true);
             telemetry.update();
         }
-        intake.stop();
-        sleep(5000);
-        intake.retractIntake();
-        while(intake.getIntakeMotor().isBusy() && opModeIsActive()){
-            telemetry.addData("INTAKE MOTOR POS",intake.getIntakeMotor().getCurrentPosition());
-            telemetry.update();
-        }
-        intake.stop();
-        intakeLift.retractIntakeLift();
+
+
     }
 
 
