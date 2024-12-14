@@ -20,9 +20,8 @@ public class calibrareIntake2 extends LinearOpMode {
 
         waitForStart();
         double pos = 0.9;
-        while(opModeIsActive()) {
-            servoIntake1.setPosition(pos);
-            servoIntake2.setPosition(pos);
-        }
+        servoIntake1.setPosition(pos);
+        servoIntake2.setPosition(pos);
+        sleep(15000);
     }
 }

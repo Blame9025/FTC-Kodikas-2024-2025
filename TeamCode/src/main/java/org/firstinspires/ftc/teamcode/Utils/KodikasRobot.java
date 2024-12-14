@@ -9,12 +9,14 @@ public class KodikasRobot {
     Intake intake;
     IntakeLift intakeLift;
     Outake outake;
+    OuttakeLift outtakeLift;
     Telemetry telemetry;
 
     public KodikasRobot(Telemetry telemetry,DcMotor motorIntake,DcMotor corehex, Servo servo1, Servo servo2, DcMotor outakeMotor1, DcMotor outakeMotor2, Servo servoArm, Servo servoArmGrabber){
         this.intake = new Intake(this,motorIntake,corehex);
         this.intakeLift = new IntakeLift(this,servo1, servo2);
         this.outake = new Outake(this,outakeMotor1, outakeMotor2,servoArm, servoArmGrabber);
+        this.outtakeLift = new OuttakeLift(this,servoArm,servoArmGrabber);
         this.telemetry = telemetry;
     }
     public Telemetry getTelemetry()
@@ -29,5 +31,8 @@ public class KodikasRobot {
     }
     public Outake getOutakeSession(){
         return outake;
+    }
+    public OuttakeLift getOutakeLiftsession(){
+        return outtakeLift;
     }
 }

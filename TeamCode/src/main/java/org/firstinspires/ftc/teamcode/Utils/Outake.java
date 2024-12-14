@@ -15,7 +15,7 @@ public class Outake {
     double power = 0.5;
     public enum Position {
         DEFAULT(0),
-        UPFOROUTTAKE(600),
+        UPFOROUTTAKE(850),
         EXTENDED(2400);
 
         public final int val;
@@ -42,42 +42,19 @@ public class Outake {
     }
 
     public void setPosition(Position target) { // setare pozitie pentru glisiera outtake
+        if (currentPosition != target) {
 
-        if(motorOuttake1.isBusy()) return;
-        if(motorOuttake2.isBusy()) return;
-        if(alreadyInActionOuttake){
-            return;
+            motorOuttake1.setTargetPosition(target.val);
+            motorOuttake2.setTargetPosition(target.val);
+
+            motorOuttake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorOuttake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            motorOuttake1.setPower(power);
+            motorOuttake2.setPower(power);
+
+            currentPosition = target;
         }
-        alreadyInActionOuttake = true;
-
-        motorOuttake1.setTargetPosition(target.val);
-        motorOuttake2.setTargetPosition(target.val);
-
-        motorOuttake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorOuttake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        motorOuttake1.setPower(power);
-        motorOuttake2.setPower(power);
-
-        long startTime = System.currentTimeMillis();
-        while(motorOuttake1.isBusy() && motorOuttake2.isBusy()){
-            if(System.currentTimeMillis() - startTime > 7000){
-                break;
-            }
-        }
-
-        while(motorOuttake1.isBusy() && motorOuttake2.isBusy()){
-            telemetry.addData("Outtake Position: ", motorOuttake1.getCurrentPosition());
-            telemetry.update();
-
-        }
-
-        motorOuttake1.setPower(0);
-        motorOuttake2.setPower(0);
-
-        currentPosition = target;
-
-        alreadyInActionOuttake = false;
 
     }
 
@@ -141,6 +118,11 @@ public class Outake {
 
     public int getMotorPositionOuttake2(){
         return motorOuttake2.getCurrentPosition();
+    }
+
+    public int getMotorPosition(){
+        return (getMotorPositionOuttake1() +
+                getMotorPositionOuttake2()) / 2;
     }
 
     public Position getCurrentPositionOuttake() {

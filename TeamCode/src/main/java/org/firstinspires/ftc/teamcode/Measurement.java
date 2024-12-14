@@ -117,9 +117,6 @@ public class Measurement extends LinearOpMode {
             coreHexIntake.setPower(0);
             throw new InterruptedException();
         }catch(InterruptedException e){
-            intake.getIntakeMotor().setTargetPosition(0);
-            intake.stop();
-            intakeLift.stopContinuousUpdate();
             telemetry.addData("OPRIM TOT", true);
             telemetry.update();
         }

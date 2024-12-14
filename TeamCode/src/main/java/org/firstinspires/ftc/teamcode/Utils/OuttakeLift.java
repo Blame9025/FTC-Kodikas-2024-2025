@@ -10,14 +10,10 @@ import java.util.concurrent.TimeUnit;
 
 public class OuttakeLift {
 
-    private Servo servoArmGrabber , servoGrabber;//de adaugat dupa ce e pus in fisierul KodikasRobot
-    private boolean alreadyInActionGrabber = false;
-    private boolean alreadyInActionArmGrabber = false;
+    private Servo servoArmGrabber , servoGrabber;
     private OuttakeLift.PositionGrabber currentPositionForGrabber = OuttakeLift.PositionGrabber.CLOSE;
     private OuttakeLift.PositionArmGrabber currentPositionForArmGrabber = OuttakeLift.PositionArmGrabber.DEFAULT;
     KodikasRobot robot;
-    Timing.Timer delayForGrabber = new Timing.Timer(2000, TimeUnit.MILLISECONDS);
-    Timing.Timer delayForArmGrabber = new Timing.Timer(2000, TimeUnit.MILLISECONDS);
 
     public enum PositionArmGrabber {
         DEFAULT(0),
@@ -49,39 +45,15 @@ public class OuttakeLift {
     }
 
     public void setPositionForGrabber(PositionGrabber target) { // pentru gheara care prinde game elementul
-        if (alreadyInActionGrabber) return;
-        if(servoGrabber.getPosition() == target.val) return;
-
-        alreadyInActionGrabber = true;
         servoGrabber.setPosition(target.val);
 
-        delayForGrabber.start();
-        while (!delayForGrabber.done()) {
-            telemetry.addData("Grabber: ", alreadyInActionGrabber);
-            telemetry.update();
-
-        }
-
         currentPositionForGrabber = target; // Update the current position
-        alreadyInActionGrabber = false;
     }
 
     public void setPositionForArmGrabber(PositionArmGrabber target) { // pentru gheara care prinde game elementul
-        if (alreadyInActionArmGrabber) return;
-        if(servoArmGrabber.getPosition() == target.val) return;
-
-        alreadyInActionArmGrabber = true;
         servoArmGrabber.setPosition(target.val);
 
-        delayForArmGrabber.start();
-        while (!delayForArmGrabber.done()) {
-            telemetry.addData("Grabber: ", alreadyInActionArmGrabber);
-            telemetry.update();
-
-        }
-
         currentPositionForArmGrabber = target; // Update the current position
-        alreadyInActionArmGrabber = false;
     }
 
     public void closeGrabber(){

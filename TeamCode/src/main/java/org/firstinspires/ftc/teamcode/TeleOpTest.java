@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -12,7 +13,7 @@ import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.concurrent.TimeUnit;
-
+@TeleOp
 public class TeleOpTest extends LinearOpMode {
 
 
@@ -151,7 +152,7 @@ public class TeleOpTest extends LinearOpMode {
         imu = hardwareMap.get(IMU.class, "imu");
 
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.DOWN,
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
 
         // Pornește timer-ul de debounce
@@ -172,9 +173,9 @@ public class TeleOpTest extends LinearOpMode {
             double rt = gamepad1.right_trigger;
 
             drive.driveRobotCentric(
-                    driverOp.getLeftX() * CHASSIS_SPEED,
-                    driverOp.getLeftY() * CHASSIS_SPEED,
-                    driverOp.getRightX() * CHASSIS_SPEED,
+                    -driverOp.getLeftX() * CHASSIS_SPEED,
+                    -driverOp.getLeftY() * CHASSIS_SPEED,
+                    -driverOp.getRightX() * CHASSIS_SPEED,
                     true
             );
 
@@ -215,7 +216,7 @@ public class TeleOpTest extends LinearOpMode {
                 activeIntakePull = true; // posibil e gresit pentru ca puterea motorului va fi data tot cu 1 nu cu -1
             }*/
 
-            if((motorOutake1.getCurrentPosition() >= positionOuttakeUpForIntake - 20 && motorOutake2.getCurrentPosition() >= positionOuttakeUpForIntake - 20) || (motorOutake1.getCurrentPosition() <= positionOuttakeUpForIntake + 20 && motorOutake2.getCurrentPosition() <= positionOuttakeUpForIntake + 20)){
+            /*if((motorOutake1.getCurrentPosition() >= positionOuttakeUpForIntake - 20 && motorOutake2.getCurrentPosition() >= positionOuttakeUpForIntake - 20) || (motorOutake1.getCurrentPosition() <= positionOuttakeUpForIntake + 20 && motorOutake2.getCurrentPosition() <= positionOuttakeUpForIntake + 20)){
                 activeOutakeLiftForIntake = true;
             } else if((motorOutake1.getCurrentPosition() < positionOuttakeUpForIntake - 20 && motorOutake2.getCurrentPosition() < positionOuttakeUpForIntake - 20) || (motorOutake1.getCurrentPosition() > positionOuttakeUpForIntake + 20 && motorOutake2.getCurrentPosition() > positionOuttakeUpForIntake + 20)){
                 activeOutakeLiftForIntake = false;
@@ -254,7 +255,7 @@ public class TeleOpTest extends LinearOpMode {
                 activeInitialBasketPosition = true;
             } else{
                 activeInitialBasketPosition = false;
-            }
+            }*/
 
             //END BOOLEAN SECTION
 
@@ -296,10 +297,10 @@ public class TeleOpTest extends LinearOpMode {
             debounceTimer.start(); // Repornește timer-ul pentru următorul ciclu
             if(!active){
 
-                if(motorOutake1.getCurrentPosition() < positionOuttakeUpForIntake -5 || motorOutake2.getCurrentPosition() < positionOuttakeUpForIntake -5){
+                if(motorOutake1.getCurrentPosition() < positionOuttakeUpForIntake -20 || motorOutake2.getCurrentPosition() < positionOuttakeUpForIntake -20){
                     liftOutakeForIntake();
                 }
-                if(motorOutake1.getCurrentPosition() >= positionOuttakeUpForIntake-5){
+                if(motorOutake1.getCurrentPosition() >= positionOuttakeUpForIntake-20){
                     moveToPosition(forwardPosition);
                     active = true;
                 }

@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.Utils;
 import com.qualcomm.robotcore.hardware.Servo;
 public class IntakeLift {
     private final Servo servo1, servo2;
-    private volatile Position targetPosition = Position.DEFAULT;
-    private volatile boolean isActive = false;
-    private Thread updateThread;
-
+    private Position targetPosition = Position.DEFAULT;
 
     public enum Position {
         DEFAULT(0.2),
         UP(0.6),
-        EXTRACT(0.9);
+        EXTRACT(0.88);
 
         public final double val;
 
@@ -24,40 +21,18 @@ public class IntakeLift {
         this.servo1 = servo1;
         this.servo2 = servo2;
         this.robot = robot;
-       // this.servo1.setDirection(Servo.Direction.REVERSE); // Adjust if necessary
-        startContinuousUpdate();
+        this.servo2.setDirection(Servo.Direction.REVERSE); // Adjust if necessary
+        //startContinuousUpdate();
     }
 
-    public synchronized void setPosition(Position target) {
+    public void setPosition(Position target) {
+        servo1.setPosition(target.val);
+        servo2.setPosition(target.val);
         targetPosition = target;
-        isActive = true; // Ensure continuous updates are active
     }
 
     public Position getCurrentPosition() {
         return targetPosition;
-    }
-
-    private void startContinuousUpdate() {
-        updateThread = new Thread(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
-                if (isActive) {
-                    servo1.setPosition(targetPosition.val);
-                    servo2.setPosition(targetPosition.val);
-                }
-            }
-        });
-        updateThread.start();
-    }
-
-    public void stopContinuousUpdate() {
-        if (updateThread != null) {
-            updateThread.interrupt();
-            try {
-                updateThread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
     }
 
     public void retractIntakeLift() {
@@ -68,7 +43,5 @@ public class IntakeLift {
         setPosition(Position.UP);
     }
 
-    public void extractIntakeLift() {
-        setPosition(Position.EXTRACT);
-    }
+    public void extractIntakeLift() {setPosition(Position.EXTRACT);}
 }

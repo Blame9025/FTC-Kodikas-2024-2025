@@ -1,18 +1,24 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
+import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
+
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
+
 public class Intake {
     private final DcMotor intakeMotor;
-    private Position currentPosition = Position.DEFAULT;
+    private int currentPosition = Position.DEFAULT.val;
    // private final Object positionLock = new Object();
     private IntakeLift intakeLift;
     private DcMotor coreHex;
-
+    private Outake outtake;
     public enum Position {
         DEFAULT(-350),
         EXTENDED(500);
@@ -36,27 +42,58 @@ public class Intake {
 
 
     public void setPosition(Position target) {
-        if (currentPosition != target) {
+        if (currentPosition != target.val) {
             intakeMotor.setTargetPosition(target.val);
             intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             intakeMotor.setPower(1.0);
-            currentPosition = target;
+            currentPosition = target.val;
         }
     }
 
+    public void modifyPosition(double value){
+        int newPos = Range.clip(intakeMotor.getCurrentPosition() + (int)(value*100),
+                Position.DEFAULT.val, Position.EXTENDED.val);
+        intakeMotor.setTargetPosition(newPos);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intakeMotor.setPower(1.0);
+        currentPosition = newPos;
+    }
+    Thread extend;
     public void extendIntake() {
+        if(extend != null) if(extend.isAlive()) return;
         this.intakeLift = robot.getIntakeLiftSession();
+        this.outtake = robot.getOutakeSession();
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
             intakeLift.prepareIntakeLift();
-        setPosition(Position.EXTENDED);
-        intakeLift.extractIntakeLift();
+        if(outtake.getCurrentPositionOuttake() == Outake.Position.DEFAULT)
+            outtake.outtakeUpForIntake();
+        extend = new Thread(() -> {
+            Timing.Timer timer = new Timing.Timer(250,TimeUnit.MILLISECONDS);
+            timer.start();
+            while (!timer.done());
+            setPosition(Position.EXTENDED);
+            intakeLift.extractIntakeLift();
+        });
+        extend.start();
     }
 
+    Thread retract;
     public void retractIntake() {
+        if(retract != null) if(retract.isAlive()) return;
         this.intakeLift = robot.getIntakeLiftSession();
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
             intakeLift.prepareIntakeLift();
-        setPosition(Position.DEFAULT);
+        retract = new Thread(() -> {
+            Timing.Timer timer = new Timing.Timer(200,TimeUnit.MILLISECONDS);
+            timer.start();
+            while (!timer.done());
+            setPosition(Position.DEFAULT);
+            timer = new Timing.Timer(800,TimeUnit.MILLISECONDS);
+            timer.start();
+            while (!timer.done());
+            intakeLift.retractIntakeLift();
+        });
+        retract.start();
 
     }
     public void stop(){
@@ -64,7 +101,7 @@ public class Intake {
     }
 
     public DcMotor getCoreHex() {return coreHex; }
-    public Position getCurrentPosition() {
+    public int getCurrentPosition() {
         return currentPosition;
     }
     public DcMotor getIntakeMotor(){ return intakeMotor; }
