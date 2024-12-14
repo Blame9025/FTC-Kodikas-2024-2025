@@ -17,7 +17,7 @@ public class calibrareOuttake extends LinearOpMode {
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
         waitForStart();
-        Timing.Timer delay = new Timing.Timer(5000, TimeUnit.MILLISECONDS);
+        Timing.Timer delay = new Timing.Timer(2000, TimeUnit.MILLISECONDS);
         delay.start();
         boolean opened =false;
         while(opModeIsActive()) {

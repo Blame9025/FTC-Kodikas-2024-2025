@@ -17,10 +17,10 @@ public class MeasurementOuttake extends LinearOpMode {
     DcMotor motorOutake2;
     Servo servoIntake1,servoIntake2, servoGrabber, servoArmGrabber;
     DcMotor coreHexIntake;
-    Timing.Timer delay = new Timing.Timer(5000, TimeUnit.MILLISECONDS);
+    Timing.Timer delay = new Timing.Timer(12000, TimeUnit.MILLISECONDS);
     Timing.Timer active = new Timing.Timer(2000, TimeUnit.MILLISECONDS);
     final int positionUp = 600;
-    final int postionBasket = 1200;
+    final int postionBasket = 2400;
     public void initHw(){
 
         motorIntake = hardwareMap.dcMotor.get("motorIntake");
@@ -77,8 +77,8 @@ public class MeasurementOuttake extends LinearOpMode {
             telemetry.update();*/
 
 
-            /*telemetry.addData("servoGrabber: ", servoGrabber.getPosition());
-            telemetry.update();*/
+            //telemetry.addData("servoGrabber: ", servoGrabber.getPosition());
+            //telemetry.update();
 
             //CALIBRARE ARM GRABBER START
 
@@ -88,14 +88,25 @@ public class MeasurementOuttake extends LinearOpMode {
 
             //CALIBRARE ARM GRABBER END
 
+            //CALIBRARE GRABBER START
+
+
+            //servoGrabber.setPosition(0);
+
+            //servoGrabber.setPosition(0.1);
+
+            //END GRABBER END
+
             //START SECTION MEASUREMENT FOR MOTOR
 
-            /*motorOutake1.setTargetPosition(600);
-            motorOutake2.setTargetPosition(600);
+            //motorOutake1.setTargetPosition(positionUp);
+            //motorOutake2.setTargetPosition(positionUp);
+            motorOutake1.setTargetPosition(postionBasket);
+            motorOutake2.setTargetPosition(postionBasket);
             motorOutake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorOutake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorOutake1.setPower(0.5);
-            motorOutake2.setPower(0.5);
+            motorOutake1.setPower(0.7);
+            motorOutake2.setPower(0.7);
 
             while(motorOutake1.isBusy() && motorOutake2.isBusy()){
                 telemetry.addData("motorIntake1: ", motorOutake1.getCurrentPosition());
@@ -106,17 +117,17 @@ public class MeasurementOuttake extends LinearOpMode {
             motorOutake1.setPower(0);
             motorOutake2.setPower(0);
 
-            /*active.start();
-            while(!active.done()) {
-                motorOutake1.setPower(0.5);
-                motorOutake2.setPower(0.5);
-            }
-            motorOutake1.setPower(0);
-            motorOutake2.setPower(0);*/
-
             //END SECTION MEASUREMENT FOR MOTOR
 
             //START SECTION MEASUREMENT FOR GRABBER
+
+            /*servoGrabber.setPosition(0);
+
+            delay.start();
+            while(!delay.done()){
+                telemetry.addData("ServoGrabber: ", servoGrabber.getPosition());
+                telemetry.update();
+            }
 
             servoGrabber.setPosition(0.1);
 
@@ -126,15 +137,7 @@ public class MeasurementOuttake extends LinearOpMode {
                 telemetry.update();
             }
 
-            servoGrabber.setPosition(0);
-
-            delay.start();
-            while(!delay.done()){
-                telemetry.addData("ServoGrabber: ", servoGrabber.getPosition());
-                telemetry.update();
-            }
-
-            servoGrabber.setPosition(0);
+            servoGrabber.setPosition(0);*/
 
             //END SECTION MEASUREMENT FOR GRABBER
 

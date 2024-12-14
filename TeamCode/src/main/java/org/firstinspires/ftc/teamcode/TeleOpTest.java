@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 public class TeleOpTest extends LinearOpMode {
 
 
-    DcMotor frontLeftMotor; // roata fata dreapta
+    /*DcMotor frontLeftMotor; // roata fata dreapta
     DcMotor backLeftMotor; // roata spate dreapta
     DcMotor frontRightMotor; // roata fata dreapta
-    DcMotor backRightMotor; // roata spate dreapta
+    DcMotor backRightMotor; // roata spate dreapta*/
     DcMotor motorIntake; // motorul care extinde glisiera de intake
     DcMotor motorOutake1; /// motor glisiera outtake 2
     DcMotor motorOutake2; // motor glisiera outtake 2
@@ -27,6 +27,9 @@ public class TeleOpTest extends LinearOpMode {
     DcMotor coreHexIntake; // motorul pentru periile de la intake
     Servo servoGrabber, // gheara cu care apuca elementul outtake-ul
             servoArmGrabber; // ridica gheara
+    Motor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
+    MecanumDrive drive;
+    GamepadEx driverOp;
 
     IMU imu;
 
@@ -48,13 +51,37 @@ public class TeleOpTest extends LinearOpMode {
     Timing.Timer debounceTimerArrow1 = new Timing.Timer(500, TimeUnit.MILLISECONDS); //
     Timing.Timer debounceTimerArrow3 = new Timing.Timer(500, TimeUnit.MILLISECONDS); //
     Timing.Timer outakeTimer = new Timing.Timer(1000,TimeUnit.MILLISECONDS); //TImer pentru ridicare outake-ului inaite sa plece intake-ul
-    final int forwardPosition = 170; // Poziția extinsă
-    final int backwardPosition = 0; // Poziția retrasă
-    final int positionOuttakeUpForIntake = 50; // Pozitia pana la care se ridica outtake ul ca s aiba loc glisiera de la intake sa se deschida
-    final int basketPosition = 200; // pozitie outtake pentru cosul de sus
+    final int forwardPosition = 500; // Poziția extinsă
+    final int backwardPosition = -350; // Poziția retrasă
+    final int positionOuttakeUpForIntake = 600; // Pozitia pana la care se ridica outtake ul ca s aiba loc glisiera de la intake sa se deschida
+    final int basketPosition = 2400; // pozitie outtake pentru cosul de sus DE SCHIMBAT
     final int initialOuttakePosition = 0;
-    final double powerForCorehex = 0.5;
-    final double power = 0.2;
+    final double powerForCorehex = 1;
+    final double power = 0.5;
+    final double CHASSIS_SPEED = 0.7;
+
+    public enum PositionArmGrabber {
+        DEFAULT(0),
+        UP(0.4);// gheara robotului se ridica ca sa lase game elemntul din gheara
+
+        public final double val;
+
+        PositionArmGrabber(double val) {
+            this.val = val;
+        }
+    }
+
+    public enum PositionGrabber {
+        CLOSE(0), // gheara prinde game elementul in clesti
+        OPEN(0.1);// gheara robotului in pozitie onitiala cum va sta mereu
+
+        public final double val;
+
+        PositionGrabber(double val) {
+            this.val = val;
+        }
+    }
+
     public enum PositionForServo {
         DEFAULT(0.2),
         UP(0.6),
@@ -70,18 +97,19 @@ public class TeleOpTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        MecanumDrive drive = new MecanumDrive(
-                new Motor(hardwareMap, "leftFrontMotor"),
-                new Motor(hardwareMap, "rightFrontMotor"),
-                new Motor(hardwareMap, "leftRearMotor"),
-                new Motor(hardwareMap, "rightRearMotor")
-        );
+        frontLeftMotor = new Motor(hardwareMap, "leftFrontMotor");
+        backLeftMotor = new Motor(hardwareMap, "leftRearMotor");
+        frontRightMotor = new Motor(hardwareMap, "rightFrontMotor");
+        backRightMotor = new Motor(hardwareMap, "rightRearMotor");
+
+        drive = new MecanumDrive(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
+        driverOp = new GamepadEx(gamepad1);
 
         // Inițializarea hardware-ului pentru motoare
-        frontLeftMotor = hardwareMap.dcMotor.get("leftFrontMotor");
+        /*frontLeftMotor = hardwareMap.dcMotor.get("leftFrontMotor");
         backLeftMotor = hardwareMap.dcMotor.get("leftRearMotor");
         frontRightMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-        backRightMotor = hardwareMap.dcMotor.get("rightRearMotor");
+        backRightMotor = hardwareMap.dcMotor.get("rightRearMotor");*/
         motorIntake = hardwareMap.dcMotor.get("motorIntake");
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
         motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
@@ -93,22 +121,28 @@ public class TeleOpTest extends LinearOpMode {
         servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        servoIntake1.setDirection(Servo.Direction.REVERSE); // de la stanga la dreapta cum te uiti spre intake
+        /*frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);*/
+
+        servoIntake1.setDirection(Servo.Direction.FORWARD); // de la stanga la dreapta cum te uiti spre intake
+        servoIntake2.setDirection(Servo.Direction.REVERSE);
+
+        motorOutake1.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorOutake2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        /*frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         coreHexIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        /*backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
         motorIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorOutake1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorOutake2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -138,11 +172,19 @@ public class TeleOpTest extends LinearOpMode {
             double rt = gamepad1.right_trigger;
 
             drive.driveRobotCentric(
-                    driverOp.getLeftX(),
-                    driverOp.getLeftY(),
-                    driverOp.getRightX(),
-                    false
+                    driverOp.getLeftX() * CHASSIS_SPEED,
+                    driverOp.getLeftY() * CHASSIS_SPEED,
+                    driverOp.getRightX() * CHASSIS_SPEED,
+                    true
             );
+
+            //drive.driveFieldCentric(
+            //        driverOp.getLeftX() * CHASSIS_SPEED,
+            //        driverOp.getLeftY() * CHASSIS_SPEED,
+            //        driverOp.getRightX() * CHASSIS_SPEED,
+            //        imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS),
+            //        true
+            //);
 
             intakeMove(lt, rt); // Control continuu pentru intake / BUTTON 'RT' AND 'LT'
             armGrabberMove(); // Daca apesi RB bratul de pe outtake se va ridica pentru a lasa piesa in cos / BUTTON 'RB'
@@ -156,7 +198,7 @@ public class TeleOpTest extends LinearOpMode {
 
             //START BOOLEAN SECTION
 
-            if(motorIntake.getCurrentPosition() >= forwardPosition - 10){
+            if(motorIntake.getCurrentPosition() >= forwardPosition - 25){
                 active = true;
             } else{
                 active = false;
@@ -173,9 +215,9 @@ public class TeleOpTest extends LinearOpMode {
                 activeIntakePull = true; // posibil e gresit pentru ca puterea motorului va fi data tot cu 1 nu cu -1
             }*/
 
-            if((motorOutake1.getCurrentPosition() >= positionOuttakeUpForIntake - 5 && motorOutake2.getCurrentPosition() >= positionOuttakeUpForIntake - 5) || (motorOutake1.getCurrentPosition() <= positionOuttakeUpForIntake + 5 && motorOutake2.getCurrentPosition() <= positionOuttakeUpForIntake + 5)){
+            if((motorOutake1.getCurrentPosition() >= positionOuttakeUpForIntake - 20 && motorOutake2.getCurrentPosition() >= positionOuttakeUpForIntake - 20) || (motorOutake1.getCurrentPosition() <= positionOuttakeUpForIntake + 20 && motorOutake2.getCurrentPosition() <= positionOuttakeUpForIntake + 20)){
                 activeOutakeLiftForIntake = true;
-            } else if((motorOutake1.getCurrentPosition() < positionOuttakeUpForIntake - 5 && motorOutake2.getCurrentPosition() < positionOuttakeUpForIntake - 5) || (motorOutake1.getCurrentPosition() > positionOuttakeUpForIntake + 5 && motorOutake2.getCurrentPosition() > positionOuttakeUpForIntake + 5)){
+            } else if((motorOutake1.getCurrentPosition() < positionOuttakeUpForIntake - 20 && motorOutake2.getCurrentPosition() < positionOuttakeUpForIntake - 20) || (motorOutake1.getCurrentPosition() > positionOuttakeUpForIntake + 20 && motorOutake2.getCurrentPosition() > positionOuttakeUpForIntake + 20)){
                 activeOutakeLiftForIntake = false;
             }
 
@@ -202,13 +244,13 @@ public class TeleOpTest extends LinearOpMode {
                 activeIntakePush = true;
             }
 
-            if(motorOutake1.getCurrentPosition() >= basketPosition-5 && motorOutake2.getCurrentPosition() >= basketPosition-5){ // (195)
+            if(motorOutake1.getCurrentPosition() >= basketPosition-20 && motorOutake2.getCurrentPosition() >= basketPosition-20){ // (195)
                 activeBasketPosition = true;
-            } else if(motorOutake1.getCurrentPosition() < basketPosition-5 && motorOutake2.getCurrentPosition() < basketPosition-5){
+            } else if(motorOutake1.getCurrentPosition() < basketPosition-20 && motorOutake2.getCurrentPosition() < basketPosition-20){
                 activeBasketPosition = false;
             }
 
-            if(motorOutake1.getCurrentPosition() <= 5 && motorOutake2.getCurrentPosition() <= 5){ // (45,55)
+            if(motorOutake1.getCurrentPosition() <= 30 && motorOutake2.getCurrentPosition() <= 30){ // (45,55)
                 activeInitialBasketPosition = true;
             } else{
                 activeInitialBasketPosition = false;
@@ -425,12 +467,12 @@ public class TeleOpTest extends LinearOpMode {
             debounceTimerY.start();
             if (!activeGrabber && debounceTimerY.done()) {
 
-                servoGrabber.setPosition(PositionForServo.DEFAULT.val);
+                servoGrabber.setPosition(PositionGrabber.CLOSE.val);
                 activeGrabber = true;
 
             } else if(activeGrabber && debounceTimerY.done()){
 
-                servoGrabber.setPosition(PositionForServo.UP.val);
+                servoGrabber.setPosition(PositionGrabber.OPEN.val);
                 activeGrabber = false;
             }
 
@@ -449,10 +491,10 @@ public class TeleOpTest extends LinearOpMode {
             debounceTimerRT.start();
             if (!activeArmGrabberUp && debounceTimerRT.done()) {
 
-                servoArmGrabber.setPosition(PositionForServo.UP.val);
+                servoArmGrabber.setPosition(PositionArmGrabber.UP.val);
                 activeArmGrabberUp = true;
             } else if(activeArmGrabberUp && debounceTimerRT.done()){
-                servoArmGrabber.setPosition(PositionForServo.DEFAULT.val);
+                servoArmGrabber.setPosition(PositionArmGrabber.DEFAULT.val);
                 activeArmGrabberUp = false;
             }
         }
