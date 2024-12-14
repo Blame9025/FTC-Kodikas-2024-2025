@@ -70,6 +70,7 @@ public class Measurement extends LinearOpMode {
         KodikasRobot robot = new KodikasRobot(
                 telemetry,
                 motorIntake,
+                coreHexIntake,
                 servoIntake1,
                 servoIntake2,
                 motorOutake1,

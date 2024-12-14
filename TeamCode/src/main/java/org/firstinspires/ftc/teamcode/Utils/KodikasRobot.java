@@ -11,8 +11,8 @@ public class KodikasRobot {
     Outake outake;
     Telemetry telemetry;
 
-    public KodikasRobot(Telemetry telemetry,DcMotor motorIntake, Servo servo1, Servo servo2, DcMotor outakeMotor1, DcMotor outakeMotor2, Servo servoArm, Servo servoArmGrabber){
-        this.intake = new Intake(this,motorIntake);
+    public KodikasRobot(Telemetry telemetry,DcMotor motorIntake,DcMotor corehex, Servo servo1, Servo servo2, DcMotor outakeMotor1, DcMotor outakeMotor2, Servo servoArm, Servo servoArmGrabber){
+        this.intake = new Intake(this,motorIntake,corehex);
         this.intakeLift = new IntakeLift(this,servo1, servo2);
         this.outake = new Outake(this,outakeMotor1, outakeMotor2,servoArm, servoArmGrabber);
         this.telemetry = telemetry;

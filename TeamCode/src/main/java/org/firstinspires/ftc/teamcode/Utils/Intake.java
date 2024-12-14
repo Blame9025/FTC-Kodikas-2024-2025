@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -10,6 +11,7 @@ public class Intake {
     private Position currentPosition = Position.DEFAULT;
    // private final Object positionLock = new Object();
     private IntakeLift intakeLift;
+    private DcMotor coreHex;
 
     public enum Position {
         DEFAULT(-350),
@@ -22,13 +24,16 @@ public class Intake {
         }
     }
     KodikasRobot robot;
-    public Intake(KodikasRobot robot,DcMotor intakeMotor) {
+    public Intake(KodikasRobot robot,DcMotor intakeMotor, DcMotor coreHex) {
         this.intakeMotor = intakeMotor;
         this.robot = robot;
+        this.coreHex = coreHex;
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        coreHex.setDirection(DcMotor.Direction.REVERSE);
     }
+
+
 
     public void setPosition(Position target) {
         if (currentPosition != target) {
@@ -57,6 +62,8 @@ public class Intake {
     public void stop(){
         intakeMotor.setPower(0);
     }
+
+    public DcMotor getCoreHex() {return coreHex; }
     public Position getCurrentPosition() {
         return currentPosition;
     }
