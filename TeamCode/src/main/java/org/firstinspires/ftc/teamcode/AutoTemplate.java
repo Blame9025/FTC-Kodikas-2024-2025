@@ -23,7 +23,7 @@ public class AutoTemplate extends LinearOpMode {
     DcMotor motorOutake2;
     Servo servoIntake1,servoIntake2;
     DcMotor coreHexIntake;
-
+    Servo servoGrabber, servoArmGrabber;
     void initMotors(){
         frontLeftMotor = hardwareMap.dcMotor.get("leftFrontMotor");
         backLeftMotor = hardwareMap.dcMotor.get("leftRearMotor");
@@ -32,6 +32,10 @@ public class AutoTemplate extends LinearOpMode {
 
         leftEncoder = hardwareMap.dcMotor.get("leftEncoder");
         rightEncoder = hardwareMap.dcMotor.get("rightEncoder");
+
+        servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
+        servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
+
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -61,18 +65,18 @@ public class AutoTemplate extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHw();
-        //Pursuit pursuit = new Pursuit(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, leftEncoder, rightEncoder);
-        //List<Waypoint> path = Arrays.asList(
-        //    new Waypoint(new Pose2d(0, 0, new Rotation2d(0)), null),
-        //    new Waypoint(new Pose2d(5, 0, new Rotation2d(0)), () -> {
-        //        telemetry.addData("Wapoint", "1");
-        //        telemetry.update();
-        //    }),
-        //    new Waypoint(new Pose2d(0, 5, new Rotation2d(Math.toRadians(45))), () -> {
-        //        telemetry.addData("Wapoint", "2");
-        //        telemetry.update();
-        //    })
-        //);
-        //pursuit.followPathWithActions(path);
+        KodikasRobot robot = new KodikasRobot(
+                telemetry,
+                motorIntake,
+                servoIntake1,
+                servoIntake2,
+                motorOutake1,
+                motorOutake2,
+                servoGrabber,
+                servoArmGrabber
+        );
+        waitForStart();
+
+
     }
 }
