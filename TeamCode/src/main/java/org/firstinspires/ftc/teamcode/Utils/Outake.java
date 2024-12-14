@@ -15,8 +15,8 @@ public class Outake {
     double power = 0.5;
     public enum Position {
         DEFAULT(0),
-        UPFOROUTTAKE(50),
-        EXTENDED(250);
+        UPFOROUTTAKE(600),
+        EXTENDED(2400);
 
         public final int val;
 
