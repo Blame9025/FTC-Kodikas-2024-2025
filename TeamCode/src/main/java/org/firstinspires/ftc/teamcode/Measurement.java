@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,8 @@ import org.firstinspires.ftc.teamcode.Utils.Intake;
 import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
 import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 
+import java.util.concurrent.TimeUnit;
+
 @TeleOp
 public class Measurement extends LinearOpMode {
     DcMotor motorIntake;
@@ -22,6 +25,7 @@ public class Measurement extends LinearOpMode {
     DcMotor motorOutake2;
     Servo servoIntake1,servoIntake2, servoGrabber, servoArmGrabber;
     DcMotor coreHexIntake;
+    Timing.Timer delay = new Timing.Timer(3000, TimeUnit.MILLISECONDS);
     public void initHw(){
 
         motorIntake = hardwareMap.dcMotor.get("motorIntake");
@@ -104,8 +108,8 @@ public class Measurement extends LinearOpMode {
             sleep(50);
             intakeLift.retractIntakeLift();
             sleep(200);
-            startTime = System.currentTimeMillis();
-            while(System.currentTimeMillis() - startTime <  && opModeIsActive())
+            delay.start();
+            while( !delay.done() && opModeIsActive())
             {
                 coreHexIntake.setPower(-1.0);
             }
