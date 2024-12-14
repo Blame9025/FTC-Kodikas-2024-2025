@@ -118,7 +118,7 @@ public class MeasurementOuttake extends LinearOpMode {
 
             //START SECTION MEASUREMENT FOR GRABBER
 
-            servoGrabber.setPosition(0);
+            servoGrabber.setPosition(0.1);
 
             delay.start();
             while(!delay.done()){
@@ -126,7 +126,7 @@ public class MeasurementOuttake extends LinearOpMode {
                 telemetry.update();
             }
 
-            servoGrabber.setPosition(0.1);
+            servoGrabber.setPosition(0);
 
             delay.start();
             while(!delay.done()){
