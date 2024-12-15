@@ -29,6 +29,7 @@ public class ControlTeleghidat extends LinearOpMode {
     MecanumDrive drive;
     GamepadEx driverOp;
 
+
     boolean intakeExtended = false;
     boolean intakeToStart = false;
     boolean grabberOpened = false;
@@ -41,7 +42,7 @@ public class ControlTeleghidat extends LinearOpMode {
     public void initHW(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new KodikasRobot(hardwareMap,telemetry);
-        coreHexIntake = robot.getIntakeSession().getCoreHex();
+        coreHexIntake = robot.getCoreHexIntake();
 
 
         drive = robot.getDriveSession();

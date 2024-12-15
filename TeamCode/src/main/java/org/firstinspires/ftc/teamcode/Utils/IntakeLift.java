@@ -21,7 +21,7 @@ public class IntakeLift {
         this.servo1 = servo1;
         this.servo2 = servo2;
         this.robot = robot;
-        this.servo2.setDirection(Servo.Direction.REVERSE); // Adjust if necessary
+      //  this.servo2.setDirection(Servo.Direction.REVERSE); // Adjust if necessary
         //startContinuousUpdate();
     }
 
