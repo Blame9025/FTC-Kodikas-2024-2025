@@ -39,6 +39,7 @@ public class ControlTeleghidat extends LinearOpMode {
     Timing.Timer debX1;
     Timing.Timer debB1;
     Timing.Timer debY;
+    Timing.Timer debStickR1;
     public void initHW(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new KodikasRobot(hardwareMap,telemetry);
@@ -59,6 +60,9 @@ public class ControlTeleghidat extends LinearOpMode {
 
         debY = new Timing.Timer(DEBUG_TIMER,TimeUnit.MILLISECONDS);
         debY.start();
+
+        debStickR1 = new Timing.Timer(1000,TimeUnit.MILLISECONDS);
+        debStickR1.start();
 
         waitIntakeExtend = new Timing.Timer(500,TimeUnit.MILLISECONDS);
         waitIntakeExtend.start();
@@ -107,16 +111,13 @@ public class ControlTeleghidat extends LinearOpMode {
                     coreHexIntake.setPower(1);
                     intakeToStart = false;
                 }
-                if(gamepad1.x && debX1.done()){
-                    if(coreHexIntake.getPower() != 1.0) coreHexIntake.setPower(1);
-                    else coreHexIntake.setPower(0);
-                    debX1.start();
+                if(gamepad1.x){
+                    coreHexIntake.setPower(1);
                 }
-                if(gamepad1.b && debB1.done()){
-                    if(coreHexIntake.getPower() != -0.5) coreHexIntake.setPower(-0.5);
-                    else coreHexIntake.setPower(0);
-                    debB1.start();
+                if(gamepad1.b){
+                    coreHexIntake.setPower(-1);
                 }
+                if(!gamepad1.b && !gamepad1.x) coreHexIntake.setPower(0);
                 if(gamepad1.y && debY.done())
                 {
                     if(!grabberOpened)
@@ -126,7 +127,8 @@ public class ControlTeleghidat extends LinearOpMode {
                     grabberOpened = !grabberOpened;
                     debY.start();
                 }
-                if(gamepad1.right_stick_button && intake.getCurrentPosition() < -100){
+                if(gamepad1.right_stick_button && debStickR1.done()){
+                    debStickR1.start();
                     Thread t = new Thread(() -> {
                         outake.retractOuttake();
                         outakeLift.openGrabber();
@@ -141,6 +143,7 @@ public class ControlTeleghidat extends LinearOpMode {
                         outakeLift.upArmGrabber();
                         grabberOpened = false;
                     });
+                    t.start();
                 }
                 if(gamepad1.right_bumper)
                     outakeLift.downArmGrabber();
