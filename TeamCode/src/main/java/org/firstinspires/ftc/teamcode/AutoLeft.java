@@ -87,9 +87,7 @@ public class AutoLeft extends LinearOpMode {
             }
 
             outake.extendOuttake();
-            if(){
 
-            }
 
             PurePursuitCommand PureppCmd = new PurePursuitCommand(
                     drive, odometry,
