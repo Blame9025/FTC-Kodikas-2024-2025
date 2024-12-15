@@ -25,11 +25,9 @@ public class Outake {
         }
     }
 
-    public Outake(KodikasRobot robot, DcMotor definedOuttakeMotor1, DcMotor definedOuttakeMotor2, Servo servoArmGrabber, Servo servoArm) {
+    public Outake(KodikasRobot robot, DcMotor definedOuttakeMotor1, DcMotor definedOuttakeMotor2) {
         this.motorOuttake1 = definedOuttakeMotor1;
         this.motorOuttake2 = definedOuttakeMotor2;
-        this.servoArm = servoArm;
-        this.servArmGrabber = servoArmGrabber;
         this.robot = robot;
         motorOuttake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOuttake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

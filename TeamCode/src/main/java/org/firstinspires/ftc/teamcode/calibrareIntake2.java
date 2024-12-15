@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
+
 public class calibrareIntake2 extends LinearOpMode {
 
     @Override
@@ -19,7 +20,7 @@ public class calibrareIntake2 extends LinearOpMode {
         servoIntake1.setDirection(Servo.Direction.FORWARD);
 
         waitForStart();
-        double pos = 0.9;
+        double pos = 0.2;
         servoIntake1.setPosition(pos);
         servoIntake2.setPosition(pos);
         sleep(15000);

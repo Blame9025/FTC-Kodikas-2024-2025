@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.util.Timing;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp
+@Disabled
 public class Measurement extends LinearOpMode {
     DcMotor motorIntake;
     DcMotor motorGlisiera;
@@ -68,15 +70,8 @@ public class Measurement extends LinearOpMode {
 
         initHw();
         KodikasRobot robot = new KodikasRobot(
-                telemetry,
-                motorIntake,
-                coreHexIntake,
-                servoIntake1,
-                servoIntake2,
-                motorOutake1,
-                motorOutake2,
-                servoGrabber,
-                servoArmGrabber
+                hardwareMap,
+                telemetry
         );
         waitForStart();
         Intake intake = robot.getIntakeSession();

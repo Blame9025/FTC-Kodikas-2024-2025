@@ -49,15 +49,8 @@ public class test2 extends LinearOpMode {
 
         initHw();
         KodikasRobot robot = new KodikasRobot(
-                telemetry,
-                motorIntake,
-                coreHexIntake,
-                servoIntake1,
-                servoIntake2,
-                motorOutake1,
-                motorOutake2,
-                servoGrabber,
-                servoArmGrabber
+                hardwareMap,
+                telemetry
         );
         waitForStart();
         Intake intake = robot.getIntakeSession();

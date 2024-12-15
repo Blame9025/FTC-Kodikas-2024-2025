@@ -22,16 +22,12 @@ import java.util.concurrent.TimeUnit;
 @TeleOp
 public class ControlTeleghidat extends LinearOpMode {
 
-    DcMotor motorIntake;
-    DcMotor motorOutake1;
-    DcMotor motorOutake2;
-    Servo servoIntake1,servoIntake2, servoGrabber, servoArmGrabber;
+    final int DEBUG_TIMER = 300;
+
     DcMotor coreHexIntake;
     KodikasRobot robot;
-    Motor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
     MecanumDrive drive;
     GamepadEx driverOp;
-    final double CHASSIS_SPEED = 1;
 
     boolean intakeExtended = false;
     boolean intakeToStart = false;
@@ -43,64 +39,24 @@ public class ControlTeleghidat extends LinearOpMode {
     Timing.Timer debB1;
     Timing.Timer debY;
     public void initHW(){
-        motorIntake = hardwareMap.dcMotor.get("motorIntake");
-        motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
-        motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
-        coreHexIntake = hardwareMap.dcMotor.get("coreHexIntake");
-        motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Inițializarea hardware-ului pentru servo
-        servoIntake1 = hardwareMap.servo.get("servoIntake1");
-        servoIntake2 = hardwareMap.servo.get("servoIntake2");
-        servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
-        servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
-
-        servoIntake1.setDirection(Servo.Direction.FORWARD);
-        servoIntake2.setDirection(Servo.Direction.REVERSE);
-
-        motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorOutake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorOutake2.setDirection(DcMotor.Direction.REVERSE);
-        coreHexIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        coreHexIntake.setDirection(DcMotor.Direction.REVERSE);
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        robot = new KodikasRobot(
-                telemetry,
-                motorIntake,
-                coreHexIntake,
-                servoIntake1,
-                servoIntake2,
-                motorOutake1,
-                motorOutake2,
-                servoGrabber,
-                servoArmGrabber
-        );
+        robot = new KodikasRobot(hardwareMap,telemetry);
+        coreHexIntake = robot.getIntakeSession().getCoreHex();
 
-        frontLeftMotor = new Motor(hardwareMap, "leftFrontMotor");
-        backLeftMotor = new Motor(hardwareMap, "leftRearMotor");
-        frontRightMotor = new Motor(hardwareMap, "rightFrontMotor");
-        backRightMotor = new Motor(hardwareMap, "rightRearMotor");
 
-        frontLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-
-        drive = new MecanumDrive(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
+        drive = robot.getDriveSession();
         driverOp = new GamepadEx(gamepad2);
 
-        debA1 = new Timing.Timer(300,TimeUnit.MILLISECONDS);
+        debA1 = new Timing.Timer(DEBUG_TIMER,TimeUnit.MILLISECONDS);
         debA1.start();
 
-        debX1 = new Timing.Timer(300,TimeUnit.MILLISECONDS);
+        debX1 = new Timing.Timer(DEBUG_TIMER,TimeUnit.MILLISECONDS);
         debX1.start();
 
-        debB1 = new Timing.Timer(300,TimeUnit.MILLISECONDS);
+        debB1 = new Timing.Timer(DEBUG_TIMER,TimeUnit.MILLISECONDS);
         debB1.start();
 
-        debY = new Timing.Timer(300,TimeUnit.MILLISECONDS);
+        debY = new Timing.Timer(DEBUG_TIMER,TimeUnit.MILLISECONDS);
         debY.start();
 
         waitIntakeExtend = new Timing.Timer(500,TimeUnit.MILLISECONDS);
@@ -119,9 +75,9 @@ public class ControlTeleghidat extends LinearOpMode {
             while(opModeIsActive()){
 
                 drive.driveRobotCentric(
-                        -driverOp.getLeftX() * CHASSIS_SPEED,
-                        -driverOp.getLeftY() * CHASSIS_SPEED,
-                        -driverOp.getRightX() * CHASSIS_SPEED,
+                        -driverOp.getLeftX(),
+                        -driverOp.getLeftY(),
+                        -driverOp.getRightX(),
                         true
                 );
                 if(gamepad1.dpad_up) {
@@ -162,9 +118,8 @@ public class ControlTeleghidat extends LinearOpMode {
                 }
                 if(gamepad1.y && debY.done())
                 {
-                    if(!grabberOpened){
+                    if(!grabberOpened)
                         outakeLift.openGrabber();
-                    }
                     else
                         outakeLift.closeGrabber();
                     grabberOpened = !grabberOpened;

@@ -25,53 +25,16 @@ import java.util.List;
 
 @Autonomous
 public class AutoTemplate extends LinearOpMode {
-    Motor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
     DcMotor leftEncoder, rightEncoder;
-    DcMotor intakeMotor;
-    DcMotor motorIntake;
-    DcMotor motorGlisiera;
-    DcMotor motorOutake1;
-    DcMotor motorOutake2;
-    Servo servoIntake1,servoIntake2;
-    DcMotor coreHexIntake;
-    Servo servoGrabber, servoArmGrabber;
-
-    void initHw()
-    {
-
-        leftEncoder = hardwareMap.dcMotor.get("leftEncoder");
-        rightEncoder = hardwareMap.dcMotor.get("rightEncoder");
-
-
-        motorGlisiera = hardwareMap.dcMotor.get("motorGlisiera");
-        motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
-        motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
-        coreHexIntake = hardwareMap.dcMotor.get("coreHexIntake");
-        intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
-
-        servoGrabber = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
-        servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
-
-
-    }
-
 
     @Override
     public void runOpMode() throws InterruptedException {
-        initHw();
+
         KodikasRobot robot = new KodikasRobot(
-            telemetry,
-            motorIntake,
-            coreHexIntake,
-            servoIntake1,
-            servoIntake2,
-            motorOutake1,
-            motorOutake2,
-            servoGrabber,
-            servoArmGrabber
+            hardwareMap, telemetry
         );
-        MecanumDrive drive = new MecanumDrive(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
-        GamepadEx driverOp = new GamepadEx(gamepad1);
+        MecanumDrive drive = robot.getDriveSession();
+
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
