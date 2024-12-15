@@ -77,12 +77,13 @@ public class ControlTeleghidat extends LinearOpMode {
             Intake intake = robot.getIntakeSession();
             Outake outake = robot.getOutakeSession();
             OuttakeLift outakeLift = robot.getOutakeLiftsession();
+            outake.outtakeUpForIntake();
             while(opModeIsActive()){
 
                 drive.driveRobotCentric(
-                        -driverOp.getLeftX(),
-                        -driverOp.getLeftY(),
-                        -driverOp.getRightX(),
+                        -driverOp.getLeftX() * (outake.getMotorPosition() > 2000 ? 0.5 : 1),
+                        -driverOp.getLeftY() * (outake.getMotorPosition() > 2000 ? 0.5 : 1),
+                        -driverOp.getRightX() * (outake.getMotorPosition() > 2000 ? 0.5 : 1),
                         true
                 );
                 if(gamepad1.dpad_up) {
@@ -133,13 +134,17 @@ public class ControlTeleghidat extends LinearOpMode {
                         outake.retractOuttake();
                         outakeLift.openGrabber();
                         outakeLift.downArmGrabber();
-                        Timing.Timer timer = new Timing.Timer(800,TimeUnit.MILLISECONDS);
+                        Timing.Timer timer = new Timing.Timer(1200,TimeUnit.MILLISECONDS);
                         timer.start();
                         while (!timer.done());
                         outakeLift.closeGrabber();
-                        outake.extendOuttake();
+
                         timer.start();
                         while (!timer.done());
+                        outake.extendOuttake();
+                        Timing.Timer timer2 = new Timing.Timer(800,TimeUnit.MILLISECONDS);
+                        timer2.start();
+                        while(!timer2.done());
                         outakeLift.upArmGrabber();
                         grabberOpened = false;
                     });

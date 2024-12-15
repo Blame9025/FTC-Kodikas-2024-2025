@@ -21,7 +21,7 @@ public class Intake {
     private Outake outtake;
     public enum Position {
         DEFAULT(-250),
-        EXTENDED(500);
+        EXTENDED(1000);
 
         public final int val;
 
@@ -92,6 +92,7 @@ public class Intake {
             timer.start();
             while (!timer.done());
             intakeLift.retractIntakeLift();
+            stop();
         });
         retract.start();
 

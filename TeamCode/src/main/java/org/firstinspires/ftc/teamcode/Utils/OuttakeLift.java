@@ -28,7 +28,7 @@ public class OuttakeLift {
 
     public enum PositionGrabber {
         CLOSE(0), // gheara prinde game elementul in clesti
-        OPEN(0.1);// gheara robotului in pozitie onitiala cum va sta mereu
+        OPEN(0.2);// gheara robotului in pozitie onitiala cum va sta mereu
 
         public final double val;
 

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.command.PurePursuitCommand;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
 import com.arcrobotics.ftclib.util.Timing;
@@ -55,45 +57,29 @@ public class AutoLeft extends LinearOpMode {
         waitForStart();
         try {
 
-
-            PurePursuitCommand PureppCmd = new PurePursuitCommand(
-                    drive, odometry,
-                    new StartWaypoint(odometry.getPose()),
-                    new GeneralWaypoint(
-                            0, -90, Math.toRadians(0),
-                            0.6, 0.5, 30)
-
-            );
-            PureppCmd.schedule();
-            while (!PureppCmd.isFinished() && opModeIsActive()) {
-                if (isStopRequested()) throw new InterruptedException();
-            }
-
-            intake.extendIntake();
-
-            stop = new Timing.Timer(DEBUG_TIMER, TimeUnit.MILLISECONDS);
-            stop.start();
-            while (!stop.done()) {
-                coreHexIntake.setPower(1);
-            }
-
-            intake.retractIntake();
-
-            delay.start();
-            while (!delay.done()) {
-                coreHexIntake.setPower(-0.5);
-            }
-
-
-            outtakeLift.closeGrabber();
-
             PurePursuitCommand PureppCmd2 = new PurePursuitCommand(
                     drive, odometry,
                     new StartWaypoint(odometry.getPose()),
                     new GeneralWaypoint(
-                            -30, -90, Math.toRadians(45),
-                            0.6, 0.5, 30)
-
+                            0, 15, Math.toRadians(0),
+                            0.6, 0.5, 30),
+                    new GeneralWaypoint(
+                            37.5, 15, Math.toRadians(0),
+                            0.6, 0.5 , 30
+                    ),
+                    new GeneralWaypoint(
+                            37.5,  60 , Math.toRadians(0),
+                            0.6, 0.5 , 30
+                    ),
+                    new GeneralWaypoint(
+                            37.5,  60 , Math.toRadians(180),
+                            0.6, 0.5 , 30
+                    ),
+                    new GeneralWaypoint(
+                            37.5,  75 , Math.toRadians(180),
+                            0.6, 0.5 , 30
+                    ),
+                    new EndWaypoint()
             );
             PureppCmd2.schedule();
             while (!PureppCmd2.isFinished() && opModeIsActive()) {
@@ -101,25 +87,40 @@ public class AutoLeft extends LinearOpMode {
             }
 
             outake.extendOuttake();
+            if(){
 
-            if (outake.getCurrentPositionOuttake() == Outake.Position.EXTENDED) {
-                outtakeLift.upArmGrabber();
             }
 
-            PurePursuitCommand PureppCmd3 = new PurePursuitCommand(
+            PurePursuitCommand PureppCmd = new PurePursuitCommand(
                     drive, odometry,
                     new StartWaypoint(odometry.getPose()),
                     new GeneralWaypoint(
-                            -35, -90, Math.toRadians(45),
-                            0.6, 0.5, 30)
-
+                            0, 40, Math.toRadians(0),
+                            0.6, 0.5, 30),
+                    new GeneralWaypoint(
+                            -90, 40, Math.toRadians(0),
+                            0.6, 0.5 , 30
+                    ),
+                    new GeneralWaypoint(
+                            -90,   15, Math.toRadians(0),
+                            0.6, 0.5 , 30
+                    ),
+                    new GeneralWaypoint(
+                            -90,   15, Math.toRadians(45),
+                            0.6, 0.5 , 30
+                    ),
+                    new GeneralWaypoint(
+                            -90,   0, Math.toRadians(45),
+                            0.6, 0.5 , 30
+                    ),
+                    new EndWaypoint()
             );
-            PureppCmd3.schedule();
-            while (!PureppCmd3.isFinished() && opModeIsActive()) {
+            PureppCmd.schedule();
+            while (!PureppCmd.isFinished() && opModeIsActive()) {
                 if (isStopRequested()) throw new InterruptedException();
             }
 
-            outtakeLift.openGrabber();
+
         }
         catch (InterruptedException e){
             drive.stop();
@@ -127,12 +128,5 @@ public class AutoLeft extends LinearOpMode {
             intake.stop();
             coreHexIntake.setPower(0);
         }
-
-
-
-
-
-
-
     }
 }

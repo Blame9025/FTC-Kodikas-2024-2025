@@ -16,7 +16,8 @@ public class Outake {
     public enum Position {
         DEFAULT(0),
         UPFOROUTTAKE(850),
-        EXTENDED(2625);
+        SPECIMEN(1400),
+        EXTENDED(2700);
 
         public final int val;
 
