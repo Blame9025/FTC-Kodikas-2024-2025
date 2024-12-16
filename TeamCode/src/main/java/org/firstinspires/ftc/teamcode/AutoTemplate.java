@@ -34,6 +34,10 @@ public class AutoTemplate extends LinearOpMode {
             hardwareMap, telemetry
         );
         MecanumDrive drive = robot.getDriveSession();
+        Motor backRightMotor, frontRightMotor;
+
+        backRightMotor = robot.getBRightMotor();
+        frontRightMotor = robot.getFRightMotor();
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
@@ -43,7 +47,7 @@ public class AutoTemplate extends LinearOpMode {
 
         imu.initialize(parameters);
 
-        KodiOdometry kodiOdometry = new KodiOdometry(imu, leftEncoder, rightEncoder);
+        KodiOdometry kodiOdometry = new KodiOdometry(imu, backRightMotor, frontRightMotor);
         OdometrySubsystem odometry = new OdometrySubsystem(kodiOdometry.getHolonomicOdometry());
         waitForStart();
 

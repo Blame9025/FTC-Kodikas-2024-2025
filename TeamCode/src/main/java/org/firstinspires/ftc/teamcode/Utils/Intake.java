@@ -20,8 +20,8 @@ public class Intake {
     private DcMotor coreHex;
     private Outake outtake;
     public enum Position {
-        DEFAULT(-250),
-        EXTENDED(1000);
+        DEFAULT(-50),
+        EXTENDED(900);
 
         public final int val;
 

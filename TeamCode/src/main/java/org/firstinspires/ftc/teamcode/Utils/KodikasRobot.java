@@ -90,4 +90,7 @@ public class KodikasRobot {
     }
     public MecanumDrive getDriveSession() { return drive; }
     public DcMotor getCoreHexIntake() { return coreHexIntake; }
+    public Motor getFRightMotor(){return frontRightMotor;}
+    public Motor getBRightMotor(){return backRightMotor;}
+
 }

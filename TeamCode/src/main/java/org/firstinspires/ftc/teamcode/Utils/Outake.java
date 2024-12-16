@@ -17,7 +17,7 @@ public class Outake {
         DEFAULT(0),
         UPFOROUTTAKE(850),
         SPECIMEN(1400),
-        EXTENDED(2700);
+        EXTENDED(1600);
 
         public final int val;
 

@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.command.PurePursuitCommand;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
@@ -34,6 +37,7 @@ public class AutoLeft extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         KodikasRobot robot = new KodikasRobot(
                 hardwareMap, telemetry
         );
@@ -44,6 +48,14 @@ public class AutoLeft extends LinearOpMode {
         OuttakeLift outtakeLift = robot.getOutakeLiftsession();
         DcMotor coreHexIntake = robot.getCoreHexIntake();
 
+        Motor backRightMotor, frontRightMotor;
+
+        backRightMotor = robot.getBRightMotor();
+        frontRightMotor = robot.getFRightMotor();
+
+        backRightMotor.resetEncoder();
+        frontRightMotor.resetEncoder();
+
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -52,49 +64,17 @@ public class AutoLeft extends LinearOpMode {
 
         imu.initialize(parameters);
 
-        KodiOdometry kodiOdometry = new KodiOdometry(imu, leftEncoder, rightEncoder);
+        KodiOdometry kodiOdometry = new KodiOdometry(imu, backRightMotor, frontRightMotor);
         OdometrySubsystem odometry = new OdometrySubsystem(kodiOdometry.getHolonomicOdometry());
         waitForStart();
         try {
-
-            PurePursuitCommand PureppCmd2 = new PurePursuitCommand(
-                    drive, odometry,
-                    new StartWaypoint(odometry.getPose()),
-                    new GeneralWaypoint(
-                            0, 15, Math.toRadians(0),
-                            0.6, 0.5, 30),
-                    new GeneralWaypoint(
-                            37.5, 15, Math.toRadians(0),
-                            0.6, 0.5 , 30
-                    ),
-                    new GeneralWaypoint(
-                            37.5,  60 , Math.toRadians(0),
-                            0.6, 0.5 , 30
-                    ),
-                    new GeneralWaypoint(
-                            37.5,  60 , Math.toRadians(180),
-                            0.6, 0.5 , 30
-                    ),
-                    new GeneralWaypoint(
-                            37.5,  75 , Math.toRadians(180),
-                            0.6, 0.5 , 30
-                    ),
-                    new EndWaypoint()
-            );
-            PureppCmd2.schedule();
-            while (!PureppCmd2.isFinished() && opModeIsActive()) {
-                if (isStopRequested()) throw new InterruptedException();
-            }
-
-            outake.extendOuttake();
-
-
             PurePursuitCommand PureppCmd = new PurePursuitCommand(
                     drive, odometry,
                     new StartWaypoint(odometry.getPose()),
                     new GeneralWaypoint(
                             0, 40, Math.toRadians(0),
-                            0.6, 0.5, 30),
+                            0.6, 0.5, 30
+                    ),
                     new GeneralWaypoint(
                             -90, 40, Math.toRadians(0),
                             0.6, 0.5 , 30
@@ -114,8 +94,15 @@ public class AutoLeft extends LinearOpMode {
                     new EndWaypoint()
             );
             PureppCmd.schedule();
+            PureppCmd.execute();
             while (!PureppCmd.isFinished() && opModeIsActive()) {
                 if (isStopRequested()) throw new InterruptedException();
+                telemetry.addData("PosX",odometry.getPose().getX());
+                telemetry.addData("PosY",odometry.getPose().getY());
+                telemetry.addData("Ang",odometry.getPose().getHeading());
+                odometry.update();
+
+                telemetry.update();
             }
 
 
