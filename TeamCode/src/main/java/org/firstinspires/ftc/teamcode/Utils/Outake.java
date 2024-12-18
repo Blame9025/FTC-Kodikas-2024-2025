@@ -17,7 +17,6 @@ public class Outake {
     public enum Position {
         DEFAULT(0),
         GRABBSPECIMEN(600),
-        UPFOROUTTAKE(850),
         SPECIMEN(1400),
         BASKET1(1600),
         EXTENDED(2625);
@@ -69,9 +68,6 @@ public class Outake {
         setPosition(Position.DEFAULT);
     }
 
-    public void outtakeUpForIntake(){
-        //setPosition(Position.UPFOROUTTAKE);
-    }
 
     public void modifyPosition(boolean up){
         int newPos = Range.clip(getMotorPosition() + (up? 300 : -300),
