@@ -65,7 +65,7 @@ public class Intake {
         this.outtake = robot.getOutakeSession();
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
             intakeLift.prepareIntakeLift();
-        if(outtake.getCurrentPositionOuttake() == Outake.Position.DEFAULT)
+        if(Math.abs(outtake.getMotorPosition() - Outake.Position.DEFAULT.val) < Outake.Position.UPFOROUTTAKE.val)
             outtake.outtakeUpForIntake();
         extend = new Thread(() -> {
             Timing.Timer timer = new Timing.Timer(250,TimeUnit.MILLISECONDS);

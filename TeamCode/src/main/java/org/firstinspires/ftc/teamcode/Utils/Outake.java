@@ -4,20 +4,23 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 public class Outake {
 
     private DcMotor motorOuttake1,motorOuttake2;
     private Servo servoArm, servArmGrabber;
     private boolean alreadyInActionOuttake = false;
-    private Position currentPosition = Position.DEFAULT;
+    private int currentPosition = Position.DEFAULT.val;
     KodikasRobot robot;
-    double power = 0.5;
+    double power = 1;
     public enum Position {
         DEFAULT(0),
+        GRABBSPECIMEN(600),
         UPFOROUTTAKE(850),
         SPECIMEN(1400),
-        EXTENDED(1600);
+        BASKET1(1600),
+        EXTENDED(2625);
 
         public final int val;
 
@@ -41,7 +44,7 @@ public class Outake {
     }
 
     public void setPosition(Position target) { // setare pozitie pentru glisiera outtake
-        if (currentPosition != target) {
+        if (currentPosition != target.val) {
 
             motorOuttake1.setTargetPosition(target.val);
             motorOuttake2.setTargetPosition(target.val);
@@ -52,7 +55,7 @@ public class Outake {
             motorOuttake1.setPower(power);
             motorOuttake2.setPower(power);
 
-            currentPosition = target;
+            currentPosition = target.val;
         }
 
     }
@@ -87,28 +90,29 @@ public class Outake {
     }*/
 
     public void extendOuttake(){
-        if(currentPosition == Position.EXTENDED){
-            return;
-        }else{
-            setPosition(Position.EXTENDED);
-        }
+        setPosition(Position.EXTENDED);
+
 
     }
 
     public void retractOuttake(){
-        if(currentPosition == Position.DEFAULT){
-            return;
-        }else{
-            setPosition(Position.DEFAULT);
-        }
+        setPosition(Position.DEFAULT);
     }
 
     public void outtakeUpForIntake(){
-        if(currentPosition == Position.UPFOROUTTAKE){
-            return;
-        }else{
-            setPosition(Position.UPFOROUTTAKE);
-        }
+        setPosition(Position.UPFOROUTTAKE);
+    }
+
+    public void modifyPosition(boolean up){
+        int newPos = Range.clip(getMotorPosition() + (up? 300 : -300),
+                Intake.Position.DEFAULT.val, Intake.Position.EXTENDED.val);
+        motorOuttake1.setTargetPosition(newPos);
+        motorOuttake2.setTargetPosition(newPos);
+        motorOuttake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorOuttake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorOuttake1.setPower(0.5);
+        motorOuttake2.setPower(0.5);
+        currentPosition = newPos;
     }
 
     public int getMotorPositionOuttake1(){
@@ -124,7 +128,7 @@ public class Outake {
                 getMotorPositionOuttake2()) / 2;
     }
 
-    public Position getCurrentPositionOuttake() {
+    public int getCurrentPositionOuttake() {
         return currentPosition; // Return the stored position
     }
 

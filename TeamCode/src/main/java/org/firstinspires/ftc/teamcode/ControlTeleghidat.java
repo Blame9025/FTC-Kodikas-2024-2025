@@ -75,6 +75,7 @@ public class ControlTeleghidat extends LinearOpMode {
             waitForStart();
 
             Intake intake = robot.getIntakeSession();
+            IntakeLift intakeLift = robot.getIntakeLiftSession();
             Outake outake = robot.getOutakeSession();
             OuttakeLift outakeLift = robot.getOutakeLiftsession();
 
@@ -88,13 +89,19 @@ public class ControlTeleghidat extends LinearOpMode {
                 drive.driveRobotCentric(
                         -driverOp.getLeftX() * (outake.getMotorPosition() > 900 ? 0.5 : 1),
                         -driverOp.getLeftY() * (outake.getMotorPosition() > 900 ? 0.5 : 1),
-                        -driverOp.getRightX() * (outake.getMotorPosition() > 900 ? 0.5 : 1),
+                        -driverOp.getRightX() * ((outake.getMotorPosition() > 900 || intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT) ? 0.5 : 1),
                         true
                 );
-                if(gamepad1.dpad_up) {
-                    outake.extendOuttake();
+                if(gamepad1.dpad_up){
+                    outake.modifyPosition(true);
                 }
                 if(gamepad1.dpad_down){
+                    outake.modifyPosition(false);
+                }
+                if(gamepad1.dpad_left) {
+                    outake.extendOuttake();
+                }
+                if(gamepad1.dpad_right){
                     outake.outtakeUpForIntake();
                 }
                 if(gamepad1.a && debA1.done()){
