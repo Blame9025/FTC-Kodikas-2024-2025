@@ -94,8 +94,7 @@ public class Outake {
     }
 
     public int getMotorPosition(){
-        return (getMotorPositionOuttake1() +
-                getMotorPositionOuttake2()) / 2;
+        return currentPosition;
     }
 
     public int getCurrentPositionOuttake() {

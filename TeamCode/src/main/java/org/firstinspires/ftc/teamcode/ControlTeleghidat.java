@@ -33,6 +33,7 @@ public class ControlTeleghidat extends LinearOpMode {
     boolean intakeExtended = false;
     boolean intakeToStart = false;
     boolean grabberOpened = false;
+    boolean specimen = false;
 
     Timing.Timer debA1;
     Timing.Timer waitIntakeExtend;
@@ -40,6 +41,7 @@ public class ControlTeleghidat extends LinearOpMode {
     Timing.Timer debB1;
     Timing.Timer debY;
     Timing.Timer debStickR1;
+    Timing.Timer debRB1;
     public void initHW(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new KodikasRobot(hardwareMap,telemetry);
@@ -51,6 +53,9 @@ public class ControlTeleghidat extends LinearOpMode {
 
         debA1 = new Timing.Timer(DEBUG_TIMER,TimeUnit.MILLISECONDS);
         debA1.start();
+
+        debRB1 = new Timing.Timer(DEBUG_TIMER,TimeUnit.MILLISECONDS);
+        debRB1.start();
 
         debX1 = new Timing.Timer(DEBUG_TIMER,TimeUnit.MILLISECONDS);
         debX1.start();
@@ -100,7 +105,18 @@ public class ControlTeleghidat extends LinearOpMode {
                 if(gamepad1.dpad_right){
                     outake.retractOuttake();
                 }
+                /*if(gamepad1.left_bumper && debRB1.done()){
+                    if(Math.abs(outake.getMotorPosition() - Outake.Position.SPECIMEN.val) < 35 ){
+                        specimen = false;
+                    } else{
+                        specimen = true;
+                    }
+                    if
+                    if(!specimen){
 
+                    }
+                    debRB1.start();
+                }*/
                 if(gamepad1.a && debA1.done()){
 
                     if(!intakeExtended){
