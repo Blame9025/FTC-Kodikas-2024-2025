@@ -14,6 +14,7 @@ import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -27,7 +28,7 @@ import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
 import java.util.concurrent.TimeUnit;
 
-@Autonomous
+@TeleOp
 public class AutoLeft extends LinearOpMode {
 
     DcMotor leftEncoder, rightEncoder;
@@ -59,7 +60,7 @@ public class AutoLeft extends LinearOpMode {
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.DOWN,
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
         imu.initialize(parameters);
@@ -68,7 +69,7 @@ public class AutoLeft extends LinearOpMode {
         OdometrySubsystem odometry = new OdometrySubsystem(kodiOdometry.getHolonomicOdometry());
         waitForStart();
         try {
-            PurePursuitCommand PureppCmd = new PurePursuitCommand(
+            /*PurePursuitCommand PureppCmd = new PurePursuitCommand(
                     drive, odometry,
                     new StartWaypoint(odometry.getPose()),
                     new GeneralWaypoint(
@@ -94,8 +95,8 @@ public class AutoLeft extends LinearOpMode {
                     new EndWaypoint()
             );
             PureppCmd.schedule();
-            PureppCmd.execute();
-            while (!PureppCmd.isFinished() && opModeIsActive()) {
+            PureppCmd.execute();*/
+            while (opModeIsActive()) {
                 if (isStopRequested()) throw new InterruptedException();
                 telemetry.addData("PosX",odometry.getPose().getX());
                 telemetry.addData("PosY",odometry.getPose().getY());
@@ -112,6 +113,8 @@ public class AutoLeft extends LinearOpMode {
             outake.stopMotorOuttake();
             intake.stop();
             coreHexIntake.setPower(0);
+            telemetry.addData("Stop", e.getMessage());
+            telemetry.update();
         }
     }
 }

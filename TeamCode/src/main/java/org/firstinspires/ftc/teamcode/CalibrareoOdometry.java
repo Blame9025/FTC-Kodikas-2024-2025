@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Utils.Intake;
 import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
 import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 @TeleOp
-public class test2 extends LinearOpMode {
+public class CalibrareoOdometry extends LinearOpMode {
     DcMotor motorIntake;
     DcMotor motorGlisiera;
     DcMotor motorOutake1;
