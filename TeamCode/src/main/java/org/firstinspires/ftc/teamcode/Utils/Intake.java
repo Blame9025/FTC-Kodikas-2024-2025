@@ -55,7 +55,7 @@ public class Intake {
                 Position.DEFAULT.val, Position.EXTENDED.val);
         intakeMotor.setTargetPosition(newPos);
         intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intakeMotor.setPower(0.8);
+        intakeMotor.setPower(1.0);
         currentPosition = newPos;
     }
     Thread extend;

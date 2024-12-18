@@ -100,7 +100,7 @@ public class Outake {
     }
 
     public void outtakeUpForIntake(){
-        setPosition(Position.UPFOROUTTAKE);
+        //setPosition(Position.UPFOROUTTAKE);
     }
 
     public void modifyPosition(boolean up){
