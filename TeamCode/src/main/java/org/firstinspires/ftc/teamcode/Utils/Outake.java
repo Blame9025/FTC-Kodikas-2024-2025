@@ -60,38 +60,8 @@ public class Outake {
 
     }
 
-    /*public void goToZeroPositionOuttake(){ // X nu o folosim X
-
-        if(motorOuttake1.getCurrentPosition() >= Position.DEFAULT.val + 5 && motorOuttake2.getCurrentPosition() >= Position.DEFAULT.val + 5){
-
-            motorOuttake1.setTargetPosition(Intake.Position.DEFAULT.val);
-            motorOuttake2.setTargetPosition(Intake.Position.DEFAULT.val);
-
-            motorOuttake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorOuttake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            motorOuttake1.setPower(power);
-            motorOuttake2.setPower(power);
-
-            while(motorOuttake1.getCurrentPosition() > Position.DEFAULT.val + 5 && motorOuttake1.getCurrentPosition() > Position.DEFAULT.val + 5){
-
-                telemetry.addData("Outtake Position", motorOuttake1.getCurrentPosition());
-                telemetry.update();
-
-            }
-
-            motorOuttake1.setPower(0.0);
-            motorOuttake2.setPower(0.0);
-            currentPosition = Position.DEFAULT;
-
-        }
-
-
-    }*/
-
     public void extendOuttake(){
         setPosition(Position.EXTENDED);
-
 
     }
 
@@ -105,7 +75,7 @@ public class Outake {
 
     public void modifyPosition(boolean up){
         int newPos = Range.clip(getMotorPosition() + (up? 300 : -300),
-                Intake.Position.DEFAULT.val, Intake.Position.EXTENDED.val);
+                Position.DEFAULT.val, Position.EXTENDED.val);
         motorOuttake1.setTargetPosition(newPos);
         motorOuttake2.setTargetPosition(newPos);
         motorOuttake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);

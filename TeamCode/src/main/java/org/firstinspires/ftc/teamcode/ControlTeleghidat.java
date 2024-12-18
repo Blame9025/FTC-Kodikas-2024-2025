@@ -100,6 +100,7 @@ public class ControlTeleghidat extends LinearOpMode {
                 if(gamepad1.dpad_right){
                     outake.retractOuttake();
                 }
+
                 if(gamepad1.a && debA1.done()){
 
                     if(!intakeExtended){

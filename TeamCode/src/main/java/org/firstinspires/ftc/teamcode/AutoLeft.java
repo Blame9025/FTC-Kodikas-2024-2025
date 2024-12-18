@@ -4,7 +4,6 @@ import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.command.PurePursuitCommand;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
@@ -27,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 @Autonomous
 public class AutoLeft extends LinearOpMode {
+
+    DcMotor leftEncoder, rightEncoder;
     Timing.Timer stop,delay;
     private static final long DEBUG_TIMER = 2000;
     private static final long delayTimer = 500;
@@ -42,12 +43,11 @@ public class AutoLeft extends LinearOpMode {
         Outake outake = robot.getOutakeSession();
         OuttakeLift outtakeLift = robot.getOutakeLiftsession();
         DcMotor coreHexIntake = robot.getCoreHexIntake();
-        Motor leftEncoder = robot.getBRightMotor();
-        Motor rightEncoder = robot.getFRightMotor();
+
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.LogoFacingDirection.DOWN,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
         imu.initialize(parameters);
