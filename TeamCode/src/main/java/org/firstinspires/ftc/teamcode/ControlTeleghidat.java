@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -9,10 +10,13 @@ import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Utils.Config;
 import org.firstinspires.ftc.teamcode.Utils.Intake;
 import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
+import org.firstinspires.ftc.teamcode.Utils.KodiOdometry;
 import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 import org.firstinspires.ftc.teamcode.Utils.Outake;
 import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
@@ -34,7 +38,7 @@ public class ControlTeleghidat extends LinearOpMode {
     boolean intakeToStart = false;
     boolean grabberOpened = false;
     boolean specimen = false;
-
+    IMU imu;
     Timing.Timer debA1;
     Timing.Timer waitIntakeExtend;
     Timing.Timer debX1;
@@ -42,6 +46,11 @@ public class ControlTeleghidat extends LinearOpMode {
     Timing.Timer debY;
     Timing.Timer debStickR1;
     Timing.Timer debRB1;
+    Timing.Timer debMovA;
+    Thread shortcutRST;
+    Thread y;
+
+
     public void initHW(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new KodikasRobot(hardwareMap,telemetry);
@@ -69,8 +78,14 @@ public class ControlTeleghidat extends LinearOpMode {
         debStickR1 = new Timing.Timer(1000,TimeUnit.MILLISECONDS);
         debStickR1.start();
 
+        debMovA = new Timing.Timer(5000,TimeUnit.MILLISECONDS);
+        debMovA.start();
+
+
         waitIntakeExtend = new Timing.Timer(500,TimeUnit.MILLISECONDS);
         waitIntakeExtend.start();
+
+
     }
 
     @Override
@@ -83,13 +98,19 @@ public class ControlTeleghidat extends LinearOpMode {
             IntakeLift intakeLift = robot.getIntakeLiftSession();
             Outake outake = robot.getOutakeSession();
             OuttakeLift outakeLift = robot.getOutakeLiftsession();
-
+            boolean yPressed = false;
             outakeLift.closeGrabber();
+            outake.idleOuttake();
+            Timing.Timer timerInceput = new Timing.Timer(400,TimeUnit.MILLISECONDS);
+            timerInceput.start();
+            while (!timerInceput.done());
+            outakeLift.idleArmGrabber();
+
             while(opModeIsActive()){
 
                 drive.driveRobotCentric(
-                        -driverOp.getLeftX() * (outake.getMotorPosition() > 900 ? 0.5 : 1),
-                        -driverOp.getLeftY() * (outake.getMotorPosition() > 900 ? 0.5 : 1),
+                        -driverOp.getLeftX() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
+                        -driverOp.getLeftY() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
                         -driverOp.getRightX() * ((outake.getMotorPosition() > 900 || intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT) ? 0.5 : 1),
                         true
                 );
@@ -101,9 +122,33 @@ public class ControlTeleghidat extends LinearOpMode {
                 }
                 if(gamepad1.dpad_left) {
                     outake.extendOuttake();
+                    outakeLift.idleArmGrabber();
                 }
                 if(gamepad1.dpad_right){
-                    outake.retractOuttake();
+                    outake.idleOuttake();
+                }
+                if(gamepad2.right_bumper && debMovA.done()){
+                    Thread t = new Thread(() -> {
+                        drive.driveRobotCentric(
+                                0,
+                                -1,
+                                0,
+                                true
+                        );
+                        Timing.Timer timer = new Timing.Timer(Config.TIMP_CM * 9L,TimeUnit.MILLISECONDS);
+                        timer.start();
+                        while (!timer.done()){
+                            drive.driveRobotCentric(
+                                    0,
+                                    -1,
+                                    0,
+                                    true
+                            );
+                        }
+                        drive.stop();
+                    });
+                    t.start();
+                    debMovA.start();
                 }
                 /*if(gamepad1.left_bumper && debRB1.done()){
                     if(Math.abs(outake.getMotorPosition() - Outake.Position.SPECIMEN.val) < 35 ){
@@ -138,40 +183,52 @@ public class ControlTeleghidat extends LinearOpMode {
                 if(!gamepad1.b && !gamepad1.x) coreHexIntake.setPower(0);
                 if(gamepad1.y && debY.done())
                 {
-                    if(!grabberOpened)
-                        outakeLift.openGrabber();
-                    else
-                        outakeLift.closeGrabber();
-                    grabberOpened = !grabberOpened;
-                    debY.start();
+                    if(y == null || !y.isAlive()){
+                        y = new Thread(() -> {
+                            outakeLift.openGrabber();
+                            Timing.Timer timer = new Timing.Timer(150,TimeUnit.MILLISECONDS);
+                            timer.start();
+                            while (!timer.done() || gamepad1.y);
+                            outakeLift.closeGrabber();
+                        });
+                        y.start();
+                        debY.start();
+                    }
                 }
                 if(gamepad1.right_stick_button && debStickR1.done()){
                     debStickR1.start();
-                    Thread t = new Thread(() -> {
-                        outake.retractOuttake();
-                        outakeLift.openGrabber();
-                        outakeLift.downArmGrabber();
-                        Timing.Timer timer = new Timing.Timer(1200,TimeUnit.MILLISECONDS);
-                        timer.start();
-                        while (!timer.done());
-                        outakeLift.closeGrabber();
+                    if(shortcutRST == null || !shortcutRST.isAlive()) {
 
-                        timer.start();
-                        while (!timer.done());
-                        outake.extendOuttake();
-                        Timing.Timer timer2 = new Timing.Timer(800,TimeUnit.MILLISECONDS);
-                        timer2.start();
-                        while(!timer2.done());
-                        outakeLift.upArmGrabber();
-                        grabberOpened = false;
-                    });
-                    t.start();
+                        shortcutRST = new Thread(() -> {
+                            outakeLift.downArmGrabber();
+                            Timing.Timer timer = new Timing.Timer(450, TimeUnit.MILLISECONDS);
+                            timer.start();
+                            while (!timer.done()) ;
+                            outake.retractOuttake();
+                            while(outake.getMotorPosition() > 50);
+                            outakeLift.openGrabber();
+
+                            timer.start();
+                            while (!timer.done()) ;
+
+                            outakeLift.closeGrabber();
+
+                            timer.start();
+                            while (!timer.done()) ;
+                            outake.idleOuttake();
+
+                        });
+                        shortcutRST.start();
+
+                    }
                 }
-                if(gamepad1.right_bumper)
+                if(gamepad1.left_bumper)
                     outakeLift.downArmGrabber();
 
-                if(gamepad1.left_bumper)
+                if(gamepad1.right_bumper)
                     outakeLift.upArmGrabber();
+                if(gamepad1.left_stick_button)
+                    outakeLift.idleArmGrabber();
                 if(Math.abs(gamepad1.right_trigger - gamepad1.left_trigger) > 0.01){
                     intake.modifyPosition(gamepad1.right_trigger - gamepad1.left_trigger);
                 }

@@ -17,8 +17,8 @@ public class OuttakeLift {
 
     public enum PositionArmGrabber {
         DEFAULT(0),
-        UP(0.4);// gheara robotului se ridica ca sa lase game elemntul din gheara
-
+        UP(0.4),// gheara robotului se ridica ca sa lase game elemntul din gheara
+        IDLE(0.8);
         public final double val;
 
         PositionArmGrabber(double val) {
@@ -57,36 +57,29 @@ public class OuttakeLift {
     }
 
     public void closeGrabber(){
-        if(currentPositionForGrabber == PositionGrabber.CLOSE){
-            return;
-        }else{
-            setPositionForGrabber(PositionGrabber.CLOSE);
-        }
+        setPositionForGrabber(PositionGrabber.CLOSE);
 
     }
 
     public void openGrabber(){
-        if(currentPositionForGrabber == PositionGrabber.OPEN){
-            return;
-        }else{
-            setPositionForGrabber(PositionGrabber.OPEN);
-        }
+        setPositionForGrabber(PositionGrabber.OPEN);
+
     }
 
     public void downArmGrabber(){
-        if(currentPositionForArmGrabber == PositionArmGrabber.DEFAULT){
-            return;
-        } else{
-            setPositionForArmGrabber(PositionArmGrabber.DEFAULT);
-        }
-    }
 
+        setPositionForArmGrabber(PositionArmGrabber.DEFAULT);
+
+    }
+    public void idleArmGrabber(){
+
+        setPositionForArmGrabber(PositionArmGrabber.IDLE);
+
+    }
     public void upArmGrabber(){
-        if(currentPositionForArmGrabber == PositionArmGrabber.UP){
-            return;
-        } else{
-            setPositionForArmGrabber(PositionArmGrabber.UP);
-        }
+
+        setPositionForArmGrabber(PositionArmGrabber.UP);
+
     }
 
 }

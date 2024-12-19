@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Utils;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PWMOutput;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -13,13 +14,14 @@ public class Outake {
     private boolean alreadyInActionOuttake = false;
     private int currentPosition = Position.DEFAULT.val;
     KodikasRobot robot;
-    double power = 1;
+    double power = 0.8;
     public enum Position {
         DEFAULT(0),
+        IDLE(600),
         GRABBSPECIMEN(600),
         SPECIMEN(1400),
         BASKET1(1600),
-        EXTENDED(2625);
+        EXTENDED(2620);
 
         public final int val;
 
@@ -63,6 +65,9 @@ public class Outake {
         setPosition(Position.EXTENDED);
 
     }
+    public void idleOuttake(){
+        setPosition(Position.IDLE);
+    }
 
     public void retractOuttake(){
         setPosition(Position.DEFAULT);
@@ -70,14 +75,14 @@ public class Outake {
 
 
     public void modifyPosition(boolean up){
-        int newPos = Range.clip(getMotorPosition() + (up? 300 : -300),
-                Position.DEFAULT.val, Position.EXTENDED.val);
+        int newPos = Range.clip(getMotorPosition() + (up ? 10 : -10),
+                Position.IDLE.val, Position.EXTENDED.val);
         motorOuttake1.setTargetPosition(newPos);
         motorOuttake2.setTargetPosition(newPos);
         motorOuttake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorOuttake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorOuttake1.setPower(0.5);
-        motorOuttake2.setPower(0.5);
+        motorOuttake1.setPower(power);
+        motorOuttake2.setPower(power);
         currentPosition = newPos;
     }
 
