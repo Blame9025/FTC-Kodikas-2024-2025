@@ -23,6 +23,6 @@ public class calibrareIntake2 extends LinearOpMode {
         double pos = 0.2;
         servoIntake1.setPosition(pos);
         servoIntake2.setPosition(pos);
-        sleep(15000);
+
     }
 }

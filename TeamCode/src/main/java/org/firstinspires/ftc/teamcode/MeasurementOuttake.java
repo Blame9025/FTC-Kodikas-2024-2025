@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp
-@Disabled
+
 public class MeasurementOuttake extends LinearOpMode {
     DcMotor motorIntake;
     DcMotor motorGlisiera;
@@ -19,7 +19,7 @@ public class MeasurementOuttake extends LinearOpMode {
     DcMotor motorOutake2;
     Servo servoIntake1,servoIntake2, servoGrabber, servoArmGrabber;
     DcMotor coreHexIntake;
-    Timing.Timer delay = new Timing.Timer(12000, TimeUnit.MILLISECONDS);
+    Timing.Timer delay = new Timing.Timer(10000, TimeUnit.MILLISECONDS);
     Timing.Timer active = new Timing.Timer(2000, TimeUnit.MILLISECONDS);
     final int positionUp = 600;
     final int postionBasket = 2400;
@@ -84,8 +84,11 @@ public class MeasurementOuttake extends LinearOpMode {
 
             //CALIBRARE ARM GRABBER START
 
-            /*servoArmGrabber.setPosition(0);
-            delay.start();*/
+            servoArmGrabber.setPosition(0);
+            delay.start();
+
+
+
 
 
             //CALIBRARE ARM GRABBER END
@@ -103,7 +106,7 @@ public class MeasurementOuttake extends LinearOpMode {
 
             //motorOutake1.setTargetPosition(positionUp);
             //motorOutake2.setTargetPosition(positionUp);
-            motorOutake1.setTargetPosition(postionBasket);
+            /*motorOutake1.setTargetPosition(postionBasket);
             motorOutake2.setTargetPosition(postionBasket);
             motorOutake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorOutake2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -117,7 +120,7 @@ public class MeasurementOuttake extends LinearOpMode {
             }
 
             motorOutake1.setPower(0);
-            motorOutake2.setPower(0);
+            motorOutake2.setPower(0);*/
 
             //END SECTION MEASUREMENT FOR MOTOR
 

@@ -17,7 +17,7 @@ public class Outake {
     public enum Position {
         DEFAULT(0),
         GRABBSPECIMEN(600),
-        SPECIMEN(1400),
+        SPECIMEN(1400), // specimen bar
         BASKET1(1600),
         EXTENDED(2625);
 
@@ -62,6 +62,18 @@ public class Outake {
     public void extendOuttake(){
         setPosition(Position.EXTENDED);
 
+    }
+
+    public void setPositionForGrabbSpecimen(){ // se ridica pana la human player
+        setPosition(Position.GRABBSPECIMEN);
+    }
+
+    public void specimenBar(){ // se ridica pana la bara de specimene
+        setPosition(Position.SPECIMEN);
+    }
+
+    public void specimenBar100posMinus(){ // se ridica pana la bara de specimene
+        setPosition(Position.SPECIMEN);
     }
 
     public void retractOuttake(){
