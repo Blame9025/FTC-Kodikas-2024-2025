@@ -33,6 +33,7 @@ public class ControlTeleghidat extends LinearOpMode {
     boolean intakeExtended = false;
     boolean intakeToStart = false;
     boolean grabberOpened = false;
+    boolean specimen = false;
 
     Timing.Timer debA1;
     Timing.Timer waitIntakeExtend;
@@ -104,19 +105,18 @@ public class ControlTeleghidat extends LinearOpMode {
                 if(gamepad1.dpad_right){
                     outake.retractOuttake();
                 }
-                if(gamepad1.left_bumper && debRB1.done()){
-                    if(Math.abs(outake.getMotorPosition() - Outake.Position.GRABBSPECIMEN.val) < 35 ){ // daca pozitia curenta de la motoare este intre 565 si 635 (Position.GRABBSPECIMEN)
-                        outake.specimenBar();
-                    } else if(Math.abs(outake.getMotorPosition() - Outake.Position.SPECIMEN.val ) < 35){ // daca pozitia curenta de la motoare este intre 1365 si 1435 (Position.SPECIMEN)
-                        outake.setPositionForGrabbSpecimen();
-                        if(Math.abs(outake.getMotorPosition() - (Outake.Position.SPECIMEN.val - 100)) < 20){ // cand coboara 100 de tickuri da drumu la specimen
-                            outakeLift.openGrabber();
-                        }
-                    } else{ // prima oara cand apas LT sau in timpul meciului cand vreau sa iau un specimen de la human player
-                        outake.setPositionForGrabbSpecimen();
+                /*if(gamepad1.left_bumper && debRB1.done()){
+                    if(Math.abs(outake.getMotorPosition() - Outake.Position.SPECIMEN.val) < 35 ){
+                        specimen = false;
+                    } else{
+                        specimen = true;
+                    }
+                    if
+                    if(!specimen){
+
                     }
                     debRB1.start();
-                }
+                }*/
                 if(gamepad1.a && debA1.done()){
 
                     if(!intakeExtended){

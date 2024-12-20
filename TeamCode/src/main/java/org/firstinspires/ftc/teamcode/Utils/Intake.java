@@ -20,8 +20,8 @@ public class Intake {
     private DcMotor coreHex;
     private Outake outtake;
     public enum Position {
-        DEFAULT(-50),
-        EXTENDED(900);
+        DEFAULT(-250),
+        EXTENDED(800);
 
         public final int val;
 
@@ -45,7 +45,7 @@ public class Intake {
         if (currentPosition != target.val) {
             intakeMotor.setTargetPosition(target.val);
             intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            intakeMotor.setPower(1.0);
+            intakeMotor.setPower(0.5);
             currentPosition = target.val;
         }
     }
@@ -55,7 +55,7 @@ public class Intake {
                 Position.DEFAULT.val, Position.EXTENDED.val);
         intakeMotor.setTargetPosition(newPos);
         intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intakeMotor.setPower(1.0);
+        intakeMotor.setPower(0.5);
         currentPosition = newPos;
     }
     Thread extend;

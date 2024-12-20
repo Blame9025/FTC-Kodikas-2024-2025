@@ -13,9 +13,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class KodiOdometry {
-    MotorEx verticalEncoder, horizontalEncoder;
+    //MotorEx verticalEncoder, horizontalEncoder;
     HolonomicOdometry holoOdometry;
-    OdometrySubsystem odometry;
+   // OdometrySubsystem odometry;
     IMU imu;
     public KodiOdometry(IMU imu, Motor verticalEncoder, Motor horizontalEncoder) {
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -23,6 +23,9 @@ public class KodiOdometry {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
         imu.initialize(parameters);
+
+        verticalEncoder.setDistancePerPulse(Config.TICKS_TO_CM);
+        horizontalEncoder.setDistancePerPulse(Config.TICKS_TO_CM);
 
         holoOdometry = new HolonomicOdometry(
                 () -> verticalEncoder.getCurrentPosition() * Config.TICKS_TO_CM +
