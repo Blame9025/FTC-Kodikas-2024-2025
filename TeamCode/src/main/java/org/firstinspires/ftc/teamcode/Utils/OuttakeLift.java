@@ -17,7 +17,8 @@ public class OuttakeLift {
 
     public enum PositionArmGrabber {
         DEFAULT(0),
-        UP(0.4),// gheara robotului se ridica ca sa lase game elemntul din gheara
+        UP(0.4),
+        UP2(0.5),// gheara robotului se ridica ca sa lase game elemntul din gheara
         IDLE(0.8);
         public final double val;
 
@@ -75,6 +76,9 @@ public class OuttakeLift {
 
         setPositionForArmGrabber(PositionArmGrabber.IDLE);
 
+    }
+    public void up2ArmGrabber() {
+        setPositionForArmGrabber(PositionArmGrabber.UP2);
     }
     public void upArmGrabber(){
 

@@ -71,6 +71,7 @@ public class KodikasRobot {
 
 
         this.drive = new MecanumDrive(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
+
     }
     public Telemetry getTelemetry()
     {
