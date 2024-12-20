@@ -10,9 +10,11 @@ import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Utils.Config;
 import org.firstinspires.ftc.teamcode.Utils.Intake;
 import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
@@ -50,7 +52,7 @@ public class ControlTeleghidat extends LinearOpMode {
     Thread shortcutRST;
     Thread y;
 
-
+    DistanceSensor distanceSensor1, distanceSensor2;
     public void initHW(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new KodikasRobot(hardwareMap,telemetry);
@@ -85,6 +87,8 @@ public class ControlTeleghidat extends LinearOpMode {
         waitIntakeExtend = new Timing.Timer(500,TimeUnit.MILLISECONDS);
         waitIntakeExtend.start();
 
+        distanceSensor1 = hardwareMap.get(DistanceSensor.class, "distance1");
+        distanceSensor2 = hardwareMap.get(DistanceSensor.class, "distance2");
 
     }
 
@@ -98,7 +102,7 @@ public class ControlTeleghidat extends LinearOpMode {
             IntakeLift intakeLift = robot.getIntakeLiftSession();
             Outake outake = robot.getOutakeSession();
             OuttakeLift outakeLift = robot.getOutakeLiftsession();
-            boolean yPressed = false;
+
             outakeLift.closeGrabber();
             outake.idleOuttake();
             Timing.Timer timerInceput = new Timing.Timer(400,TimeUnit.MILLISECONDS);
@@ -107,13 +111,21 @@ public class ControlTeleghidat extends LinearOpMode {
             outakeLift.idleArmGrabber();
 
             while(opModeIsActive()){
-
-                drive.driveRobotCentric(
-                        -driverOp.getLeftX() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
-                        -driverOp.getLeftY() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
-                        -driverOp.getRightX() * ((outake.getMotorPosition() > 900 || intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT) ? 0.5 : 1),
-                        true
-                );
+                double dist = (distanceSensor1.getDistance(DistanceUnit.CM) + distanceSensor2.getDistance(DistanceUnit.CM)) * 0.5;
+                if(gamepad2.right_bumper){
+                    drive.driveRobotCentric(
+                            0,
+                            -0.17 * Math.signum((int)((14-dist))),
+                            0
+                    );
+                }
+                else {
+                    drive.driveRobotCentric(
+                            -driverOp.getLeftX() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
+                            -driverOp.getLeftY() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
+                            -driverOp.getRightX() * ((outake.getMotorPosition() > 900 || intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT) ? 0.75 : 1)
+                    );
+                }
                 if(gamepad1.dpad_up){
                     outake.modifyPosition(true);
                 }
@@ -127,29 +139,9 @@ public class ControlTeleghidat extends LinearOpMode {
                 if(gamepad1.dpad_right){
                     outake.idleOuttake();
                 }
-                if(gamepad2.right_bumper && debMovA.done()){
-                    Thread t = new Thread(() -> {
-                        drive.driveRobotCentric(
-                                0,
-                                -1,
-                                0,
-                                true
-                        );
-                        Timing.Timer timer = new Timing.Timer(Config.TIMP_CM * 9L,TimeUnit.MILLISECONDS);
-                        timer.start();
-                        while (!timer.done()){
-                            drive.driveRobotCentric(
-                                    0,
-                                    -1,
-                                    0,
-                                    true
-                            );
-                        }
-                        drive.stop();
-                    });
-                    t.start();
-                    debMovA.start();
-                }
+                if(gamepad1.ps)
+                    outakeLift.up2ArmGrabber();
+
                 /*if(gamepad1.left_bumper && debRB1.done()){
                     if(Math.abs(outake.getMotorPosition() - Outake.Position.SPECIMEN.val) < 35 ){
                         specimen = false;

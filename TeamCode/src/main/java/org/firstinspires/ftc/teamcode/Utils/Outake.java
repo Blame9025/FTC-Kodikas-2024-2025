@@ -75,7 +75,7 @@ public class Outake {
 
 
     public void modifyPosition(boolean up){
-        int newPos = Range.clip(getMotorPosition() + (up ? 10 : -10),
+        int newPos = Range.clip(getMotorPosition() + (up ? 100 : -100),
                 Position.IDLE.val, Position.EXTENDED.val);
         motorOuttake1.setTargetPosition(newPos);
         motorOuttake2.setTargetPosition(newPos);

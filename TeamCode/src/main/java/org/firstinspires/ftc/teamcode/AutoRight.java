@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Utils.KodiOdometry.ewp;
+import static org.firstinspires.ftc.teamcode.Utils.KodiOdometry.wp;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.command.PurePursuitCommand;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
+import com.arcrobotics.ftclib.purepursuit.Path;
+import com.arcrobotics.ftclib.purepursuit.types.PathType;
 import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
 import com.arcrobotics.ftclib.util.Timing;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,11 +28,8 @@ import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 import org.firstinspires.ftc.teamcode.Utils.Outake;
 import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
-
-import java.util.concurrent.TimeUnit;
-
 @Autonomous
-public class AutoLeft extends LinearOpMode {
+public class AutoRight extends LinearOpMode {
 
     DcMotor leftEncoder, rightEncoder;
     Timing.Timer stop,delay;
@@ -53,39 +54,31 @@ public class AutoLeft extends LinearOpMode {
         backRightMotor = robot.getBRightMotor();
         frontRightMotor = robot.getFRightMotor();
 
-        backRightMotor.resetEncoder();
-        frontRightMotor.resetEncoder();
+
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         KodiOdometry kodiOdometry = new KodiOdometry(imu, backRightMotor, frontRightMotor);
-        OdometrySubsystem odometry = new OdometrySubsystem(kodiOdometry.getHolonomicOdometry());
+        HolonomicOdometry odometry = kodiOdometry.getHolonomicOdometry();
+        Path m_path = new Path(
+                new StartWaypoint(odometry.getPose()),
+                ewp(55,120,0)
+
+        );
+
+        m_path.setPathType(PathType.HEADING_CONTROLLED);
         waitForStart();
         try {
-
-            PurePursuitCommand PureppCmd = new PurePursuitCommand(
-                    drive, odometry,
-                    new StartWaypoint(odometry.getPose()),
-                    new GeneralWaypoint(
-                            0, 5, 0,
-                            0.6, 0.5, 30
-                    ),
-
-                    new EndWaypoint(
-                            0, 10, 0,
-                            0.6, 0.5, 30, 0.8, 1)
-            );
-            PureppCmd.schedule();
-
-            while (!PureppCmd.isFinished() && opModeIsActive()) {
-                //if (isStopRequested()) throw new InterruptedException();
-                PureppCmd.execute();
+            while (opModeIsActive()) {
+                //if (isStopRequested()) throw new InterruptedException()
+                m_path.followPath(drive, odometry);
                 telemetry.addData("PosX",odometry.getPose().getX());
                 telemetry.addData("PosY",odometry.getPose().getY());
                 telemetry.addData("Ang",odometry.getPose().getHeading());
-                odometry.update();
+                odometry.updatePose();
 
                 telemetry.update();
+                m_path.init();
             }
             //telemetry.addData("S-A TERMINAT TASK",true);
             //telemetry.update();
