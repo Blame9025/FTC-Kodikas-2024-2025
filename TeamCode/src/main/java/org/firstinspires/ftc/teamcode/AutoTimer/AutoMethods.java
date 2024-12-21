@@ -22,10 +22,10 @@ public class AutoMethods extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftDrive");
-        backRightMotor = hardwareMap.get(DcMotor.class, "backRightDrive");
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftDrive");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightDrive");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "leftRearMotor");
+        backRightMotor = hardwareMap.get(DcMotor.class, "rightRearMotor");
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "rightFrontMotor");
 
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
