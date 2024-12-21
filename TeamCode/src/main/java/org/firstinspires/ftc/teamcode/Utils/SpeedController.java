@@ -11,7 +11,7 @@ public class SpeedController {
     double kA, kTan, kV;
 
     public double getTime(){
-        return System.currentTimeMillis() * 0.0001;
+        return (double)System.currentTimeMillis() * 0.001;
     }
 
     public SpeedController(double accel, double brakeRate, double maxV){

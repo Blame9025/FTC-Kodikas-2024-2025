@@ -15,9 +15,9 @@ public class Config {
 
     public static double targetT = 0.5;
 
-    public static double hV = 0.6, hA = 0.4, hTan = 1;
-    public static double vV = 0.6, vA = 0.4, vTan = 1;
-    public static double rV = 0.4, rA = 0.3, rTan = 1;
+    public static double hV = 0.3, hA = 0.2, hTan = 1;
+    public static double vV = 0.3, vA = 0.2, vTan = 1;
+    public static double rV = 0.2, rA = 0.15, rTan = 1;
 
     public static double toleranceXY = 4.5;
 

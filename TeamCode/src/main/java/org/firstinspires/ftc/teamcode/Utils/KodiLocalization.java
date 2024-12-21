@@ -30,6 +30,7 @@ public class KodiLocalization {
         imu = new KodiIMU(hardwareMap);
         imu.init();
         imu.reset();
+        imu.invertGyro();
 
         verticalEncoder.setDistancePerPulse(Config.TICKS_TO_CM);
         horizontalEncoder.setDistancePerPulse(Config.TICKS_TO_CM);
@@ -53,10 +54,13 @@ public class KodiLocalization {
                 prevV += dV;
                 prevH += dH;
 
-                double dist = Math.hypot(dV,dH);
+                double robotAngle = Math.toRadians(theta);
 
-                x += Math.sin(Math.toRadians(theta)) * dist;
-                y += Math.cos(Math.toRadians(theta)) * dist;
+                double deltaX = dH * Math.sin(robotAngle) + dV * Math.cos(robotAngle);
+                double deltaY = dH * Math.cos(robotAngle) - dV * Math.sin(robotAngle);
+
+                x += deltaX;
+                y += deltaY;
             }
 
         });

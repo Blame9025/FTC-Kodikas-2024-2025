@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,7 +13,7 @@ import java.util.Queue;
 public class KodiPursuit {
 
     HardwareMap hMap;
-    KodiLocalization loc;
+    public KodiLocalization loc;
 
     Thread pursuitThread;
 
@@ -19,6 +22,8 @@ public class KodiPursuit {
     public Point lastPoint, targetPoint;
 
     public MecanumDrive drive;
+
+    Telemetry telemetry;
 
     /**
      *
@@ -34,9 +39,10 @@ public class KodiPursuit {
      *
      */
 
-    public KodiPursuit(HardwareMap hMap, MecanumDrive drive){
+    public KodiPursuit(HardwareMap hMap, MecanumDrive drive, Telemetry telemetry){
         this.hMap = hMap;
         this.drive = drive;
+        this.telemetry = telemetry;
         loc = new KodiLocalization(hMap);
         loc.start();
     }
@@ -114,9 +120,17 @@ public class KodiPursuit {
                         Config.vV
                 );
 
+                SpeedController scR = new SpeedController(
+                        Config.rA,
+                        Config.rTan,
+                        Config.rV
+                );
+
                 boolean check = false;
 
                 double lastDistance = 2e9;
+
+                double targetTheta = loc.theta;
 
                 while (!pursuitThread.isInterrupted() && !check){
 
@@ -124,18 +138,32 @@ public class KodiPursuit {
 
                     double errorX = target.x - loc.x;
                     double errorY = target.y - loc.y;
+                    double errorTheta = targetTheta - loc.theta;
+
+                    errorTheta = minAbs(errorTheta, errorTheta - Math.signum(errorTheta) * 360);
 
                     double distance = Math.hypot(errorX,errorY);
 
-                    double targetAngle = ((int)Math.toDegrees(Math.atan2(errorX, errorY)) + 360) % 360;
+                    double currentTheta = Math.toRadians(loc.theta);
 
-                    double dx = distance * Math.sin(Math.toRadians(targetAngle - loc.theta));
-                    double dy = distance * Math.cos(Math.toRadians(targetAngle - loc.theta));
+                    double adjustedX = errorX * Math.cos(currentTheta) + errorY * Math.sin(currentTheta);
+                    double adjustedY = -errorX * Math.sin(currentTheta) + errorY * Math.cos(currentTheta);
 
-                    double x = scH.getSpeed(dx);
-                    double y = scV.getSpeed(dy);
+                    double x = scH.getSpeed(adjustedX);
+                    double y = scV.getSpeed(adjustedY);
+                    double r = scR.getSpeed(errorTheta);
 
-                    drive.driveRobotCentric(x,y,0);
+                    drive.driveRobotCentric(-x,-y,-r);
+
+                    telemetry.addData("errX",errorX);
+                    telemetry.addData("errY",errorY);
+                    telemetry.addData("errT",errorTheta);
+                    telemetry.addLine();
+                    telemetry.addData("x",x);
+                    telemetry.addData("y",y);
+                    telemetry.addData("r",r);
+                    telemetry.update();
+
 
                     if(i == waypoints.size() - 1 || targetPoint.theta!=Double.NaN){
                         if(distance < Config.toleranceXY
@@ -154,7 +182,7 @@ public class KodiPursuit {
 
                 }
 
-                SpeedController scR = new SpeedController(
+                scR = new SpeedController(
                         Config.rA,
                         Config.rTan,
                         Config.rV
@@ -169,7 +197,12 @@ public class KodiPursuit {
 
                     double r = scR.getSpeed(error);
 
-                    drive.driveRobotCentric(0,0,r);
+                    drive.driveRobotCentric(0,0,-r);
+
+                    telemetry.addData("err",error);
+                    telemetry.addLine();
+                    telemetry.addData("r",r);
+                    telemetry.update();
 
                     if(Math.abs(lastError-error) < Config.minimumRate){
                         targetPoint.theta = Double.NaN;
@@ -178,6 +211,8 @@ public class KodiPursuit {
                     lastError = error;
 
                 }
+
+                lastPoint = targetPoint;
             }
         });
         pursuitThread.start();
@@ -190,6 +225,7 @@ public class KodiPursuit {
 
     public void kill(){
         loc.stop();
+        pursuitThread.interrupt();
         drive.driveRobotCentric(0,0,0);
     }
 }
