@@ -20,8 +20,8 @@ public class Intake {
     private DcMotor coreHex;
     private Outake outtake;
     public enum Position {
-        DEFAULT(-250),
-        EXTENDED(800);
+        DEFAULT(-400),
+        EXTENDED(550);
 
         public final int val;
 
@@ -45,7 +45,7 @@ public class Intake {
         if (currentPosition != target.val) {
             intakeMotor.setTargetPosition(target.val);
             intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            intakeMotor.setPower(0.5);
+            intakeMotor.setPower(1.0);
             currentPosition = target.val;
         }
     }
@@ -55,7 +55,7 @@ public class Intake {
                 Position.DEFAULT.val, Position.EXTENDED.val);
         intakeMotor.setTargetPosition(newPos);
         intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intakeMotor.setPower(0.5);
+        intakeMotor.setPower(1.0);
         currentPosition = newPos;
     }
     Thread extend;
@@ -67,10 +67,8 @@ public class Intake {
             intakeLift.prepareIntakeLift();
 
         extend = new Thread(() -> {
-            Timing.Timer timer = new Timing.Timer(250,TimeUnit.MILLISECONDS);
-            timer.start();
-            while (!timer.done());
             setPosition(Position.EXTENDED);
+            while(intakeMotor.getCurrentPosition() < Position.EXTENDED.val - 50);
             intakeLift.extractIntakeLift();
         });
         extend.start();
@@ -87,9 +85,7 @@ public class Intake {
             timer.start();
             while (!timer.done());
             setPosition(Position.DEFAULT);
-            timer = new Timing.Timer(800,TimeUnit.MILLISECONDS);
-            timer.start();
-            while (!timer.done());
+            while(intakeMotor.getCurrentPosition() > Position.DEFAULT.val + 50 );
             intakeLift.retractIntakeLift();
             stop();
         });

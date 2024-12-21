@@ -65,7 +65,7 @@ public class AutoTemplate extends LinearOpMode {
             telemetry.addData("Ang",imu.getRobotOrientation(
                     AxesReference.INTRINSIC,
                     AxesOrder.ZXY,
-                    AngleUnit.DEGREES
+                    AngleUnit.RADIANS
             ).firstAngle);
             odometry.update();
 

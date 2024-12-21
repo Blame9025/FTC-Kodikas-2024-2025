@@ -109,8 +109,9 @@ public class ControlTeleghidat extends LinearOpMode {
             timerInceput.start();
             while (!timerInceput.done());
             outakeLift.idleArmGrabber();
-
             while(opModeIsActive()){
+                gamepad2.setLedColor(217,65,148, 1000);
+                gamepad1.setLedColor(179,250,60, 1000);
                 double dist = (distanceSensor1.getDistance(DistanceUnit.CM) + distanceSensor2.getDistance(DistanceUnit.CM)) * 0.5;
                 if(gamepad2.right_bumper){
                     drive.driveRobotCentric(
@@ -141,7 +142,23 @@ public class ControlTeleghidat extends LinearOpMode {
                 }
                 if(gamepad1.ps)
                     outakeLift.up2ArmGrabber();
-
+                if(gamepad1.options) {
+                    if(y==null || !y.isAlive()) {
+                        y = new Thread(() -> {
+                            if (Math.abs(outake.getMotorPosition() - Outake.Position.IDLE.val) > 50) {
+                                outake.idleOuttake();
+                                while (outake.getMotorPosition() < Outake.Position.IDLE.val - 50 || outake.getMotorPosition() > Outake.Position.IDLE.val - 50)
+                                    ;
+                            }
+                            outakeLift.specimenArmGrabber();
+                            Timing.Timer timer = new Timing.Timer(200, TimeUnit.MILLISECONDS);
+                            timer.start();
+                            while (timer.done()) ;
+                            outake.retractOuttake();
+                        });
+                        y.start();
+                    }
+                }
                 /*if(gamepad1.left_bumper && debRB1.done()){
                     if(Math.abs(outake.getMotorPosition() - Outake.Position.SPECIMEN.val) < 35 ){
                         specimen = false;
