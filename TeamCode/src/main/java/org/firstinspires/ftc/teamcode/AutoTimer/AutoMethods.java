@@ -16,14 +16,16 @@ public class AutoMethods extends LinearOpMode {
 
     DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
 
+    private static final double power = 1;
+
     Timing.Timer delay = new Timing.Timer(200, TimeUnit.MILLISECONDS);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
-        backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "leftRearMotor");
+        backRightMotor = hardwareMap.get(DcMotor.class, "rightRearMotor");
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "rightFrontMotor");
 
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -40,10 +42,10 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontRightMotor.setPower(1);
-            frontLeftMotor.setPower(1);
-            backRightMotor.setPower(1);
-            backLeftMotor.setPower(1);
+            frontRightMotor.setPower(power);
+            frontLeftMotor.setPower(power);
+            backRightMotor.setPower(power);
+            backLeftMotor.setPower(power);
         }
         stopMotors();
     }
@@ -53,10 +55,10 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontRightMotor.setPower(-1);
-            frontLeftMotor.setPower(-1);
-            backRightMotor.setPower(-1);
-            backLeftMotor.setPower(-1);
+            frontRightMotor.setPower(-power);
+            frontLeftMotor.setPower(-power);
+            backRightMotor.setPower(-power);
+            backLeftMotor.setPower(-power);
         }
         stopMotors();
     }
@@ -66,10 +68,10 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontRightMotor.setPower(-1);
-            frontLeftMotor.setPower(1);
-            backRightMotor.setPower(1);
-            backLeftMotor.setPower(-1);
+            frontRightMotor.setPower(-power);
+            frontLeftMotor.setPower(power);
+            backRightMotor.setPower(power);
+            backLeftMotor.setPower(-power);
         }
         stopMotors();
 
@@ -80,10 +82,10 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontRightMotor.setPower(1);
-            frontLeftMotor.setPower(-1);
-            backRightMotor.setPower(-1);
-            backLeftMotor.setPower(1);
+            frontRightMotor.setPower(power);
+            frontLeftMotor.setPower(-power);
+            backRightMotor.setPower(-power);
+            backLeftMotor.setPower(power);
         }
         stopMotors();
     }
@@ -93,8 +95,8 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontLeftMotor.setPower(1);
-            backRightMotor.setPower(1);
+            frontLeftMotor.setPower(power);
+            backRightMotor.setPower(power);
         }
         stopMotors();
     }
@@ -104,8 +106,8 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontRightMotor.setPower(1);
-            backLeftMotor.setPower(1);
+            frontRightMotor.setPower(power);
+            backLeftMotor.setPower(power);
         }
         stopMotors();
     }
@@ -115,8 +117,8 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontRightMotor.setPower(-1);
-            backLeftMotor.setPower(-1);
+            frontRightMotor.setPower(-power);
+            backLeftMotor.setPower(-power);
         }
         stopMotors();
     }
@@ -126,8 +128,8 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontLeftMotor.setPower(-1);
-            backRightMotor.setPower(-1);
+            frontLeftMotor.setPower(-power);
+            backRightMotor.setPower(-power);
         }
         stopMotors();
     }
@@ -137,10 +139,10 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontRightMotor.setPower(-1);
-            frontLeftMotor.setPower(1);
-            backRightMotor.setPower(-1);
-            backLeftMotor.setPower(1);
+            frontRightMotor.setPower(-power);
+            frontLeftMotor.setPower(power);
+            backRightMotor.setPower(-power);
+            backLeftMotor.setPower(power);
         }
         stopMotors();
     }
@@ -150,10 +152,10 @@ public class AutoMethods extends LinearOpMode {
         delay.start();
 
         while(!delay.done()){
-            frontRightMotor.setPower(1);
-            frontLeftMotor.setPower(-1);
-            backRightMotor.setPower(1);
-            backLeftMotor.setPower(-1);
+            frontRightMotor.setPower(power);
+            frontLeftMotor.setPower(-power);
+            backRightMotor.setPower(power);
+            backLeftMotor.setPower(-power);
         }
 
         stopMotors();
