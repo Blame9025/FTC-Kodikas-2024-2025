@@ -9,4 +9,17 @@ public class Config {
 
     public static double OUTTAKE_CLOSEDPOS = 0.0;
     public static double OUTTAKE_OPENPOS = 0.3;
+
+    public static double targetR = 40;
+    public static double alphaR = 0.7;
+
+    public static double targetT = 0.5;
+
+    public static double hV = 0.6, hA = 0.4, hTan = 1;
+    public static double vV = 0.6, vA = 0.4, vTan = 1;
+    public static double rV = 0.4, rA = 0.3, rTan = 1;
+
+    public static double toleranceXY = 4.5;
+
+    public static double minimumRate = 1;
 }
