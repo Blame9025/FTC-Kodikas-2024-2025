@@ -9,9 +9,7 @@ import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.command.PurePursuitCommand;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.arcrobotics.ftclib.purepursuit.Path;
-import com.arcrobotics.ftclib.purepursuit.types.PathType;
 import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
@@ -59,32 +57,34 @@ public class AutoRight extends LinearOpMode {
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         KodiOdometry kodiOdometry = new KodiOdometry(imu, backRightMotor, frontRightMotor);
-        HolonomicOdometry odometry = kodiOdometry.getHolonomicOdometry();
-        Path m_path = new Path(
-                new StartWaypoint(odometry.getPose()),
-                ewp(55,120,0)
 
-        );
-
-        m_path.setPathType(PathType.HEADING_CONTROLLED);
+        OdometrySubsystem odometry = new OdometrySubsystem(kodiOdometry.getHolonomicOdometry());
         waitForStart();
         try {
-            while (opModeIsActive()) {
-                //if (isStopRequested()) throw new InterruptedException()
-                m_path.followPath(drive, odometry);
+            PurePursuitCommand PureppCmd = new PurePursuitCommand(
+                    drive, odometry,
+                    new StartWaypoint(odometry.getPose()),
+                    //wp(0,5,0),
+                    ewp(0,10,0)
+
+            );
+            PureppCmd.schedule();
+
+            while (!PureppCmd.isFinished() && opModeIsActive()) {
+                //if (isStopRequested()) throw new InterruptedException();
+                PureppCmd.execute();
                 telemetry.addData("PosX",odometry.getPose().getX());
                 telemetry.addData("PosY",odometry.getPose().getY());
                 telemetry.addData("Ang",odometry.getPose().getHeading());
-                odometry.updatePose();
+                odometry.update();
 
                 telemetry.update();
-                m_path.init();
             }
             //telemetry.addData("S-A TERMINAT TASK",true);
             //telemetry.update();
             drive.stop();
             //PureppCmd.end(true);
-            if (opModeIsActive()) sleep(1000);
+           // if (opModeIsActive()) sleep(1000);
             throw  new InterruptedException();
         }
         catch (InterruptedException e){
