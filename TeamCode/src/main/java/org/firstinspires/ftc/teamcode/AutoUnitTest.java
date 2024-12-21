@@ -34,10 +34,7 @@ public class AutoUnitTest extends LinearOpMode {
 
             waitForStart();
 
-            pp.goTo(0,0)
-                    .goTo(0,70)
-                    .goTo(50,70,90)
-                    .goTo(0,10)
+            pp.goTo(0,10)
                     .execute();
 
             while (!pp.finished() && opModeIsActive()){

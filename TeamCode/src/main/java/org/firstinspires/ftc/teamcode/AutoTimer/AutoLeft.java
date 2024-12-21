@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class AutoLeft extends LinearOpMode {
 
     private static final double time = 200;
-    private static final long nineteenDegree = 600;
+    //private static final long nineteenDegree = 600;
     KodikasRobot robot;
 
     Timing.Timer delay = new Timing.Timer(3000, TimeUnit.MILLISECONDS);
@@ -33,7 +33,7 @@ public class AutoLeft extends LinearOpMode {
 
         outakeLift.closeGrabber();
         methods.diagonalForwardRight(1000);
-        methods.clockwiseRight(nineteenDegree);
+        methods.clockwiseRight(600);
 
         outake.specimenBar();
         outakeLift.idleArmGrabber();
@@ -54,7 +54,7 @@ public class AutoLeft extends LinearOpMode {
         outake.retractOuttake();
         sleep(2000);
 
-        methods.clockwiseRight(nineteenDegree);
+        methods.clockwiseRight(600);
         methods.goRight(1000);
 
     }

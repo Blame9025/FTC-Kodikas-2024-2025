@@ -14,7 +14,7 @@ public class AutoParkRight extends LinearOpMode {
 
         AutoMethods methods = new AutoMethods();
 
-        sleep(28000);
+
 
         methods.goRight(1300);
 
