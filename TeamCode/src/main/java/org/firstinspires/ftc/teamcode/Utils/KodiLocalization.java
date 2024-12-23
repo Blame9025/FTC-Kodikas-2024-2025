@@ -56,8 +56,8 @@ public class KodiLocalization {
 
                 double robotAngle = Math.toRadians(theta);
 
-                double deltaX = dH * Math.sin(robotAngle) + dV * Math.cos(robotAngle);
-                double deltaY = dH * Math.cos(robotAngle) - dV * Math.sin(robotAngle);
+                double deltaX = - dH * Math.sin(robotAngle) - dV * Math.cos(robotAngle);
+                double deltaY = - dH * Math.cos(robotAngle) + dV * Math.sin(robotAngle);
 
                 x += deltaX;
                 y += deltaY;

@@ -39,12 +39,11 @@ public class KodiPursuit {
      *
      */
 
-    public KodiPursuit(HardwareMap hMap, MecanumDrive drive, Telemetry telemetry){
+    public KodiPursuit(HardwareMap hMap, MecanumDrive drive, Telemetry telemetry, KodiLocalization loc){
         this.hMap = hMap;
         this.drive = drive;
         this.telemetry = telemetry;
-        loc = new KodiLocalization(hMap);
-        loc.start();
+        this.loc = loc;
     }
 
     public KodiPursuit goTo(double x, double y){
@@ -153,7 +152,7 @@ public class KodiPursuit {
                     double y = scV.getSpeed(adjustedY);
                     double r = scR.getSpeed(errorTheta);
 
-                    drive.driveRobotCentric(-x,-y,-r);
+                    drive.driveRobotCentric(x,y,-r);
 
                     telemetry.addData("errX",errorX);
                     telemetry.addData("errY",errorY);
@@ -165,7 +164,7 @@ public class KodiPursuit {
                     telemetry.update();
 
 
-                    if(i == waypoints.size() - 1 || targetPoint.theta!=Double.NaN){
+                    if(i == waypoints.size() - 1 || !Double.isNaN(targetPoint.theta)){
                         if(distance < Config.toleranceXY
                                 && Math.abs(lastDistance-distance) < Config.minimumRate){
                             check = true;
@@ -190,7 +189,7 @@ public class KodiPursuit {
 
                 double lastError = 2e9;
 
-                while(!pursuitThread.isInterrupted() && targetPoint.theta!=Double.NaN){
+                while(!pursuitThread.isInterrupted() && !Double.isNaN(targetPoint.theta)){
                     double error = targetPoint.theta - loc.theta;
 
                     error = minAbs(error, error - Math.signum(error) * 360);
@@ -204,7 +203,7 @@ public class KodiPursuit {
                     telemetry.addData("r",r);
                     telemetry.update();
 
-                    if(Math.abs(lastError-error) < Config.minimumRate){
+                    if(Math.abs(error) < 1 && Math.abs(lastError-error) < Config.minimumRate){
                         targetPoint.theta = Double.NaN;
                     }
 
@@ -214,6 +213,7 @@ public class KodiPursuit {
 
                 lastPoint = targetPoint;
             }
+            drive.driveRobotCentric(0,0,0);
         });
         pursuitThread.start();
         return this;

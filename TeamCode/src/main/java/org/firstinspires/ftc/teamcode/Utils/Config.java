@@ -10,16 +10,16 @@ public class Config {
     public static double OUTTAKE_CLOSEDPOS = 0.0;
     public static double OUTTAKE_OPENPOS = 0.3;
 
-    public static double targetR = 40;
+    public static double targetR = 15;
     public static double alphaR = 0.7;
 
     public static double targetT = 0.5;
 
-    public static double hV = 0.3, hA = 0.2, hTan = 1;
-    public static double vV = 0.3, vA = 0.2, vTan = 1;
-    public static double rV = 0.2, rA = 0.15, rTan = 1;
+    public static double hV = 0.6, hA = 1, hTan = 0.1;
+    public static double vV = 0.6, vA = 1, vTan = 0.1;
+    public static double rV = 0.4, rA = 0.2, rTan = 0.1;
 
-    public static double toleranceXY = 4.5;
+    public static double toleranceXY = 3;
 
     public static double minimumRate = 1;
 }

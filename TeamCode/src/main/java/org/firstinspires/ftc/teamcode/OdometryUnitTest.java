@@ -14,7 +14,7 @@ public class OdometryUnitTest extends LinearOpMode {
 
     KodikasRobot robot;
     MecanumDrive drive;
-    KodiPursuit pp;
+    //KodiPursuit pp;
 
     public void initHW(){
 
@@ -24,7 +24,7 @@ public class OdometryUnitTest extends LinearOpMode {
         );
         drive = robot.getDriveSession();
 
-        pp = new KodiPursuit(hardwareMap,drive,telemetry);
+        //pp = new KodiPursuit(hardwareMap,drive,telemetry);
     }
 
     @Override
@@ -34,16 +34,16 @@ public class OdometryUnitTest extends LinearOpMode {
 
             waitForStart();
 
-            while (opModeIsActive()){
+            /*while (opModeIsActive()){
                 telemetry.addData("x",pp.loc.x);
                 telemetry.addData("y",pp.loc.y);
                 telemetry.addData("t",pp.loc.theta);
                 telemetry.update();
-            }
+            }*/
 
             throw new InterruptedException();
         } catch (InterruptedException e) {
-            pp.loc.stop();
+            //pp.loc.stop();
         }
     }
 }
