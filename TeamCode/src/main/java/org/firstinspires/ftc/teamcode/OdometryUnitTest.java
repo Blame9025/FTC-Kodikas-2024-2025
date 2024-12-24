@@ -6,25 +6,21 @@ import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Utils.KodiLocalization;
 import org.firstinspires.ftc.teamcode.Utils.KodiPursuit;
 import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 
 @TeleOp
 public class OdometryUnitTest extends LinearOpMode {
 
-    KodikasRobot robot;
-    MecanumDrive drive;
-    //KodiPursuit pp;
+    KodiLocalization loc;
 
     public void initHW(){
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        robot = new KodikasRobot(
-                hardwareMap, telemetry
-        );
-        drive = robot.getDriveSession();
 
-        //pp = new KodiPursuit(hardwareMap,drive,telemetry);
+        loc = new KodiLocalization(hardwareMap);
+        loc.start();
     }
 
     @Override
@@ -34,16 +30,16 @@ public class OdometryUnitTest extends LinearOpMode {
 
             waitForStart();
 
-            /*while (opModeIsActive()){
-                telemetry.addData("x",pp.loc.x);
-                telemetry.addData("y",pp.loc.y);
-                telemetry.addData("t",pp.loc.theta);
+            while (opModeIsActive()){
+                telemetry.addData("x",loc.x);
+                telemetry.addData("y",loc.y);
+                telemetry.addData("t",loc.theta);
                 telemetry.update();
-            }*/
+            }
 
             throw new InterruptedException();
         } catch (InterruptedException e) {
-            //pp.loc.stop();
+            loc.stop();
         }
     }
 }

@@ -12,7 +12,6 @@ import java.util.Queue;
 
 public class KodiPursuit {
 
-    HardwareMap hMap;
     public KodiLocalization loc;
 
     Thread pursuitThread;
@@ -25,22 +24,7 @@ public class KodiPursuit {
 
     Telemetry telemetry;
 
-    /**
-     *
-     * KodiPursuit pp = new KodiPursuit(hMap,drive)
-     *                      .goTo(loc.x,loc.y)
-     *                      .goto(x1,y1,theta1)
-     *                      .goto(x2,y2,theta2)
-     *                      ....................
-     *                      .execute()
-     *
-     * while(!pp.finished() && opModeIsActive());
-     * pp.kill();
-     *
-     */
-
-    public KodiPursuit(HardwareMap hMap, MecanumDrive drive, Telemetry telemetry, KodiLocalization loc){
-        this.hMap = hMap;
+    public KodiPursuit(MecanumDrive drive, Telemetry telemetry, KodiLocalization loc){
         this.drive = drive;
         this.telemetry = telemetry;
         this.loc = loc;
@@ -76,27 +60,36 @@ public class KodiPursuit {
         double yP = m * xP + b;
         double d = Math.hypot(xP - xR, yP - yR);
 
-        double x1 = xP + Math.cos(Math.atan(m))
-                * (Config.targetT * d + Config.targetR);
-        double y1 = m * x1 + b;
+        double offset = Math.cos(Math.atan(m)) * (Config.targetT * d + Config.targetR);
 
-        double x2 = xP - Math.cos(Math.atan(m))
-                * (Config.targetT * d + Config.targetR);
-        double y2 = m * x2 + b;
+        double x = xP + Math.signum(target.x - xP) * offset;
+        double y = m * x + b;
 
-        double d1 = Math.hypot(target.x - x1, target.y - y1);
-        double d2 = Math.hypot(target.x - x2, target.y - y2);
-
-        double dMin = Math.min(d1,d2);
-
-        if(dMin == d1) return new Point(x1,y1);
-        return new Point(x2,y2);
+        return new Point(x,y);
     }
 
     public KodiPursuit execute(){
         pursuitThread = new Thread(() -> {
-            lastPoint = waypoints.get(0);
-            for(int i=1;!pursuitThread.isInterrupted() && i < waypoints.size();i++){
+            lastPoint = loc.getLocAsPoint();
+            double targetTheta = lastPoint.theta;
+            SpeedController scH = new SpeedController(
+                    Config.hA,
+                    Config.hTan,
+                    Config.hV
+            );
+
+            SpeedController scV = new SpeedController(
+                    Config.vA,
+                    Config.vTan,
+                    Config.vV
+            );
+
+            SpeedController scR = new SpeedController(
+                    Config.rA,
+                    Config.rTan,
+                    Config.rV
+            );
+            for(int i=0;!pursuitThread.isInterrupted() && i < waypoints.size();i++){
                 targetPoint = waypoints.get(i);
 
                 double dX = targetPoint.x - lastPoint.x;
@@ -107,33 +100,13 @@ public class KodiPursuit {
                 double m = dY/dX;
                 double b = lastPoint.y - m * lastPoint.x;
 
-                SpeedController scH = new SpeedController(
-                        Config.hA,
-                        Config.hTan,
-                        Config.hV
-                );
-
-                SpeedController scV = new SpeedController(
-                        Config.vA,
-                        Config.vTan,
-                        Config.vV
-                );
-
-                SpeedController scR = new SpeedController(
-                        Config.rA,
-                        Config.rTan,
-                        Config.rV
-                );
-
                 boolean check = false;
 
                 double lastDistance = 2e9;
 
-                double targetTheta = loc.theta;
-
                 while (!pursuitThread.isInterrupted() && !check){
 
-                    Point target = getBestPoint(m,b,new Point(loc.x, loc.y),targetPoint);
+                    Point target = getBestPoint(m,b,loc.getLocAsPoint(),targetPoint);
 
                     double errorX = target.x - loc.x;
                     double errorY = target.y - loc.y;
@@ -143,10 +116,12 @@ public class KodiPursuit {
 
                     double distance = Math.hypot(errorX,errorY);
 
-                    double currentTheta = Math.toRadians(loc.theta);
+                    double movementAngle = Math.atan2(errorY,errorX);
 
-                    double adjustedX = errorX * Math.cos(currentTheta) + errorY * Math.sin(currentTheta);
-                    double adjustedY = -errorX * Math.sin(currentTheta) + errorY * Math.cos(currentTheta);
+                    double currentTheta = Math.toRadians(360 - loc.theta);
+
+                    double adjustedX = distance * Math.cos(movementAngle - currentTheta);
+                    double adjustedY = distance * Math.sin(movementAngle - currentTheta);
 
                     double x = scH.getSpeed(adjustedX);
                     double y = scV.getSpeed(adjustedY);
@@ -171,8 +146,7 @@ public class KodiPursuit {
                         }
                     }
                     else{
-                        if(distance < Config.targetR * Config.alphaR
-                                && Math.abs(lastDistance-distance) < Config.minimumRate){
+                        if(distance < Config.targetR){
                             check = true;
                         }
                     }
@@ -181,11 +155,7 @@ public class KodiPursuit {
 
                 }
 
-                scR = new SpeedController(
-                        Config.rA,
-                        Config.rTan,
-                        Config.rV
-                );
+                scR.resetSpeed();
 
                 double lastError = 2e9;
 
@@ -203,8 +173,13 @@ public class KodiPursuit {
                     telemetry.addData("r",r);
                     telemetry.update();
 
-                    if(Math.abs(error) < 1 && Math.abs(lastError-error) < Config.minimumRate){
+                    if(Math.abs(error) < Config.toleranceR
+                            && Math.abs(lastError-error) < Config.minimumRate){
+                        targetTheta = targetPoint.theta;
                         targetPoint.theta = Double.NaN;
+                        scH.resetSpeed();
+                        scV.resetSpeed();
+                        scR.resetSpeed();
                     }
 
                     lastError = error;

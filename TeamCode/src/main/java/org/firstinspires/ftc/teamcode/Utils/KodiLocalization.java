@@ -67,6 +67,10 @@ public class KodiLocalization {
         updateThread.start();
     }
 
+    public Point getLocAsPoint(){
+        return new Point(x,y,theta);
+    }
+
     public void stop(){
         updateThread.interrupt();
     }

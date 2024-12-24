@@ -11,7 +11,6 @@ public class Config {
     public static double OUTTAKE_OPENPOS = 0.3;
 
     public static double targetR = 15;
-    public static double alphaR = 0.7;
 
     public static double targetT = 0.5;
 
@@ -20,6 +19,7 @@ public class Config {
     public static double rV = 0.4, rA = 0.2, rTan = 0.1;
 
     public static double toleranceXY = 3;
+    public static double toleranceR = 2;
 
     public static double minimumRate = 1;
 }

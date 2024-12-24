@@ -30,5 +30,9 @@ public class SpeedController {
         return Math.atan(position * kTan) * speed;
     }
 
+    public void resetSpeed(){
+        speed = 0;
+    }
+
 
 }
