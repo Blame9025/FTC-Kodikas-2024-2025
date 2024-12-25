@@ -14,12 +14,18 @@ public class SpeedController {
         return (double)System.currentTimeMillis() * 0.001;
     }
 
-    public SpeedController(double accel, double brakeRate, double maxV){
+    public SpeedController(double accel, double maxV, double brakeDist){
         kA = accel;
-        kTan = brakeRate;
+        kTan = Math.PI * 0.5 / brakeDist;
         kV = maxV;
 
         lastTime = getTime();
+    }
+
+    public void updateCoef(double accel, double maxV, double brakeDist){
+        kA = accel;
+        kTan = Math.PI * 0.5 / brakeDist;
+        kV = maxV;
     }
 
     public double getSpeed(double position){
@@ -27,7 +33,7 @@ public class SpeedController {
         speed += kA * (time - lastTime);
         speed = Range.clip(speed,0,kV);
         lastTime = time;
-        return Math.atan(position * kTan) * speed;
+        return Range.clip(Math.atan(position * kTan) * speed,0,kV);
     }
 
     public void resetSpeed(){

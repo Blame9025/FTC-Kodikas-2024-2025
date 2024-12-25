@@ -10,7 +10,7 @@ public class KodiDistance {
 
     DistanceSensor distanceSensor;
     MecanumDrive drive;
-    SpeedController scSpecimen = new SpeedController(1,0.1,0.4);
+    SpeedController scSpecimen = new SpeedController(1,0.4,15);
     Thread positioningThread;
 
     public KodiDistance(HardwareMap hardwareMap, MecanumDrive drive){

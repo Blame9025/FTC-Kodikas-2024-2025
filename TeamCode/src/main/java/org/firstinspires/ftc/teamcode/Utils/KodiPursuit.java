@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class KodiPursuit {
 
@@ -74,20 +70,20 @@ public class KodiPursuit {
             double targetTheta = lastPoint.theta;
             SpeedController scH = new SpeedController(
                     Config.hA,
-                    Config.hTan,
-                    Config.hV
+                    Config.hV,
+                    Config.hBr
             );
 
             SpeedController scV = new SpeedController(
                     Config.vA,
-                    Config.vTan,
-                    Config.vV
+                    Config.vV,
+                    Config.vBr
             );
 
             SpeedController scR = new SpeedController(
                     Config.rA,
-                    Config.rTan,
-                    Config.rV
+                    Config.rV,
+                    Config.rBr
             );
             for(int i=0;!pursuitThread.isInterrupted() && i < waypoints.size();i++){
                 targetPoint = waypoints.get(i);
@@ -105,6 +101,10 @@ public class KodiPursuit {
                 double lastDistance = 2e9;
 
                 while (!pursuitThread.isInterrupted() && !check){
+
+                    scH.updateCoef(Config.hA, Config.hV, Config.hBr);
+                    scV.updateCoef(Config.vA, Config.vV, Config.vBr);
+                    scR.updateCoef(Config.rA, Config.rV, Config.rBr);
 
                     Point target = getBestPoint(m,b,loc.getLocAsPoint(),targetPoint);
 
@@ -160,6 +160,10 @@ public class KodiPursuit {
                 double lastError = 2e9;
 
                 while(!pursuitThread.isInterrupted() && !Double.isNaN(targetPoint.theta)){
+
+                    scR.updateCoef(Config.rA, Config.rV, Config.rBr);
+
+
                     double error = targetPoint.theta - loc.theta;
 
                     error = minAbs(error, error - Math.signum(error) * 360);
