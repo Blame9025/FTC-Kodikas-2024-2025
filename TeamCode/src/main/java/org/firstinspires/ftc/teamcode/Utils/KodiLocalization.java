@@ -54,10 +54,13 @@ public class KodiLocalization {
                 prevV += dV;
                 prevH += dH;
 
+                double hyp = -Math.hypot(dV,dH);
+                double moveAngle = Math.atan2(dV,dH);
+
                 double robotAngle = Math.toRadians(theta);
 
-                double deltaX = - dH * Math.sin(robotAngle) - dV * Math.cos(robotAngle);
-                double deltaY = - dH * Math.cos(robotAngle) + dV * Math.sin(robotAngle);
+                double deltaX = hyp * Math.sin(robotAngle + moveAngle);
+                double deltaY = hyp * Math.cos(robotAngle + moveAngle);
 
                 x += deltaX;
                 y += deltaY;

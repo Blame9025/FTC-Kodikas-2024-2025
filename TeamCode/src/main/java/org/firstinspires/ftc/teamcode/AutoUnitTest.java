@@ -39,17 +39,23 @@ public class AutoUnitTest extends LinearOpMode {
 
             waitForStart();
 
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(0,30)
-                    .execute();
-            while (!pp.finished() && opModeIsActive());
-
             dist.run(17);
             while (dist.running());
 
+            sleep(1000);
+
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(100,130)
-                    .goTo(100,30)
+                    .goTo(70,70)
+                    .goTo(70,145)
+                    .goTo(97,145,90)
+                    .goTo(97,20)
+                    .goTo(97,145)
+                    .goTo(120,145)
+                    .goTo(120,20)
+                    .goTo(120,145)
+                    .goTo(135,145)
+                    .goTo(135,0)
+                    .goTo(70,50,0)
                     .goTo(0,0)
                     .execute();
             while (!pp.finished() && opModeIsActive());
@@ -57,6 +63,7 @@ public class AutoUnitTest extends LinearOpMode {
             throw new InterruptedException();
         } catch (InterruptedException e) {
             pp.kill();
+            dist.stop();
         }
     }
 }

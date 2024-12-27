@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Utils;
 
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -56,12 +57,21 @@ public class KodiPursuit {
         double yP = m * xP + b;
         double d = Math.hypot(xP - xR, yP - yR);
 
-        double offset = Math.cos(Math.atan(m)) * (Config.targetT * d + Config.targetR);
+        double x1 = xP + Math.cos(Math.atan(m))
+                * (Config.targetT * d + Config.targetR);
+        double y1 = m * x1 + b;
 
-        double x = xP + Math.signum(target.x - xP) * offset;
-        double y = m * x + b;
+        double x2 = xP - Math.cos(Math.atan(m))
+                * (Config.targetT * d + Config.targetR);
+        double y2 = m * x2 + b;
 
-        return new Point(x,y);
+        double d1 = Math.hypot(target.x - x1, target.y - y1);
+        double d2 = Math.hypot(target.x - x2, target.y - y2);
+
+        double dMin = Math.min(d1,d2);
+
+        if(dMin == d1) return new Point(x1,y1);
+        return new Point(x2,y2);
     }
 
     public KodiPursuit execute(){
@@ -91,7 +101,7 @@ public class KodiPursuit {
                 double dX = targetPoint.x - lastPoint.x;
                 double dY = targetPoint.y - lastPoint.y;
 
-                if(dX == 0) dX = 1e-9;
+                if(dX == 0) dX = 1e-6;
 
                 double m = dY/dX;
                 double b = lastPoint.y - m * lastPoint.x;
@@ -127,11 +137,29 @@ public class KodiPursuit {
                     double y = scV.getSpeed(adjustedY);
                     double r = scR.getSpeed(errorTheta);
 
-                    drive.driveRobotCentric(x,y,-r);
+                    drive.driveRobotCentric(x, y, -r);
 
+                    double deltaX = targetPoint.x - loc.x;
+                    double deltaY = targetPoint.y - loc.y;
+
+                    double deltaDist = Math.hypot(deltaX,deltaY);
+
+                    telemetry.addData("targetX",targetPoint.x);
+                    telemetry.addData("targetY",targetPoint.y);
+                    telemetry.addLine();
+                    telemetry.addData("followX",target.x);
+                    telemetry.addData("followY",target.y);
+                    telemetry.addLine();
+                    telemetry.addData("adjX",adjustedX);
+                    telemetry.addData("adjY",adjustedY);
+                    telemetry.addLine();
+                    telemetry.addData("locX",loc.x);
+                    telemetry.addData("locY",loc.y);
+                    telemetry.addLine();
                     telemetry.addData("errX",errorX);
                     telemetry.addData("errY",errorY);
                     telemetry.addData("errT",errorTheta);
+                    telemetry.addData("dist",deltaDist);
                     telemetry.addLine();
                     telemetry.addData("x",x);
                     telemetry.addData("y",y);
@@ -146,7 +174,7 @@ public class KodiPursuit {
                         }
                     }
                     else{
-                        if(distance < Config.targetR){
+                        if(deltaDist < Config.targetR){
                             check = true;
                         }
                     }

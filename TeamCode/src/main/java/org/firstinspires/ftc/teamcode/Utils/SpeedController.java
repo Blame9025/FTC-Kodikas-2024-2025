@@ -28,12 +28,12 @@ public class SpeedController {
         kV = maxV;
     }
 
-    public double getSpeed(double position){
+    public double getSpeed(double error){
         double time = getTime();
         speed += kA * (time - lastTime);
         speed = Range.clip(speed,0,kV);
         lastTime = time;
-        return Range.clip(Math.atan(position * kTan) * speed,0,kV);
+        return Range.clip(Math.atan(error * kTan) * speed,-kV,kV);
     }
 
     public void resetSpeed(){

@@ -14,12 +14,12 @@ public class Config {
 
     public static double targetT = 0.5;
 
-    public static double hV = 0.6, hA = 1, hBr = 15;
-    public static double vV = 0.6, vA = 1, vBr = 15;
-    public static double rV = 0.4, rA = 0.2, rBr = 15;
+    public static double hV = 1, hA = 1, hBr = 15;
+    public static double vV = 1, vA = 1, vBr = 15;
+    public static double rV = 0.8, rA = 1, rBr = 20;
 
-    public static double toleranceXY = 3;
-    public static double toleranceR = 2;
+    public static double toleranceXY = 2.5;
+    public static double toleranceR = 3;
 
-    public static double minimumRate = 1;
+    public static double minimumRate = 1.5;
 }

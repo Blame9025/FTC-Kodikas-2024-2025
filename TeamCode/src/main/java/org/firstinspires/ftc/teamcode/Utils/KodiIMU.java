@@ -42,6 +42,9 @@ public class KodiIMU extends GyroEx {
      * @param hw      Hardware map
      * @param imuName Name of sensor in configuration
      */
+
+    double angle,lastAngle;
+
     public KodiIMU(HardwareMap hw, String imuName) {
         imu = hw.get(IMU.class, imuName);
         multiplier = 1;
@@ -65,6 +68,7 @@ public class KodiIMU extends GyroEx {
         globalHeading = 0;
         relativeHeading = 0;
         offset = 0;
+        lastAngle = 0;
     }
 
     /**
@@ -77,9 +81,27 @@ public class KodiIMU extends GyroEx {
     /**
      * @return Relative heading of the robot
      */
+
     public double getHeading() {
-        // Return yaw
-        return getAbsoluteHeading() - offset;
+        double currentAngle = getAbsoluteHeading();
+        double deltaAngle = currentAngle - lastAngle;
+        // Detectăm tranzițiile de la 90 la -90 sau de la -90 la 90
+        if (deltaAngle < -90) {
+            // Tranziție de la 90 la -90
+            deltaAngle += 180;
+        } else if (deltaAngle > 90) {
+            // Tranziție de la -90 la 90
+            deltaAngle -= 180;
+        }
+
+        // Actualizăm unghiul global
+        globalHeading += deltaAngle;
+
+        // Actualizăm ultima citire
+        lastAngle = currentAngle;
+
+        // Convertim unghiul global în intervalul [0, 360]
+        return (globalHeading % 360 + 360 - offset) % 360;
     }
 
     /**
@@ -114,7 +136,7 @@ public class KodiIMU extends GyroEx {
 
     @Override
     public void reset() {
-        offset += getHeading();
+        offset = globalHeading;
     }
 
     @Override
