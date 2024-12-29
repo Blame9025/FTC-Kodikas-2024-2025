@@ -47,31 +47,23 @@ public class KodiPursuit {
         return (x % 360 + 360) % 360;
     }
 
-    public Point getBestPoint(double m, double b, Point robot, Point target){
+    public Point getBestPoint(double a, double b, Point robot, Point target){
         double xR = robot.x;
         double yR = robot.y;
 
         if(Math.hypot(target.x - xR, target.y - yR) < Config.targetR) return target;
 
-        double xP = (xR + m * yR - m * b) / (m * m + 1);
-        double yP = m * xP + b;
+        double xP = (xR + a * yR - a * b) / (a * a + 1);
+        double yP = a * xP + b;
         double d = Math.hypot(xP - xR, yP - yR);
 
-        double x1 = xP + Math.cos(Math.atan(m))
-                * (Config.targetT * d + Config.targetR);
-        double y1 = m * x1 + b;
+        double offset = Math.cos(Math.atan(a)) *
+                (Config.targetT * d + Config.targetR);
 
-        double x2 = xP - Math.cos(Math.atan(m))
-                * (Config.targetT * d + Config.targetR);
-        double y2 = m * x2 + b;
+        double x = xP + Math.signum(target.x - xP) * offset;
+        double y = a * x + b;
 
-        double d1 = Math.hypot(target.x - x1, target.y - y1);
-        double d2 = Math.hypot(target.x - x2, target.y - y2);
-
-        double dMin = Math.min(d1,d2);
-
-        if(dMin == d1) return new Point(x1,y1);
-        return new Point(x2,y2);
+        return new Point(x,y);
     }
 
     public KodiPursuit execute(){
@@ -101,7 +93,10 @@ public class KodiPursuit {
                 double dX = targetPoint.x - lastPoint.x;
                 double dY = targetPoint.y - lastPoint.y;
 
-                if(dX == 0) dX = 1e-6;
+                if(dX == 0) {
+                    dX = 0.1;
+                    targetPoint.x = dX;
+                }
 
                 double m = dY/dX;
                 double b = lastPoint.y - m * lastPoint.x;

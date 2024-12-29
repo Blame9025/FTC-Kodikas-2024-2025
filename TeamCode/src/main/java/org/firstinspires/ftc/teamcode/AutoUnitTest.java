@@ -54,7 +54,7 @@ public class AutoUnitTest extends LinearOpMode {
                     .goTo(120,20)
                     .goTo(120,145)
                     .goTo(135,145)
-                    .goTo(135,0)
+                    .goTo(135,20)
                     .goTo(70,50,0)
                     .goTo(0,0)
                     .execute();
