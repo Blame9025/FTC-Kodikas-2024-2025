@@ -10,7 +10,7 @@ public class KodiDistance {
 
     DistanceSensor distanceSensor;
     MecanumDrive drive;
-    SpeedController scSpecimen = new SpeedController(1,0.6,20);
+    SpeedController scSpecimen = new SpeedController(1,0.4,22);
     Thread positioningThread;
 
     public KodiDistance(HardwareMap hardwareMap, MecanumDrive drive){
@@ -29,7 +29,7 @@ public class KodiDistance {
 
                     drive.driveRobotCentric(0, speed, 0);
 
-                    if (Math.abs(error) < 1 && Math.abs(lastError - error) < Config.minimumRate)
+                    if (Math.abs(error) < Config.toleranceXY && Math.abs(lastError - error) < Config.minimumRate)
                         positioningThread.interrupt();
 
                     lastError = error;

@@ -89,5 +89,9 @@ public class OuttakeLift {
         setPositionForArmGrabber(PositionArmGrabber.UP);
 
     }
+    
+    public PositionArmGrabber getArmGrabberPosition(){
+        return currentPositionForArmGrabber;
+    }
 
 }

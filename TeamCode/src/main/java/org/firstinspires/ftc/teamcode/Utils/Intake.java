@@ -21,7 +21,7 @@ public class Intake {
     private Outake outtake;
     public enum Position {
         DEFAULT(-400),
-        EXTENDED(550);
+        EXTENDED(680);
 
         public final int val;
 
