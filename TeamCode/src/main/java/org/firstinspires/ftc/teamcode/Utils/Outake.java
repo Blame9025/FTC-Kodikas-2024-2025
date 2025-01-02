@@ -69,7 +69,7 @@ public class Outake {
         setPosition(Position.IDLE);
     }
 
-    public void setPositionForGrabbSpecimen(){ // se ridica pana la human player
+    public void grabbSpecimen(){ // se ridica pana la human player
         setPosition(Position.GRABBSPECIMEN);
     }
 
