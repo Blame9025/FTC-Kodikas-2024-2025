@@ -88,8 +88,8 @@ public class ControlTeleghidat extends LinearOpMode {
         waitIntakeExtend = new Timing.Timer(500,TimeUnit.MILLISECONDS);
         waitIntakeExtend.start();
 
-        distanceSensor1 = hardwareMap.get(DistanceSensor.class, "distance2");
-        distanceSensor2 = hardwareMap.get(DistanceSensor.class, "distance2");
+        distanceSensor1 = hardwareMap.get(DistanceSensor.class, "distance1");
+        distanceSensor2 = hardwareMap.get(DistanceSensor.class, "distance1");
 
     }
 

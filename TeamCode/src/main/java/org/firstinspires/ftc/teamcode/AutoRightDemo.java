@@ -53,54 +53,77 @@ public class AutoRightDemo extends LinearOpMode {
             outakeLift.idleArmGrabber();
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(70,70)
+                    .goTo(0,30,0)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            dist.run(19);
+            dist.run(23);
             while (dist.running());
 
             outakeLift.specimenArmGrabber();
             sleep(800);
             outakeLift.openGrabber();
             sleep(600);
-            outakeLift.closeGrabber();
-            outakeLift.downArmGrabber();
+            outakeLift.idleArmGrabber();
             sleep(600);
             outake.retractOuttake();
+            sleep(1000);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(70,125)
-                    .goTo(97,125)
-                    .goTo(97,125,90)
-                    .goTo(97,20)
-                    .goTo(97,125)
-                    .goTo(120,125)
-                    .goTo(120,20)
-                    .goTo(120,125)
-                    .goTo(135,125)
-                    .goTo(135,20)
-                    .goTo(135,30,0)
-                    .goTo(135,15)
+                    .goTo(63,70)
+                    .goTo(63,125)
+                    .goTo(90,125)
+                    .goTo(90,125,90)
+                    .goTo(90,30)
+                    .goTo(90,125)
+                    .goTo(113,125)
+                    .goTo(113,30)
+                    .goTo(113,12,180)
+//                    .goTo(120,125)
+//                    .goTo(135,125) // pozitii pentru al 3 lea sample testate MERG!
+//                    .goTo(135,20)
+//                    .goTo(135,30,0)
+                    //.goTo(135,15)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            outake.grabbSpecimen(); // !!!! DE VERIFICAT POZITIA !!!!
+            outake.retractOuttake(); // !!!! DE VERIFICAT POZITIA !!!!
+            sleep(500);
+            outakeLift.openGrabber();
             sleep(500);
             outakeLift.specimenArmGrabber(); // pozitia de luat de la human player !!!! DE TESTAT SI MODIFICAT POZTITIA !!!!
-            outakeLift.openGrabber();
-
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(135,4)
-                    .execute();
-            while (!pp.finished() && opModeIsActive());
+            sleep(500);
+            outakeLift.closeGrabber();
+            sleep(500);
+            outakeLift.idleArmGrabber();
 
             sleep(600);
 
             outakeLift.closeGrabber();
+            sleep(100);
 
-            // Pana acum autonomia pune specimen ul din preload dupa impinge toate cele 3 sample la human player dupa se intoarce
-            // si prinde un specimen pus de human player in colt ul din dreapta de tot aproape de perete !!!! DE TESTAT PE TEREN !!!!
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(113,20)
+                    .goTo(113,20,0)
+                    .goTo(-10,20)
+                    .goTo(-10,30)
+                    .execute();
+            while (!pp.finished() && opModeIsActive());
+
+            dist.run(23);
+            while (dist.running());
+
+            outake.specimenBar();
+            sleep(1300);
+            outakeLift.idleArmGrabber();
+            sleep(600);
+            outakeLift.specimenArmGrabber();
+            sleep(400);
+            outakeLift.openGrabber();
+            sleep(200);
+            outakeLift.idleArmGrabber();
+            sleep(200);
+
 
 
             throw new InterruptedException();
