@@ -14,7 +14,7 @@ public class KodiDistance {
     Thread positioningThread;
 
     public KodiDistance(HardwareMap hardwareMap, MecanumDrive drive){
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "distance1");
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "distance2");
         this.drive = drive;
     }
 

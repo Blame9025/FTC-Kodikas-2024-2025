@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Utils.Intake;
 import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
@@ -17,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Utils.Outake;
 import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
 @Autonomous
-public class AutoRightDemo extends LinearOpMode {
+public class AutoRightKristee extends LinearOpMode {
 
     KodikasRobot robot;
     MecanumDrive drive;
@@ -55,11 +54,10 @@ public class AutoRightDemo extends LinearOpMode {
 
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(0,30)
-                    .goTo(0,30,0)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            dist.run(23);
+            dist.run(20);
             while (dist.running());
 
             outakeLift.specimenArmGrabber();
@@ -72,29 +70,15 @@ public class AutoRightDemo extends LinearOpMode {
             sleep(1000);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(60,70)
-                    .goTo(60,135)
-                    .goTo(93,135)
+                    .goTo(65,70)
+                    .goTo(65,135)
                     .goTo(93,135,90)
                     .goTo(93,30)
                     .goTo(93,135)
                     .goTo(125,135)
-                    .goTo(125,50)
                     .goTo(125,30)
-                    .goTo(125,30,180)
-//                    .goTo(120,125)
-//                    .goTo(135,125) // pozitii pentru al 3 lea sample testate MERG!
-//                    .goTo(135,20)
-//                    .goTo(135,30,0)
-                    //.goTo(135,15)
-                    .execute();
-            while (!pp.finished() && opModeIsActive());
-
-            sleep(2000);
-
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(125,25)
-                    .goTo(125,25,0)
+                    .goTo(125,60,180)
+                    .goTo(90,30)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
@@ -104,41 +88,41 @@ public class AutoRightDemo extends LinearOpMode {
             outake.retractOuttake(); // !!!! DE VERIFICAT POZITIA !!!!
             sleep(500);
             outakeLift.openGrabber();
-            sleep(500);
             outakeLift.specimenArmGrabber(); // pozitia de luat de la human player !!!! DE TESTAT SI MODIFICAT POZTITIA !!!!
             sleep(500);
             outakeLift.closeGrabber();
-            sleep(500);
+            sleep(300);
             outakeLift.idleArmGrabber();
-
             sleep(600);
 
             outakeLift.closeGrabber();
             sleep(100);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(130,40)
                     .goTo(130,40,0)
-                    .goTo(-10,30)
                     .goTo(-10,30,0)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            dist.run(23);
+            dist.run(20);
             while (dist.running());
 
             outake.specimenBar();
             sleep(1300);
-            outakeLift.idleArmGrabber();
-            sleep(600);
             outakeLift.specimenArmGrabber();
             sleep(400);
             outakeLift.openGrabber();
             sleep(200);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(120,20)
+                    .execute();
+            while (!pp.finished() && opModeIsActive());
+
             outakeLift.idleArmGrabber();
             sleep(500);
             outakeLift.closeGrabber();
-            sleep(300);
+            sleep(5000);
 
 
 
