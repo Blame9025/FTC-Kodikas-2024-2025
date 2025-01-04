@@ -53,68 +53,73 @@ public class AutoRightDemo extends LinearOpMode {
             outake.specimenBar();
             outakeLift.idleArmGrabber();
 
+            outakeLift.closeGrabber();
+            outake.grabbSpecimen();
+            outakeLift.up2ArmGrabber();
+
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(0,30)
                     .goTo(0,30,0)
                     .execute();
-            while (!pp.finished() && opModeIsActive());
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
 
-            dist.run(23);
-            while (dist.running());
-
-            outakeLift.specimenArmGrabber();
+            drive.driveRobotCentric(0,0.5,0);
             sleep(800);
+            drive.stop();
+
             outakeLift.openGrabber();
             sleep(600);
-            outakeLift.idleArmGrabber();
-            sleep(600);
-            outake.retractOuttake();
-            sleep(1000);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(60,70)
-                    .goTo(60,135)
+                    .goTo(0,35)
+                    .goTo(75,70)
+                    .goTo(75,70,0)
+                    .goTo(75,135)
                     .goTo(93,135)
                     .goTo(93,135,90)
-                    .goTo(93,30)
+                    .goTo(93,20)
                     .goTo(93,135)
                     .goTo(125,135)
-                    .goTo(125,50)
-                    .goTo(125,30)
-                    .goTo(125,30,180)
+                    .goTo(125,20)
+                    .goTo(125,60)
+                    .goTo(125,60,180)
+                    .goTo(125,40,180)
 //                    .goTo(120,125)
 //                    .goTo(135,125) // pozitii pentru al 3 lea sample testate MERG!
 //                    .goTo(135,20)
 //                    .goTo(135,30,0)
                     //.goTo(135,15)
                     .execute();
-            while (!pp.finished() && opModeIsActive());
-
-            sleep(2000);
-
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(125,25)
-                    .goTo(125,25,0)
-                    .execute();
-            while (!pp.finished() && opModeIsActive());
-
-            dist.run(15);
-            while (dist.running());
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
 
             outake.retractOuttake(); // !!!! DE VERIFICAT POZITIA !!!!
             sleep(500);
             outakeLift.openGrabber();
             sleep(500);
             outakeLift.specimenArmGrabber(); // pozitia de luat de la human player !!!! DE TESTAT SI MODIFICAT POZTITIA !!!!
-            sleep(500);
-            outakeLift.closeGrabber();
-            sleep(500);
-            outakeLift.idleArmGrabber();
 
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(125,40,180)
+                    .execute();
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+            sleep(1000);
+
+            drive.driveRobotCentric(0,0.3,0);
+            sleep(800);
+            drive.stop();
+
+            outakeLift.closeGrabber();
             sleep(600);
-
-            outakeLift.closeGrabber();
-            sleep(100);
+            outakeLift.autoUp();
+            sleep(600);
+            outake.grabbSpecimen();
+            sleep(800);
 
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(130,40)
@@ -122,25 +127,33 @@ public class AutoRightDemo extends LinearOpMode {
                     .goTo(-10,30)
                     .goTo(-10,30,0)
                     .execute();
-            while (!pp.finished() && opModeIsActive());
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
 
-            dist.run(23);
-            while (dist.running());
+            drive.driveRobotCentric(0,0.5,0);
+            sleep(800);
+            drive.stop();
 
-            outake.specimenBar();
-            sleep(1300);
-            outakeLift.idleArmGrabber();
-            sleep(600);
-            outakeLift.specimenArmGrabber();
-            sleep(400);
-            outakeLift.openGrabber();
-            sleep(200);
-            outakeLift.idleArmGrabber();
-            sleep(500);
-            outakeLift.closeGrabber();
-            sleep(300);
+//            pp = new KodiPursuit(drive,telemetry,loc)
+//                    .goTo(130,40)
+//                    .goTo(130,40,0)
+//                    .goTo(-10,30)
+//                    .goTo(-10,30,0)
+//                    .execute();
+//            while (!pp.finished() && opModeIsActive());
 
+            outakeLift.downArmGrabber();
+            sleep(800);
+            outake.retractOuttake();
+            sleep(1000);
 
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(90,15)
+                    .execute();
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
 
             throw new InterruptedException();
         } catch (InterruptedException e) {

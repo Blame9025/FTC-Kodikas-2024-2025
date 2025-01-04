@@ -17,6 +17,7 @@ public class Outake {
     double power = 0.8;
     public enum Position {
         DEFAULT(0),
+        SPECIMENAUTO(500),
         IDLE(600),
         GRABBSPECIMEN(600),
         SPECIMEN(800), // specimen bar
@@ -84,6 +85,8 @@ public class Outake {
     public void retractOuttake(){
         setPosition(Position.DEFAULT);
     }
+
+    public void autoSpec2(){setPosition(Position.SPECIMENAUTO);}
 
 
     public void modifyPosition(boolean up){

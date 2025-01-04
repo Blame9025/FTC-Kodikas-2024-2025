@@ -19,7 +19,8 @@ public class OuttakeLift {
         DEFAULT(0),
         SPECIMEN(0.3),
         UP(0.4),
-        UP2(0.5),// gheara robotului se ridica ca sa lase game elemntul din gheara
+        UP2(0.5),// gheara robotului se ridica ca sa lase game elemntul din gheara HITLER
+        AUTOUP(0.51),
         IDLE(0.8);
         public final double val;
 
@@ -83,6 +84,9 @@ public class OuttakeLift {
     }
     public void up2ArmGrabber() {
         setPositionForArmGrabber(PositionArmGrabber.UP2);
+    }
+    public void autoUp(){
+        setPositionForArmGrabber(PositionArmGrabber.AUTOUP);
     }
     public void upArmGrabber(){
 

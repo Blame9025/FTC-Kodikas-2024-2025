@@ -8,7 +8,8 @@ public class IntakeLift {
     public enum Position {
         DEFAULT(0.15),
         UP(0.6),
-        EXTRACT(0.9);
+        EXTRACT(0.9),
+        AUTO(1);
 
         public final double val;
 
@@ -44,4 +45,6 @@ public class IntakeLift {
     }
 
     public void extractIntakeLift() {setPosition(Position.EXTRACT);}
+
+    public void autoServoIntake(){setPosition(Position.AUTO);}
 }

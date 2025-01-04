@@ -19,7 +19,7 @@ public class Config {
     public static double rV = 0.6, rA = 1, rBr = 20;
 
     public static double toleranceXY = 2.5;
-    public static double toleranceR = 2;
+    public static double toleranceR = 3;
 
     public static double minimumRate = 1.5;
 }

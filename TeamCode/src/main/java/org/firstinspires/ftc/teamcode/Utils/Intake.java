@@ -21,6 +21,7 @@ public class Intake {
     private Outake outtake;
     public enum Position {
         DEFAULT(-400),
+        AUTO(-200), // PENTRU AUTONOMIE
         EXTENDED(680);
 
         public final int val;
@@ -94,6 +95,10 @@ public class Intake {
     }
     public void stop(){
         intakeMotor.setPower(0);
+    }
+
+    public void autoPos(){
+        setPosition(Position.AUTO);
     }
 
     public DcMotor getCoreHex() {return coreHex; }

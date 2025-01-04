@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,8 +17,8 @@ import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 import org.firstinspires.ftc.teamcode.Utils.Outake;
 import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
-@TeleOp
-public class AutoLeftDemo extends LinearOpMode {
+@Autonomous(name = "AlbertBasketParkDemo")
+public class AutoLeftAlbertDemo extends LinearOpMode {
 
     KodikasRobot robot;
     MecanumDrive drive;
@@ -61,11 +62,12 @@ public class AutoLeftDemo extends LinearOpMode {
             //sleep(3000);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(40,40,0)
+                    .goTo(-30,40)
+                    .goTo(-30,40,0)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            dist.run(19);
+            dist.run(23);
             while (dist.running());
 
             outakeLift.specimenArmGrabber();
@@ -75,68 +77,14 @@ public class AutoLeftDemo extends LinearOpMode {
             outakeLift.closeGrabber();
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(-85,30)
-                    .goTo(-85,30,180)
-                    .goTo(-85,45,180)
+                    .goTo(-85,30,0)
+                    .goTo(-85,100)
+                    .goTo(-85,100,90)
+                    .goTo(-60,100)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            intake.autoPos();
-            intakeLift.autoServoIntake();
-            sleep(2000);
-
-            coreHexIntake.setPower(1);
-
-            drive.driveRobotCentric(0,-0.3,0);
-            sleep(1000);
-            drive.stop();
-
-            intake.retractIntake();
-            coreHexIntake.setPower(-0.75);
-            sleep(800);
-            coreHexIntake.setPower(0);
-//            outakeLift.openGrabber();
-//            outake.retractOuttake();
-//            sleep(1200);
-//            outakeLift.closeGrabber();
-//            sleep(200);
-//            outake.extendOuttake();
-//            outakeLift.idleArmGrabber();
-
-            outakeLift.openGrabber();
-            outakeLift.downArmGrabber();
-            sleep(800);
-            outake.retractOuttake();
-            sleep(1200);
-            outakeLift.closeGrabber();
-
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    //.goTo(-65,10,180)
-                    .goTo(-65,25,180)
-                    .execute();
-            while (!pp.finished() && opModeIsActive());
-
-            outake.extendOuttake();
-            sleep(2000);
             outakeLift.upArmGrabber();
-            sleep(500);
-
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(-65,20,225)
-                    .goTo(-80,10,225)
-                    .execute();
-            while (!pp.finished() && opModeIsActive());
-
-            outakeLift.openGrabber();
-            sleep(400);
-            outakeLift.idleArmGrabber();
-            sleep(500);
-
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(-65,20,225)
-                    .goTo(-65,20,180)
-                    .execute();
-            while (!pp.finished() && opModeIsActive());
 
             throw new InterruptedException();
         } catch (InterruptedException e) {
