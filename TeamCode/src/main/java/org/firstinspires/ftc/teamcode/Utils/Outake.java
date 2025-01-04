@@ -14,7 +14,7 @@ public class Outake {
     private boolean alreadyInActionOuttake = false;
     private int currentPosition = Position.DEFAULT.val;
     KodikasRobot robot;
-    double power = 0.8;
+    double power = 1;
     public enum Position {
         DEFAULT(0),
         SPECIMENAUTO(500),

@@ -82,12 +82,15 @@ public class OuttakeLift {
     public void specimenArmGrabber(){
         setPositionForArmGrabber(PositionArmGrabber.SPECIMEN);
     }
+
     public void up2ArmGrabber() {
         setPositionForArmGrabber(PositionArmGrabber.UP2);
     }
+
     public void autoUp(){
         setPositionForArmGrabber(PositionArmGrabber.AUTOUP);
     }
+
     public void upArmGrabber(){
 
         setPositionForArmGrabber(PositionArmGrabber.UP);

@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 import org.firstinspires.ftc.teamcode.Utils.Outake;
 import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
-@Autonomous(name = "AlbertBasketParkDemo")
+@Autonomous
 public class AutoLeftAlbertDemo extends LinearOpMode {
 
     KodikasRobot robot;
@@ -25,14 +25,14 @@ public class AutoLeftAlbertDemo extends LinearOpMode {
     KodiPursuit pp;
     KodiLocalization loc;
     KodiDistance dist;
-    DcMotor coreHexIntake;
+    DcMotor coreHex;
 
     public void initHW(){
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new KodikasRobot(hardwareMap, telemetry);
         drive = robot.getDriveSession();
-        coreHexIntake = robot.getCoreHexIntake();
+        coreHex = robot.getCoreHexIntake();
 
         dist = new KodiDistance(hardwareMap,drive);
 
@@ -52,39 +52,88 @@ public class AutoLeftAlbertDemo extends LinearOpMode {
 
             waitForStart();
 
-//            dist.run(17);
-//            while (dist.running());
-
             outakeLift.closeGrabber();
             outake.specimenBar();
             outakeLift.idleArmGrabber();
 
-            //sleep(3000);
-
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(-30,40)
-                    .goTo(-30,40,0)
+                    .goTo(60,0)
+                    .goTo(60,0,-45)
+                    .goTo(35,35,-45)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            dist.run(23);
-            while (dist.running());
+            outake.extendOuttake();
+            sleep(2000);
+            outakeLift.up2ArmGrabber();
+            sleep(500);
 
-            outakeLift.specimenArmGrabber();
-            sleep(800);
+//            pp = new KodiPursuit(drive,telemetry,loc)
+//                    .goTo(10,28)
+//                    .execute();
+//            while (!pp.finished() && opModeIsActive());
+
             outakeLift.openGrabber();
-            sleep(600);
+            sleep(300);
+            outakeLift.idleArmGrabber();
+            sleep(500);
             outakeLift.closeGrabber();
+            sleep(300);
+            outake.retractOuttake();
+            sleep(1500);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(-85,30,0)
-                    .goTo(-85,100)
-                    .goTo(-85,100,90)
-                    .goTo(-60,100)
+                    .goTo(15,12)
+                    .goTo(15,12,0)
+                    .goTo(150,0)
+                    .goTo(150,0,180)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            outakeLift.upArmGrabber();
+            outakeLift.idleArmGrabber();
+            sleep(500);
+
+            drive.driveRobotCentric(0,0.5,0);
+            sleep(1200);
+            drive.stop();
+
+            outakeLift.autoUp();
+            sleep(200);
+
+
+//            pp = new KodiPursuit(drive,telemetry,loc) //START SECTION SAMPLE 1 DE PE JOS
+//                    .goTo(30,30)
+//                    .goTo(30,30,180)
+//                    //.goTo(30,60)
+//                    .execute();
+//            while (!pp.finished() && opModeIsActive());
+//
+//            outakeLift.downArmGrabber();
+//            sleep(700);
+//            outakeLift.openGrabber();
+//            sleep(400);
+//            outake.retractOuttake();
+//            sleep(1500);
+//            intakeLift.prepareIntakeLift();
+//            sleep(500);
+//            intake.autoPos();
+//            sleep(1000);
+//            coreHex.setPower(1);
+//
+//            drive.driveRobotCentric(0,0.2,0);
+//            sleep(800);
+//            drive.stop();
+//
+//            coreHex.setPower(0);
+//            intakeLift.prepareIntakeLift();
+//            intake.retractIntake();
+//            sleep(1000);
+//
+//            coreHex.setPower(-0.75);
+//            sleep(800);
+//
+//            outakeLift.closeGrabber();
+//            sleep(300); //END SECTION SAMPLE 1 DE PE JOS
 
             throw new InterruptedException();
         } catch (InterruptedException e) {
