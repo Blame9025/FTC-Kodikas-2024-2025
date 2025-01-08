@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -16,6 +17,8 @@ import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
 import org.firstinspires.ftc.teamcode.Utils.Outake;
 import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
+import java.util.concurrent.TimeUnit;
+
 @Autonomous
 public class AutoRightDemo extends LinearOpMode {
 
@@ -24,6 +27,7 @@ public class AutoRightDemo extends LinearOpMode {
     KodiPursuit pp;
     KodiLocalization loc;
     KodiDistance dist;
+    Timing.Timer timer;
 
     public void initHW(){
 
@@ -49,6 +53,9 @@ public class AutoRightDemo extends LinearOpMode {
 
             waitForStart();
 
+            timer = new Timing.Timer(29, TimeUnit.SECONDS);
+            timer.start();
+
             outakeLift.closeGrabber();
             outake.specimenBar();
             outakeLift.idleArmGrabber();
@@ -62,7 +69,7 @@ public class AutoRightDemo extends LinearOpMode {
                     .goTo(0,30,0)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested()) throw new InterruptedException();
+                if(isStopRequested() || timer.done()) throw new InterruptedException();
             }
 
             drive.driveRobotCentric(0,0.5,0);
@@ -74,18 +81,17 @@ public class AutoRightDemo extends LinearOpMode {
 
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(0,35)
-                    .goTo(75,70)
-                    .goTo(75,70,0)
-                    .goTo(75,135)
-                    .goTo(93,135)
-                    .goTo(93,135,90)
-                    .goTo(93,20)
-                    .goTo(93,135)
-                    .goTo(125,135)
-                    .goTo(125,20)
-                    .goTo(125,60)
-                    .goTo(125,60,180)
-                    .goTo(125,40,180)
+                    .goTo(76,70)
+                    .goTo(76,70,0)
+                    .goTo(76,135)
+                    .goTo(87,135)
+                    .goTo(87,135,90)
+                    .goTo(87,20)
+                    .goTo(87,135)
+                    .goTo(118,135)
+                    .goTo(118,20)
+                    .goTo(118,60)
+                    .goTo(118,60,180)
 //                    .goTo(120,125)
 //                    .goTo(135,125) // pozitii pentru al 3 lea sample testate MERG!
 //                    .goTo(135,20)
@@ -93,7 +99,7 @@ public class AutoRightDemo extends LinearOpMode {
                     //.goTo(135,15)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested()) throw new InterruptedException();
+                if(isStopRequested() || timer.done()) throw new InterruptedException();
             }
 
             outake.retractOuttake(); // !!!! DE VERIFICAT POZITIA !!!!
@@ -106,7 +112,7 @@ public class AutoRightDemo extends LinearOpMode {
                     .goTo(125,40,180)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested()) throw new InterruptedException();
+                if(isStopRequested() || timer.done()) throw new InterruptedException();
             }
             sleep(1000);
 
@@ -128,7 +134,7 @@ public class AutoRightDemo extends LinearOpMode {
                     .goTo(-10,30,0)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested()) throw new InterruptedException();
+                if(isStopRequested() || timer.done()) throw new InterruptedException();
             }
 
             drive.driveRobotCentric(0,0.5,0);
@@ -149,10 +155,21 @@ public class AutoRightDemo extends LinearOpMode {
             sleep(1000);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(90,15)
+                    .goTo(60,15)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested()) throw new InterruptedException();
+                if(isStopRequested() || timer.done()) throw new InterruptedException();
+            }
+
+            drive.driveRobotCentric(0,0.5,0);
+            sleep(600);
+            drive.stop();
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(150,5)
+                    .execute();
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested() || timer.done()) throw new InterruptedException();
             }
 
             throw new InterruptedException();

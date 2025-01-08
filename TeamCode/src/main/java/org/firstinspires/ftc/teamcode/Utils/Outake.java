@@ -89,9 +89,9 @@ public class Outake {
     public void autoSpec2(){setPosition(Position.SPECIMENAUTO);}
 
 
-    public void modifyPosition(boolean up){
+    public void modifyPosition(boolean up, boolean forced){
         int newPos = Range.clip(getMotorPosition() + (up ? 100 : -100),
-                Position.IDLE.val, Position.EXTENDED.val);
+                forced ? -1000 : Position.IDLE.val, Position.EXTENDED.val);
         motorOuttake1.setTargetPosition(newPos);
         motorOuttake2.setTargetPosition(newPos);
         motorOuttake1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -101,12 +101,13 @@ public class Outake {
         currentPosition = newPos;
     }
 
-    public int getMotorPositionOuttake1(){
-        return motorOuttake1.getCurrentPosition();
+    public DcMotor getMotorOuttake2(){
+        return motorOuttake1;
     }
 
-    public int getMotorPositionOuttake2(){
-        return motorOuttake2.getCurrentPosition();
+    public DcMotor getMotorOuttake1(){
+
+        return motorOuttake2;
     }
 
     public int getMotorPosition(){

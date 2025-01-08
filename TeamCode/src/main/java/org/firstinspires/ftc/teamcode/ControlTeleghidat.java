@@ -60,6 +60,7 @@ public class ControlTeleghidat extends LinearOpMode {
         coreHexIntake = robot.getCoreHexIntake();
 
 
+
         drive = robot.getDriveSession();
         driverOp = new GamepadEx(gamepad2);
 
@@ -103,7 +104,7 @@ public class ControlTeleghidat extends LinearOpMode {
             IntakeLift intakeLift = robot.getIntakeLiftSession();
             Outake outake = robot.getOutakeSession();
             OuttakeLift outakeLift = robot.getOutakeLiftsession();
-
+            boolean forcedReset = false;
             outakeLift.closeGrabber();
             outake.idleOuttake();
             Timing.Timer timerInceput = new Timing.Timer(400,TimeUnit.MILLISECONDS);
@@ -129,10 +130,18 @@ public class ControlTeleghidat extends LinearOpMode {
                     );
                 }
                 if(gamepad1.dpad_up){
-                    outake.modifyPosition(true);
+                    outake.modifyPosition(true, false);
                 }
                 if(gamepad1.dpad_down){
-                    outake.modifyPosition(false);
+                    outake.modifyPosition(false,gamepad1.share);
+                    if(gamepad1.share)
+                        forcedReset = true;
+                }
+                if(!gamepad1.share && gamepad1.dpad_down && forcedReset)
+                {
+                    outake.getMotorOuttake1().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    outake.getMotorOuttake2().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    forcedReset = false;
                 }
                 if(gamepad1.dpad_left) {
                     outake.extendOuttake();

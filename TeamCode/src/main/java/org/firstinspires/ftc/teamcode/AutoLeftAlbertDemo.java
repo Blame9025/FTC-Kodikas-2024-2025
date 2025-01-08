@@ -85,8 +85,8 @@ public class AutoLeftAlbertDemo extends LinearOpMode {
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(15,12)
                     .goTo(15,12,0)
-                    .goTo(150,0)
-                    .goTo(150,0,180)
+                    .goTo(130,-5)
+                    .goTo(130,-5,180)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 

@@ -21,6 +21,8 @@ public class KodiPursuit {
 
     Telemetry telemetry;
 
+    boolean kill = false;
+
     public KodiPursuit(MecanumDrive drive, Telemetry telemetry, KodiLocalization loc){
         this.drive = drive;
         this.telemetry = telemetry;
@@ -75,6 +77,7 @@ public class KodiPursuit {
     }
 
     public KodiPursuit execute(){
+        kill = false;
         pursuitThread = new Thread(() -> {
             lastPoint = loc.getLocAsPoint();
             double targetTheta = lastPoint.theta;
@@ -95,7 +98,7 @@ public class KodiPursuit {
                     Config.rV,
                     Config.rBr
             );
-            for(int i=0;!pursuitThread.isInterrupted() && i < waypoints.size();i++){
+            for(int i=0;!kill && i < waypoints.size();i++){
                 targetPoint = waypoints.get(i);
 
                 double dX = targetPoint.x - lastPoint.x;
@@ -110,7 +113,7 @@ public class KodiPursuit {
 
                 double lastDistance = 2e9;
 
-                while (!pursuitThread.isInterrupted() && !check){
+                while (!kill && !check){
 
                     scH.updateCoef(Config.hA, Config.hV, Config.hBr);
                     scV.updateCoef(Config.vA, Config.vV, Config.vBr);
@@ -187,7 +190,7 @@ public class KodiPursuit {
 
                 double lastError = 2e9;
 
-                while(!pursuitThread.isInterrupted() && !Double.isNaN(targetPoint.theta)){
+                while(!kill && !Double.isNaN(targetPoint.theta)){
 
                     scR.updateCoef(Config.rA, Config.rV, Config.rBr);
 
@@ -233,6 +236,8 @@ public class KodiPursuit {
     public void kill(){
         loc.stop();
         pursuitThread.interrupt();
+
+        kill = true;
         drive.driveRobotCentric(0,0,0);
     }
 }
