@@ -30,7 +30,7 @@ public class Measurement extends LinearOpMode {
     Timing.Timer delay = new Timing.Timer(3000, TimeUnit.MILLISECONDS);
     public void initHw(){
 
-        motorIntake = hardwareMap.dcMotor.get("motorIntake");
+        /*motorIntake = hardwareMap.dcMotor.get("motorIntake");
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
         motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
         coreHexIntake = hardwareMap.dcMotor.get("coreHexIntake");
@@ -60,13 +60,13 @@ public class Measurement extends LinearOpMode {
 
         //MotorEx encoderLeft, encoderRight;
         //encoderLeft = new MotorEx(hardwareMap, "leftEncoder");
-        //encoderRight = new MotorEx(hardwareMap, "rightEncoder");
+        //encoderRight = new MotorEx(hardwareMap, "rightEncoder");*/
 
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        /*telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         initHw();
         KodikasRobot robot = new KodikasRobot(
@@ -114,7 +114,7 @@ public class Measurement extends LinearOpMode {
         }catch(InterruptedException e){
             telemetry.addData("OPRIM TOT", true);
             telemetry.update();
-        }
+        }*/
 
 
     }

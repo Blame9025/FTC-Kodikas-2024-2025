@@ -57,8 +57,15 @@ public class AutoRightAiCitinel extends LinearOpMode {
             outake.grabbSpecimen();
             outakeLift.up2ArmGrabber();
 
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(-20,40,0)
+                    .execute();
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+
             drive.driveRobotCentric(0,0.5,0);
-            sleep(1500);
+            sleep(800);
             drive.stop();
 
             outakeLift.openGrabber();
@@ -67,7 +74,7 @@ public class AutoRightAiCitinel extends LinearOpMode {
             sleep(600);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(45,45,45)
+                    .goTo(70,59,45) // verificat cu ruleta, neverificat unghiul
 //                    .goTo(75,70)
 //                    .goTo(75,70,0)
 //                    .goTo(75,135)
@@ -98,14 +105,14 @@ public class AutoRightAiCitinel extends LinearOpMode {
             sleep(400);
             coreHexIntake.setPower(1);
 
-            drive.driveRobotCentric(0.1,0.2,0);
+            drive.driveRobotCentric(0,0.3,0);
             sleep(800);
             drive.stop();
 
             coreHexIntake.setPower(0);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(60,40,-45)
+                    .goTo(70,59,-45) // verificat cu ruleta, neverificat unghiul
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -116,20 +123,20 @@ public class AutoRightAiCitinel extends LinearOpMode {
             coreHexIntake.setPower(1);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(60,40,45)
+                    .goTo(95,59,45)// verificat prin poze, neverificat unghiul
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            drive.driveRobotCentric(0.1,0.2,0);
+            drive.driveRobotCentric(0,0.3,0);
             sleep(800);
             drive.stop();
 
             coreHexIntake.setPower(0);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(73,40,-45)
+                    .goTo(95,59,-45)// verificat prin poze, neverificat unghiul
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -140,7 +147,7 @@ public class AutoRightAiCitinel extends LinearOpMode {
             coreHexIntake.setPower(1);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(73,40,45)
+                    .goTo(120,59,45)// verificat prin poze, neverificat unghiul
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -153,7 +160,7 @@ public class AutoRightAiCitinel extends LinearOpMode {
             coreHexIntake.setPower(0);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(73,40,-45)
+                    .goTo(120,59,-45)// verificat prin poze, neverificat unghiul
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -172,7 +179,7 @@ public class AutoRightAiCitinel extends LinearOpMode {
             sleep(500);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(68,40,180)
+                    .goTo(72,40,180) // verificat cu ruleta
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -212,6 +219,7 @@ public class AutoRightAiCitinel extends LinearOpMode {
             }
             sleep(1200);
 
+
             drive.driveRobotCentric(0,0.3,0);
             sleep(800);
             drive.stop();
@@ -233,6 +241,21 @@ public class AutoRightAiCitinel extends LinearOpMode {
 
             outake.specimenBar();
             sleep(750);
+
+            //PARCARE START
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(100,7,0)
+                    .execute();
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+
+            drive.driveRobotCentric(0.3,0,0); // se duce in dreapta ca sa se parcheze in colt
+            sleep(800);
+            drive.stop();
+
+            //PARCARE END
 
             throw new InterruptedException();
         } catch (InterruptedException e) {

@@ -18,9 +18,11 @@ public class Intake {
     private double currentPosition = Position.DEFAULT.val;
     private IntakeLift intakeLift;
     private DcMotor coreHex;
+    private Outake outtake;
+    private Timing.Timer cooldown = new Timing.Timer(800,TimeUnit.MILLISECONDS);
 
     public enum Position {
-        DEFAULT(0.0),
+        DEFAULT(0.7),
         EXTENDED(1.0);
 
         public final double val;
@@ -36,6 +38,10 @@ public class Intake {
         this.servoIntake2 = servoIntake2;
         this.robot = robot;
         this.coreHex = coreHex;
+        outtake = robot.getOutakeSession();
+
+        cooldown.start();
+
         coreHex.setDirection(DcMotor.Direction.REVERSE);
         servoIntake2.setDirection(Servo.Direction.REVERSE);
     }
@@ -67,7 +73,8 @@ public class Intake {
 
         extend = new Thread(() -> {
             setPosition(Position.EXTENDED);
-            while(intakeMotor.getCurrentPosition() < Position.EXTENDED.val - 50);
+            cooldown.start();
+            while(!cooldown.done());
             intakeLift.extractIntakeLift();
         });
         extend.start();
@@ -83,8 +90,8 @@ public class Intake {
             Timing.Timer timer = new Timing.Timer(200,TimeUnit.MILLISECONDS);
             timer.start();
             while (!timer.done());
-            setPosition(Position.DEFAULT);
-            while(intakeMotor.getCurrentPosition() > Position.DEFAULT.val + 50 );
+            cooldown.start();
+            while(!cooldown.done());
             intakeLift.retractIntakeLift();
             stop();
         });
@@ -92,16 +99,13 @@ public class Intake {
 
     }
     public void stop(){
-        intakeMotor.setPower(0);
+        servoIntake1.close();
+        servoIntake2.close();
     }
 
-    public void autoPos(){
-        setPosition(Position.AUTO);
-    }
+//    public void autoPos(){
+//        setPosition(Position.AUTO);
+//    }
 
     public DcMotor getCoreHex() {return coreHex; }
-    public int getCurrentPosition() {
-        return currentPosition;
-    }
-    public DcMotor getIntakeMotor(){ return intakeMotor; }
 }
