@@ -11,18 +11,13 @@ public class calibrareIntake2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Servo servoIntake1,servoIntake2;
+        Servo servoArm;
 
-        servoIntake1 = hardwareMap.servo.get("servoIntake1");
-        servoIntake2 = hardwareMap.servo.get("servoIntake2");
-
-        servoIntake2.setDirection(Servo.Direction.REVERSE);
-        servoIntake1.setDirection(Servo.Direction.FORWARD);
-
+        servoArm = hardwareMap.servo.get("servoGrabber");
         waitForStart();
-        double pos = 0.2;
-        servoIntake1.setPosition(pos);
-        servoIntake2.setPosition(pos);
-        sleep(15000);
+        double pos = 0.0    ;
+        servoArm.setPosition(pos);
+        while (opModeIsActive());
+
     }
 }

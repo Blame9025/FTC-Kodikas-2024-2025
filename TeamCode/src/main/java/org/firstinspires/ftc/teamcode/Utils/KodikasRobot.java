@@ -18,7 +18,7 @@ public class KodikasRobot {
     Outake outake;
     OuttakeLift outtakeLift;
 
-    DcMotor motorIntake;
+    Servo servoGlisieraIntake1,servoGlisieraIntake2;
     Servo servoArm;
     Servo servoArmGrabber;
     DcMotor motorOutake1, motorOutake2;
@@ -38,11 +38,11 @@ public class KodikasRobot {
         frontRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-        motorIntake = hardwareMap.dcMotor.get("motorIntake");
+        servoGlisieraIntake1 = hardwareMap.servo.get("servoGlisieraIntake1");
+        servoGlisieraIntake2 = hardwareMap.servo.get("servoGlisieraIntake2");
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
         motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
         coreHexIntake = hardwareMap.dcMotor.get("coreHexIntake");
-        motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Inițializarea hardware-ului pentru servo
         servoIntake1 = hardwareMap.servo.get("servoIntake1");
@@ -53,7 +53,6 @@ public class KodikasRobot {
        // servoIntake1.setDirection(Servo.Direction.FORWARD);
         servoIntake2.setDirection(Servo.Direction.REVERSE);
 
-        motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOutake2.setDirection(DcMotor.Direction.REVERSE);
@@ -63,7 +62,7 @@ public class KodikasRobot {
     }
     public KodikasRobot(HardwareMap hardwareMap, Telemetry telemetry){
         initHardware(hardwareMap);
-        this.intake = new Intake(this,motorIntake,coreHexIntake);
+        this.intake = new Intake(this,servoGlisieraIntake1,servoGlisieraIntake2,coreHexIntake);
         this.intakeLift = new IntakeLift(this,servoIntake1, servoIntake1);
         this.outake = new Outake(this,motorOutake1, motorOutake2);
         this.outtakeLift = new OuttakeLift(this,servoArm,servoArmGrabber);

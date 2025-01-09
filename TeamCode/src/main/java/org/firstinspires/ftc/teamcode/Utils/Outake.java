@@ -41,8 +41,6 @@ public class Outake {
         motorOuttake1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorOuttake2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        motorOuttake1.setTargetPosition(Intake.Position.DEFAULT.val);
-        motorOuttake2.setTargetPosition(Intake.Position.DEFAULT.val);
     }
 
     public void setPosition(Position target) { // setare pozitie pentru glisiera outtake

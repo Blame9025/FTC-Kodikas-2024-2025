@@ -7,6 +7,8 @@ public class Config {
     public static int CENTER_WHEEL_OFFSET = 0;
     public static int TIMP_CM = 50;
 
+    public static double kAIntake = 0.9;
+
     public static double OUTTAKE_CLOSEDPOS = 0.0;
     public static double OUTTAKE_OPENPOS = 0.3;
 

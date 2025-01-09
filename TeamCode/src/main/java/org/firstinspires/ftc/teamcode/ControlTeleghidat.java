@@ -34,7 +34,7 @@ public class ControlTeleghidat extends LinearOpMode {
     KodikasRobot robot;
     MecanumDrive drive;
     GamepadEx driverOp;
-
+    double lastTime;
 
     boolean intakeExtended = false;
     boolean intakeToStart = false;
@@ -91,7 +91,10 @@ public class ControlTeleghidat extends LinearOpMode {
 
         distanceSensor1 = hardwareMap.get(DistanceSensor.class, "distance2");
         distanceSensor2 = hardwareMap.get(DistanceSensor.class, "distance2");
-
+        lastTime = getTime();
+    }
+    public double getTime(){
+        return (double)System.currentTimeMillis() * 0.001;
     }
 
     @Override
@@ -248,7 +251,10 @@ public class ControlTeleghidat extends LinearOpMode {
                 if(gamepad1.left_stick_button)
                     outakeLift.idleArmGrabber();
                 if(Math.abs(gamepad1.right_trigger - gamepad1.left_trigger) > 0.01){
-                    intake.modifyPosition(gamepad1.right_trigger - gamepad1.left_trigger);
+                    double time = getTime();
+                    double deltaTimp = time - lastTime;
+                    intake.modifyPosition((gamepad1.right_trigger - gamepad1.left_trigger) * Config.kAIntake * deltaTimp);
+                    lastTime = time;
                 }
             }
 

@@ -49,7 +49,7 @@ public class OuttakeLift {
 
     public void setPositionForGrabber(PositionGrabber target) { // pentru gheara care prinde game elementul
         servoGrabber.setPosition(target.val);
-
+        servoGrabber.setDirection(Servo.Direction.REVERSE);
         currentPositionForGrabber = target; // Update the current position
     }
 

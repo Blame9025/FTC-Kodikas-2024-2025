@@ -13,50 +13,48 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class Intake {
-    private final DcMotor intakeMotor;
-    private int currentPosition = Position.DEFAULT.val;
+    private Servo servoIntake1,servoIntake2;
    // private final Object positionLock = new Object();
+    private double currentPosition = Position.DEFAULT.val;
     private IntakeLift intakeLift;
     private DcMotor coreHex;
-    private Outake outtake;
+
     public enum Position {
-        DEFAULT(-400),
-        AUTO(-200), // PENTRU AUTONOMIE
-        EXTENDED(680);
+        DEFAULT(0.0),
+        EXTENDED(1.0);
 
-        public final int val;
+        public final double val;
 
-        Position(int val) {
+        Position(double val) {
             this.val = val;
         }
     }
+
     KodikasRobot robot;
-    public Intake(KodikasRobot robot,DcMotor intakeMotor, DcMotor coreHex) {
-        this.intakeMotor = intakeMotor;
+    public Intake(KodikasRobot robot,Servo servoIntake1, Servo servoIntake2, DcMotor coreHex) {
+        this.servoIntake1 = servoIntake1;
+        this.servoIntake2 = servoIntake2;
         this.robot = robot;
         this.coreHex = coreHex;
-        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         coreHex.setDirection(DcMotor.Direction.REVERSE);
+        servoIntake2.setDirection(Servo.Direction.REVERSE);
     }
 
 
 
     public void setPosition(Position target) {
         if (currentPosition != target.val) {
-            intakeMotor.setTargetPosition(target.val);
-            intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            intakeMotor.setPower(1.0);
+            servoIntake2.setPosition(target.val);
+            servoIntake1.setPosition(target.val);
             currentPosition = target.val;
         }
     }
 
     public void modifyPosition(double value){
-        int newPos = Range.clip(intakeMotor.getCurrentPosition() + (int)(value*100),
-                Position.DEFAULT.val, Position.EXTENDED.val);
-        intakeMotor.setTargetPosition(newPos);
-        intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intakeMotor.setPower(1.0);
+        double newPos = Range.clip(currentPosition + value,
+                    (double)Position.DEFAULT.val, (double)Position.EXTENDED.val);
+        servoIntake1.setPosition(newPos);
+        servoIntake2.setPosition(newPos);
         currentPosition = newPos;
     }
     Thread extend;
