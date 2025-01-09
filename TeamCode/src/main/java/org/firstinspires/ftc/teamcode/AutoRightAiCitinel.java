@@ -54,11 +54,13 @@ public class AutoRightAiCitinel extends LinearOpMode {
             waitForStart();
 
             outakeLift.closeGrabber();
-            outake.grabbSpecimen();
+            sleep(200);
+            outake.specimenBar();
             outakeLift.up2ArmGrabber();
+            sleep(800);
 
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(-20,40,0)
+            pp = new KodiPursuit(drive,telemetry,loc) // 1 START
+                    .goTo(-14,40,0)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -66,46 +68,27 @@ public class AutoRightAiCitinel extends LinearOpMode {
 
             drive.driveRobotCentric(0,0.5,0);
             sleep(800);
-            drive.stop();
+            drive.stop(); // 1 END
 
             outakeLift.openGrabber();
             sleep(300);
-            outake.retractOuttake();
-            sleep(600);
 
-            pp = new KodiPursuit(drive,telemetry,loc)
+            pp = new KodiPursuit(drive,telemetry,loc) // 2 START DE PE JOS
                     .goTo(70,59,45) // verificat cu ruleta, neverificat unghiul
-//                    .goTo(75,70)
-//                    .goTo(75,70,0)
-//                    .goTo(75,135)
-//                    .goTo(93,135)
-//                    .goTo(93,135,90)
-//                    .goTo(93,20)
-//                    .goTo(93,135)
-//                    .goTo(125,135)
-//                    .goTo(125,20)
-//                    .goTo(125,60)
-//                    .goTo(125,60,180)
-//                    .goTo(125,40,180)
-//                    .goTo(120,125)
-//                    .goTo(135,125) // pozitii pentru al 3 lea sample testate MERG!
-//                    .goTo(135,20)
-//                    .goTo(135,30,0)
-                    //.goTo(135,15)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
             }
 
             intakeLift.prepareIntakeLift();
-            sleep(800);
+            sleep(600);
             intake.extendIntake();
             sleep(800);
             intakeLift.extractIntakeLift();
             sleep(400);
             coreHexIntake.setPower(1);
 
-            drive.driveRobotCentric(0,0.3,0);
+            drive.driveRobotCentric(0,0.2,0);
             sleep(800);
             drive.stop();
 
@@ -118,18 +101,18 @@ public class AutoRightAiCitinel extends LinearOpMode {
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            coreHexIntake.setPower(-0.75);
+            coreHexIntake.setPower(-1);
             sleep(750);
-            coreHexIntake.setPower(1);
+            coreHexIntake.setPower(1); // 2 END DE PE JOS
 
-            pp = new KodiPursuit(drive,telemetry,loc)
+            pp = new KodiPursuit(drive,telemetry,loc)  // 3 START DE PE JOS
                     .goTo(95,59,45)// verificat prin poze, neverificat unghiul
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            drive.driveRobotCentric(0,0.3,0);
+            drive.driveRobotCentric(0,0.2,0);
             sleep(800);
             drive.stop();
 
@@ -142,18 +125,18 @@ public class AutoRightAiCitinel extends LinearOpMode {
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            coreHexIntake.setPower(-0.75);
+            coreHexIntake.setPower(-1);
             sleep(750);
-            coreHexIntake.setPower(1);
+            coreHexIntake.setPower(1); // 3 END DE PE JOS
 
-            pp = new KodiPursuit(drive,telemetry,loc)
+            pp = new KodiPursuit(drive,telemetry,loc) // 4 START DE PE JOS
                     .goTo(120,59,45)// verificat prin poze, neverificat unghiul
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            drive.driveRobotCentric(0.1,0.2,0);
+            drive.driveRobotCentric(0,0.2,0);
             sleep(800);
             drive.stop();
 
@@ -166,10 +149,10 @@ public class AutoRightAiCitinel extends LinearOpMode {
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            coreHexIntake.setPower(-0.75);
-            sleep(800);
+            coreHexIntake.setPower(-1);
+            sleep(800); // 4 END DE PE JOS
             coreHexIntake.setPower(0);
-            intakeLift.prepareIntakeLift();
+            intakeLift.prepareIntakeLift(); // 2 START
             sleep(600);
             intake.retractIntake();
             sleep(800);
@@ -180,13 +163,14 @@ public class AutoRightAiCitinel extends LinearOpMode {
 
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(72,40,180) // verificat cu ruleta
+                    .goTo(72,40,180)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
             }
             sleep(1200);
 
-            drive.driveRobotCentric(0,0.3,0);
+            drive.driveRobotCentric(0,0.2,0);
             sleep(800);
             drive.stop();
 
@@ -196,8 +180,9 @@ public class AutoRightAiCitinel extends LinearOpMode {
             sleep(500);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(68,40,180)
-                    .goTo(-20,40,0)
+                    .goTo(72,40,180)
+                    .goTo(-26,40,0)
+                    .goTo(-26,40,0)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -207,42 +192,54 @@ public class AutoRightAiCitinel extends LinearOpMode {
             drive.stop();
 
             outakeLift.openGrabber();
-            sleep(300);
-            outake.retractOuttake();
-            sleep(800);
+            sleep(300); // 2 END
 
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(68,40,180)
+            pp = new KodiPursuit(drive,telemetry,loc) // 3 START
+                    .goTo(72,40,180)
+                    .goTo(72,40,180)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
             }
-            sleep(1200);
+            outake.grabbSpecimen();
+            sleep(2000);
 
 
             drive.driveRobotCentric(0,0.3,0);
+            sleep(800);
+            drive.stop();
+
+            outakeLift.closeGrabber();
+            sleep(300);
+            outake.specimenBar();
+            sleep(800);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(72,40,180)
+                    .goTo(-33,40,0)
+                    .goTo(-33,40,0)
+                    .execute();
+            while (!pp.finished() && opModeIsActive()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+
+            drive.driveRobotCentric(0,0.5,0);
             sleep(800);
             drive.stop();
 
             outakeLift.openGrabber();
             sleep(300);
 
+            //PARCARE START
+
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(68,40,180)
+                    .goTo(0,40,0)
                     .execute();
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested()) throw new InterruptedException();
             }
-            sleep(1200);
-
-            drive.driveRobotCentric(0,0.3,0);
+            outake.grabbSpecimen();
             sleep(800);
-            drive.stop();
-
-            outake.specimenBar();
-            sleep(750);
-
-            //PARCARE START
 
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(100,7,0)
