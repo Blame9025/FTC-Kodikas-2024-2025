@@ -100,7 +100,7 @@ public class Outake {
     }
 
     public DcMotor getMotorOuttake2(){
-        return motorOuttake1;
+        return motorOuttake2;
     }
 
     public DcMotor getMotorOuttake1(){
@@ -110,10 +110,6 @@ public class Outake {
 
     public int getMotorPosition(){
         return currentPosition;
-    }
-
-    public int getCurrentPositionOuttake() {
-        return currentPosition; // Return the stored position
     }
 
     public void stopMotorOuttake(){

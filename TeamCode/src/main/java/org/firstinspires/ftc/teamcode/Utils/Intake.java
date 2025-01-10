@@ -71,6 +71,10 @@ public class Intake {
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
             intakeLift.prepareIntakeLift();
 
+        if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
+            outtake.grabbSpecimen();
+        }
+
         extend = new Thread(() -> {
             setPosition(Position.EXTENDED);
             cooldown.start();
@@ -86,6 +90,10 @@ public class Intake {
         this.intakeLift = robot.getIntakeLiftSession();
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
             intakeLift.prepareIntakeLift();
+
+        if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
+            outtake.grabbSpecimen();
+        }
         retract = new Thread(() -> {
             Timing.Timer timer = new Timing.Timer(200,TimeUnit.MILLISECONDS);
             timer.start();
