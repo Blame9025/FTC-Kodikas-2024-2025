@@ -6,9 +6,9 @@ public class IntakeLift {
     private Position targetPosition = Position.DEFAULT;
 
     public enum Position {
-        DEFAULT(0.15),
+        DEFAULT(0.9),
         UP(0.6),
-        EXTRACT(0.9),
+        EXTRACT(0.12),
         AUTO(1);
 
         public final double val;

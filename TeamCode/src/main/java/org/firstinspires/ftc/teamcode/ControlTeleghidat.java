@@ -256,6 +256,8 @@ public class ControlTeleghidat extends LinearOpMode {
                     intake.modifyPosition((gamepad1.right_trigger - gamepad1.left_trigger) * Config.kAIntake * deltaTimp);
                     lastTime = time;
                 }
+                telemetry.addData("Extended",intakeExtended);
+                telemetry.update();
             }
 
             throw new InterruptedException();

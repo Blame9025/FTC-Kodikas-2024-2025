@@ -22,7 +22,7 @@ public class Intake {
     private Timing.Timer cooldown = new Timing.Timer(800,TimeUnit.MILLISECONDS);
 
     public enum Position {
-        DEFAULT(0.7),
+        DEFAULT(0.4),
         EXTENDED(1.0);
 
         public final double val;
@@ -91,6 +91,7 @@ public class Intake {
             timer.start();
             while (!timer.done());
             cooldown.start();
+            setPosition(Position.DEFAULT);
             while(!cooldown.done());
             intakeLift.retractIntakeLift();
             stop();

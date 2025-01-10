@@ -63,7 +63,7 @@ public class KodikasRobot {
     public KodikasRobot(HardwareMap hardwareMap, Telemetry telemetry){
         initHardware(hardwareMap);
         this.intake = new Intake(this,servoGlisieraIntake1,servoGlisieraIntake2,coreHexIntake);
-        this.intakeLift = new IntakeLift(this,servoIntake1, servoIntake1);
+        this.intakeLift = new IntakeLift(this,servoIntake1, servoIntake2);
         this.outake = new Outake(this,motorOutake1, motorOutake2);
         this.outtakeLift = new OuttakeLift(this,servoArm,servoArmGrabber);
         this.telemetry = telemetry;
