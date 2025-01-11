@@ -38,6 +38,7 @@ public class AutoLeftAlbertDemo extends LinearOpMode {
 
         loc = new KodiLocalization(hardwareMap);
         loc.start();
+
     }
 
     @Override
@@ -89,19 +90,76 @@ public class AutoLeftAlbertDemo extends LinearOpMode {
 //                    .goTo(15,12,0)
 //                    .goTo(130,-5)
 //                    .goTo(130,-5,180)
-                    .goTo(62,22.5,90)
+                    .goTo(62,11,90)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
             intakeLift.autoServoIntake();
             sleep(600);
+            coreHex.setPower(1);
 
-            drive.driveRobotCentric(0,0.5,0);
-            sleep(1200);
+
+            drive.driveRobotCentric(0,0.2,0);
+            sleep(600);
             drive.stop();
 
+            coreHex.setPower(0);
+            intakeLift.retractIntakeLift();
+            sleep(400);
+            coreHex.setPower(-0.75);
+            sleep(700);
+            coreHex.setPower(0);
+            outakeLift.openGrabber();
+            sleep(300);
+            outakeLift.downArmGrabber();
+            sleep(500);
+            outake.retractOuttake();
+            sleep(800);
+            outakeLift.closeGrabber();
+            sleep(400);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(35,50,-45)
+                    .execute();
+            while (!pp.finished() && opModeIsActive());
+
+            outake.extendOuttake();
+            sleep(1200);
+            outakeLift.idleArmGrabber();
+            sleep(600);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+
+                    .goTo(35,35,-45)
+                    .execute();
+            while (!pp.finished() && opModeIsActive());
+
             outakeLift.autoUp();
-            sleep(200);
+            sleep(300);
+            outakeLift.openGrabber();
+            sleep(400);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(35,50,-45)
+                    .execute();
+            while (!pp.finished() && opModeIsActive());
+
+            outakeLift.idleArmGrabber();
+            sleep(400);
+            outake.retractOuttake();
+            sleep(1000);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(100,0,180)
+                    .goTo(100,7,180)
+                    .execute();
+            while (!pp.finished() && opModeIsActive());
+
+            outakeLift.up2ArmGrabber();
+            sleep(300);
+
+//            outakeLift.autoUp();
+//            sleep(200);
 
 
 //            pp = new KodiPursuit(drive,telemetry,loc) //START SECTION SAMPLE 1 DE PE JOS
