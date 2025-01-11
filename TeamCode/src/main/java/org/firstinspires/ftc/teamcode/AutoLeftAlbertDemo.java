@@ -89,7 +89,7 @@ public class AutoLeftAlbertDemo extends LinearOpMode {
 //                    .goTo(15,12,0)
 //                    .goTo(130,-5)
 //                    .goTo(130,-5,180)
-                    .goTo(62,22.5)
+                    .goTo(62,22.5,90)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
