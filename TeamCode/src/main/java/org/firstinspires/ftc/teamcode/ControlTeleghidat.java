@@ -13,7 +13,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Utils.Config;
 import org.firstinspires.ftc.teamcode.Utils.Intake;
@@ -36,7 +38,7 @@ public class ControlTeleghidat extends LinearOpMode {
     GamepadEx driverOp;
     double lastTime;
 
-    boolean intakeExtended = false;
+    int intakeExtended = 1;
     boolean intakeToStart = false;
     boolean grabberOpened = false;
     boolean specimen = false;
@@ -184,15 +186,20 @@ public class ControlTeleghidat extends LinearOpMode {
                     debRB1.start();
                 }*/
                 if(gamepad1.a && debA1.done()){
-
-                    if(!intakeExtended){
-                        intake.extendIntake();
+                    if(intakeExtended == 3)
+                        intakeExtended = 1;
+                    intakeExtended = Range.clip(intakeExtended + 1, 1, 3);
+                    switch (intakeExtended){
+                        case 1:
+                            intakeLift.retractIntakeLift();
+                            break;
+                        case 2:
+                            intakeLift.prepareIntakeLift();
+                            break;
+                        case 3:
+                            intakeLift.extractIntakeLift();
+                            break;
                     }
-                    else {
-                        intake.retractIntake();
-                    }
-
-                    intakeExtended = !intakeExtended;
                     debA1.start();
                 }
                 if(gamepad1.x){
@@ -207,10 +214,14 @@ public class ControlTeleghidat extends LinearOpMode {
                     if(y == null || !y.isAlive()){
                         y = new Thread(() -> {
                             outakeLift.openGrabber();
+                            telemetry.addData("Grabber", true);
+                            telemetry.update();
                             Timing.Timer timer = new Timing.Timer(150,TimeUnit.MILLISECONDS);
                             timer.start();
                             while (!timer.done() || gamepad1.y);
                             outakeLift.closeGrabber();
+                            telemetry.addData("Grabber", false);
+                            telemetry.update();
                         });
                         y.start();
                         debY.start();
@@ -256,8 +267,6 @@ public class ControlTeleghidat extends LinearOpMode {
                     intake.modifyPosition((gamepad1.right_trigger - gamepad1.left_trigger) * Config.kAIntake * deltaTimp);
                     lastTime = time;
                 }
-                telemetry.addData("Extended",intakeExtended);
-                telemetry.update();
             }
 
             throw new InterruptedException();

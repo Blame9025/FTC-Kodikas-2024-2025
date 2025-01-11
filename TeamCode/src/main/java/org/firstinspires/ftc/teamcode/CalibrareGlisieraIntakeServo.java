@@ -50,6 +50,11 @@ public class CalibrareGlisieraIntakeServo extends LinearOpMode {
             initHW();
 
             waitForStart();
+            while(opModeIsActive()){
+
+
+
+            }
 
             servoIntake1.setPosition(0.4);
             servoIntake2.setPosition(0.4);

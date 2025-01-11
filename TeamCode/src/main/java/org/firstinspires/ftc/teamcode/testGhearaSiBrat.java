@@ -3,24 +3,33 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Utils.Intake;
+import org.firstinspires.ftc.teamcode.Utils.IntakeLift;
 import org.firstinspires.ftc.teamcode.Utils.KodiDistance;
 import org.firstinspires.ftc.teamcode.Utils.KodiLocalization;
 import org.firstinspires.ftc.teamcode.Utils.KodiPursuit;
 import org.firstinspires.ftc.teamcode.Utils.KodikasRobot;
+import org.firstinspires.ftc.teamcode.Utils.Outake;
 import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
 @TeleOp
-public class
-AutoLeftPark extends LinearOpMode {
+public class testGhearaSiBrat extends LinearOpMode {
+    Servo servoArm;
+    Servo servoArmGrabber;
 
     KodikasRobot robot;
     MecanumDrive drive;
     KodiPursuit pp;
     KodiLocalization loc;
     KodiDistance dist;
+
 
     public void initHW(){
 
@@ -33,34 +42,89 @@ AutoLeftPark extends LinearOpMode {
         loc = new KodiLocalization(hardwareMap);
         loc.start();
     }
-
     @Override
     public void runOpMode() throws InterruptedException {
-        try{
-            initHW();
+        initHW();
+        servoArm = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
+        servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
+        //servoArm.setDirection(Servo.Direction.REVERSE);
+        servoArm.setDirection(Servo.Direction.REVERSE);
 
-            waitForStart();
 
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(0,100)
-                    .goTo(0,100,90)
-                    .execute();
-            while (!pp.finished() && opModeIsActive());
 
-            OuttakeLift outakeLift = robot.getOutakeLiftsession();
-            outakeLift.idleArmGrabber();
-            sleep(500);
+        waitForStart();
+        double pos = 0;
+        servoArm.setPosition(0.1);
+        sleep(3000);
+        servoArm.setPosition(0);
+        //servoArm.setPosition(0);
+        while(opModeIsActive()){
 
-            drive.driveRobotCentric(0,0.5,0);
-            sleep(1200);
-            drive.stop();
-
-            outakeLift.autoUp();
-            sleep(200);
-
-            throw new InterruptedException();
-        } catch (InterruptedException e) {
-            pp.kill();
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
