@@ -25,7 +25,14 @@ public class CalibrareBratSiGheara extends LinearOpMode {
         while(opModeIsActive()) {
 
             servoArmGrabber.setPosition(0);
-            servoArm.setPosition(0);
+            servoArm.setPosition(0.4);// close
+
+//            sleep(2500);
+
+//            servoArm.setPosition(0.5); // open
+//            sleep(4000);
+//            servoArm.setPosition(0.3);
+//            servoArmGrabber.setPosition(0.4);
 
         }
     }
