@@ -59,12 +59,14 @@ public class CalibrareGlisieraIntakeServo extends LinearOpMode {
 //        sleep(2000);
 //        servoGlisieraIntake1.setPosition(0.8);
 //        servoGlisieraIntake2.setPosition(0.8);
+//        servoGlisieraIntake2.setPosition(1);
+//        servoGlisieraIntake1.setPosition(1);
+//        sleep(8000);
+//        servoGlisieraIntake2.setPosition(0.6);
+//        servoGlisieraIntake1.setPosition(0.6);
+//        sleep(10000);
         servoGlisieraIntake2.setPosition(0.9);
         servoGlisieraIntake1.setPosition(0.9);
-        sleep(3000);
-        servoGlisieraIntake2.setPosition(0.5);
-        servoGlisieraIntake1.setPosition(0.5);
-
 
             while(opModeIsActive()){
 
