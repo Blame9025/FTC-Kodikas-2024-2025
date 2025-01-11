@@ -57,16 +57,18 @@ public class AutoLeftAlbertDemo extends LinearOpMode {
             outakeLift.idleArmGrabber();
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(60,0)
-                    .goTo(60,0,-45)
+//                    .goTo(60,0) // vechi care merge
+//                    .goTo(60,0,-45)
+//                    .goTo(35,35,-45)
+                    .goTo(35,50,-45)
                     .goTo(35,35,-45)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
             outake.extendOuttake();
-            sleep(2000);
+            sleep(1500);
             outakeLift.up2ArmGrabber();
-            sleep(500);
+            sleep(300);
 
 //            pp = new KodiPursuit(drive,telemetry,loc)
 //                    .goTo(10,28)
@@ -79,19 +81,20 @@ public class AutoLeftAlbertDemo extends LinearOpMode {
             sleep(500);
             outakeLift.closeGrabber();
             sleep(300);
-            outake.retractOuttake();
-            sleep(1500);
+            outake.grabbSpecimen();
+            sleep(1000);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(15,12)
-                    .goTo(15,12,0)
-                    .goTo(130,-5)
-                    .goTo(130,-5,180)
+//                    .goTo(15,12)
+//                    .goTo(15,12,0)
+//                    .goTo(130,-5)
+//                    .goTo(130,-5,180)
+                    .goTo(62,22.5,90)
                     .execute();
             while (!pp.finished() && opModeIsActive());
 
-            outakeLift.idleArmGrabber();
-            sleep(500);
+            intakeLift.autoServoIntake();
+            sleep(600);
 
             drive.driveRobotCentric(0,0.5,0);
             sleep(1200);
