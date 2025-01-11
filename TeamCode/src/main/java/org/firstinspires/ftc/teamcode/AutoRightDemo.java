@@ -85,7 +85,7 @@ public class AutoRightDemo extends LinearOpMode {
                     .goTo(76,70,0)
                     .goTo(76,135)
                     .goTo(87,135)
-                    .goTo(87,135,90)
+                    .goTo(87,135,0)
                     .goTo(87,20)
                     .goTo(87,135)
                     .goTo(118,135)
@@ -114,7 +114,7 @@ public class AutoRightDemo extends LinearOpMode {
             while (!pp.finished() && opModeIsActive()){
                 if(isStopRequested() || timer.done()) throw new InterruptedException();
             }
-            sleep(1000);
+            sleep(1200);
 
             drive.driveRobotCentric(0,0.3,0);
             sleep(800);
