@@ -49,6 +49,8 @@ public class KodikasRobot {
         servoIntake2 = hardwareMap.servo.get("servoIntake2");
         servoArm = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
+        servoArmGrabber.setDirection(Servo.Direction.REVERSE);
+
        // servoIntake1.setDirection(Servo.Direction.FORWARD);
         servoIntake2.setDirection(Servo.Direction.REVERSE);
 
