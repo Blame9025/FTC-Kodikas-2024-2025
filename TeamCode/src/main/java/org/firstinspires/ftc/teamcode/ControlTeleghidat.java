@@ -256,7 +256,11 @@ public class ControlTeleghidat extends LinearOpMode {
                 if(Math.abs(gamepad1.right_trigger - gamepad1.left_trigger) > 0.01){
                     double time = getTime();
                     double deltaTimp = time - lastTime;
-                    intake.modifyPosition((gamepad1.right_trigger - gamepad1.left_trigger) * Config.kAIntake * deltaTimp);
+                    intake.modifyPosition((int)(
+                            (gamepad1.right_trigger - gamepad1.left_trigger) *
+                                    Config.kAIntake *
+                                    deltaTimp)
+                            );
                     lastTime = time;
                 }
             }
