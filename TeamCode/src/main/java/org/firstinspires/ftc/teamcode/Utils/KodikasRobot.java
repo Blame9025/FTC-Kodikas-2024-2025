@@ -18,7 +18,7 @@ public class KodikasRobot {
     Outake outake;
     OuttakeLift outtakeLift;
 
-    Servo servoGlisieraIntake1,servoGlisieraIntake2;
+    DcMotor motorIntake;
     Servo servoClaw;
     Servo servoArmGrabber;
     DcMotor motorOutake1, motorOutake2;
@@ -38,8 +38,8 @@ public class KodikasRobot {
         frontRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-        servoGlisieraIntake1 = hardwareMap.servo.get("servoGlisieraIntake1");
-        servoGlisieraIntake2 = hardwareMap.servo.get("servoGlisieraIntake2");
+        motorIntake = hardwareMap.dcMotor.get("CoreHexGlisiera");
+        //servoGlisieraIntake2 = hardwareMap.servo.get("servoGlisieraIntake2");
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
         motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
         coreHexIntake = hardwareMap.dcMotor.get("coreHexIntake");
@@ -63,7 +63,7 @@ public class KodikasRobot {
     }
     public KodikasRobot(HardwareMap hardwareMap, Telemetry telemetry){
         initHardware(hardwareMap);
-        this.intake = new Intake(this,servoGlisieraIntake1,servoGlisieraIntake2,coreHexIntake);
+        this.intake = new Intake(this,motorIntake,coreHexIntake);
         this.intakeLift = new IntakeLift(this,servoIntake1, servoIntake2);
         this.outake = new Outake(this,motorOutake1, motorOutake2);
         this.outtakeLift = new OuttakeLift(this, servoClaw,servoArmGrabber);
