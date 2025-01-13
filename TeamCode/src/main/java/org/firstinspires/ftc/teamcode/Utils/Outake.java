@@ -33,6 +33,7 @@ public class Outake {
         this.motorOuttake1 = definedOuttakeMotor1;
         this.motorOuttake2 = definedOuttakeMotor2;
         this.robot = robot;
+
         motorOuttake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorOuttake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -52,7 +53,9 @@ public class Outake {
 
             motorOuttake1.setPower(power);
             motorOuttake2.setPower(power);
-
+            while(motorOuttake2.isBusy() && motorOuttake1.isBusy());
+            motorOuttake1.setPower(power * 0.25);
+            motorOuttake2.setPower(power * 0.25);
             currentPosition = target.val;
         }
 

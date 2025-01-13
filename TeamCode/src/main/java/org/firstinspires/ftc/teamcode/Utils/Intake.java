@@ -13,54 +13,57 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class Intake {
-    private Servo servoIntake1,servoIntake2;
+    private DcMotor motorIntake;
    // private final Object positionLock = new Object();
     private double currentPosition = Position.DEFAULT.val;
     private IntakeLift intakeLift;
     private DcMotor coreHex;
     private Outake outtake;
     private Timing.Timer cooldown = new Timing.Timer(800,TimeUnit.MILLISECONDS);
-
+    private Telemetry telemetry;
     public enum Position {
         DEFAULT(0),
-        EXTENDED(50);
+        EXTENDED(30);
 
-        public final double val;
+        public final int val;
 
-        Position(double val) {
+        Position(int val) {
             this.val = val;
         }
     }
 
     KodikasRobot robot;
-    public Intake(KodikasRobot robot,Servo servoIntake1, Servo servoIntake2, DcMotor coreHex) {
-        this.servoIntake1 = servoIntake1;
-        this.servoIntake2 = servoIntake2;
+    public Intake(KodikasRobot robot,DcMotor motorIntake, DcMotor coreHex) {
+        this.motorIntake = motorIntake;
         this.robot = robot;
         this.coreHex = coreHex;
-        outtake = robot.getOutakeSession();
+        this.outtake = robot.getOutakeSession();
+        this.telemetry = robot.getTelemetry();
 
         cooldown.start();
 
         coreHex.setDirection(DcMotor.Direction.REVERSE);
-        servoIntake2.setDirection(Servo.Direction.REVERSE);
     }
 
 
 
-    public void setPosition(Position target) {
+    public void setPosition(Position target,boolean back) {
         if (currentPosition != target.val) {
-            servoIntake2.setPosition(target.val);
-            servoIntake1.setPosition(target.val);
+            motorIntake.setTargetPosition(target.val);
+            motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorIntake.setPower(back ? -1 : 1);
+            while(motorIntake.isBusy());
+            motorIntake.setPower(back ? -0.25 : 0.25);
             currentPosition = target.val;
         }
     }
 
     public void modifyPosition(double value){
-        double newPos = Range.clip(currentPosition + value,
-                    (double)Position.DEFAULT.val, (double)Position.EXTENDED.val);
-        servoIntake1.setPosition(newPos);
-        servoIntake2.setPosition(newPos);
+        int newPos = Range.clip((int)(currentPosition + value),
+                    Position.DEFAULT.val, Position.EXTENDED.val);
+        motorIntake.setTargetPosition(newPos);
+        motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorIntake.setPower(newPos > currentPosition ? 1 : -1 );
         currentPosition = newPos;
     }
     Thread extend;
@@ -76,7 +79,7 @@ public class Intake {
         }
 
         extend = new Thread(() -> {
-            setPosition(Position.EXTENDED);
+            setPosition(Position.EXTENDED,false);
             cooldown.start();
             while(!cooldown.done());
             intakeLift.extractIntakeLift();
@@ -91,16 +94,16 @@ public class Intake {
         if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
             intakeLift.prepareIntakeLift();
 
+        this.outtake = robot.getOutakeSession();
         if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
             outtake.grabbSpecimen();
         }
         retract = new Thread(() -> {
-            Timing.Timer timer = new Timing.Timer(200,TimeUnit.MILLISECONDS);
-            timer.start();
-            while (!timer.done());
-            cooldown.start();
-            setPosition(Position.DEFAULT);
-            while(!cooldown.done());
+            setPosition(Position.DEFAULT,true);
+            while(Math.abs(motorIntake.getCurrentPosition() - Position.DEFAULT.val) > 5) {
+                telemetry.addData("Motor encoder position", motorIntake.getCurrentPosition());
+                telemetry.update();
+            }
             intakeLift.retractIntakeLift();
             stop();
         });
@@ -108,8 +111,7 @@ public class Intake {
 
     }
     public void stop(){
-        servoIntake1.close();
-        servoIntake2.close();
+        motorIntake.setPower(0);
     }
 
 //    public void autoPos(){

@@ -9,7 +9,7 @@ public class Config {
 
     public static double DESCHIDERE_CLESTE = 0.4;
 
-    public static double kAIntake = 0.9;
+    public static double kAIntake = 150;
 
     public static double OUTTAKE_CLOSEDPOS = 0.0;
     public static double OUTTAKE_OPENPOS = 0.3;
