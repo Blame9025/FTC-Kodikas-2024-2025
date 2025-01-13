@@ -19,7 +19,7 @@ public class KodikasRobot {
     OuttakeLift outtakeLift;
 
     Servo servoGlisieraIntake1,servoGlisieraIntake2;
-    Servo servoArm;
+    Servo servoClaw;
     Servo servoArmGrabber;
     DcMotor motorOutake1, motorOutake2;
     DcMotor coreHexIntake;
@@ -47,7 +47,7 @@ public class KodikasRobot {
         // Inițializarea hardware-ului pentru servo
         servoIntake1 = hardwareMap.servo.get("servoIntake1");
         servoIntake2 = hardwareMap.servo.get("servoIntake2");
-        servoArm = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
+        servoClaw = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
         servoArmGrabber.setDirection(Servo.Direction.REVERSE);
 
@@ -66,7 +66,7 @@ public class KodikasRobot {
         this.intake = new Intake(this,servoGlisieraIntake1,servoGlisieraIntake2,coreHexIntake);
         this.intakeLift = new IntakeLift(this,servoIntake1, servoIntake2);
         this.outake = new Outake(this,motorOutake1, motorOutake2);
-        this.outtakeLift = new OuttakeLift(this,servoArm,servoArmGrabber);
+        this.outtakeLift = new OuttakeLift(this, servoClaw,servoArmGrabber);
         this.telemetry = telemetry;
 
 

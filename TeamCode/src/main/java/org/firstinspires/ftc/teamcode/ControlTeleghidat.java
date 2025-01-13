@@ -38,7 +38,7 @@ public class ControlTeleghidat extends LinearOpMode {
     GamepadEx driverOp;
     double lastTime;
 
-    int intakeExtended = 1;
+    boolean intakeExtended;
     boolean intakeToStart = false;
     boolean grabberOpened = false;
     boolean specimen = false;
@@ -186,20 +186,12 @@ public class ControlTeleghidat extends LinearOpMode {
                     debRB1.start();
                 }*/
                 if(gamepad1.a && debA1.done()){
-                    if(intakeExtended == 3)
-                        intakeExtended = 1;
-                    intakeExtended = Range.clip(intakeExtended + 1, 1, 3);
-                    switch (intakeExtended){
-                        case 1:
-                            intakeLift.retractIntakeLift();
-                            break;
-                        case 2:
-                            intakeLift.prepareIntakeLift();
-                            break;
-                        case 3:
-                            intakeLift.extractIntakeLift();
-                            break;
-                    }
+                    if(intakeExtended)
+                        intake.extendIntake();
+                    else
+                        intake.retractIntake();
+
+                    intakeExtended = !intakeExtended;
                     debA1.start();
                 }
                 if(gamepad1.x){

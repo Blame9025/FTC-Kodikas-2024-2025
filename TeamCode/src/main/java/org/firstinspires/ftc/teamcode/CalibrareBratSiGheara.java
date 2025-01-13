@@ -12,28 +12,17 @@ public class CalibrareBratSiGheara extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Servo servoArm;
+        Servo servoClaw;
         Servo servoArmGrabber;
 
-        servoArm = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
+        servoClaw = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
 
 
         waitForStart();
-        double pos = 0;
 
-        while(opModeIsActive()) {
+        servoClaw.setPosition(0.4);
 
-            servoArmGrabber.setPosition(0);
-            servoArm.setPosition(0.4);// close
-
-//            sleep(2500);
-
-//            servoArm.setPosition(0.5); // open
-//            sleep(4000);
-//            servoArm.setPosition(0.3);
-//            servoArmGrabber.setPosition(0.4);
-
-        }
+        while(opModeIsActive()) ;
     }
 }

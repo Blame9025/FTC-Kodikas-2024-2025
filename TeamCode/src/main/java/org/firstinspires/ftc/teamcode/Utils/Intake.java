@@ -22,8 +22,8 @@ public class Intake {
     private Timing.Timer cooldown = new Timing.Timer(800,TimeUnit.MILLISECONDS);
 
     public enum Position {
-        DEFAULT(1),
-        EXTENDED(0.4);
+        DEFAULT(0),
+        EXTENDED(50);
 
         public final double val;
 

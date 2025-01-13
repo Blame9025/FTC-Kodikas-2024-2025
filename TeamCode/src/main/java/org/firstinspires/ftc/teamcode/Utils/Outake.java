@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.util.Range;
 public class Outake {
 
     private DcMotor motorOuttake1,motorOuttake2;
-    private Servo servoArm, servArmGrabber;
-    private boolean alreadyInActionOuttake = false;
     private int currentPosition = Position.DEFAULT.val;
     KodikasRobot robot;
     double power = 1;

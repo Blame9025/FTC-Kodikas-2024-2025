@@ -30,13 +30,13 @@ public class OuttakeLift {
     }
 
     public enum PositionGrabber {
-        CLOSE(0.4), // gheara prinde game elementul in clesti
-        OPEN(0.6);// gheara robotului in pozitie onitiala cum va sta mereu
+        CLOSE(0.0), // gheara prinde game elementul in clesti
+        OPEN(0.65);// gheara robotului in pozitie onitiala cum va sta mereu
 
         public final double val;
 
         PositionGrabber(double val) {
-            this.val = val;
+            this.val = 1 - val;
         }
     }
 
@@ -49,7 +49,7 @@ public class OuttakeLift {
 
     public void setPositionForGrabber(PositionGrabber target) { // pentru gheara care prinde game elementul
         servoGrabber.setPosition(target.val);
-        servoGrabber.setDirection(Servo.Direction.REVERSE);
+       // servoGrabber.setDirection(Servo.Direction.REVERSE);
         currentPositionForGrabber = target; // Update the current position
     }
 

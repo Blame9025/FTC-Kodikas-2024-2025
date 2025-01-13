@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
 @TeleOp
 public class testGhearaSiBrat extends LinearOpMode {
-    Servo servoArm;
+    Servo servoClaw;
     Servo servoArmGrabber;
 
     KodikasRobot robot;
@@ -45,19 +45,19 @@ public class testGhearaSiBrat extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHW();
-        servoArm = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
+        servoClaw = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
-        //servoArm.setDirection(Servo.Direction.REVERSE);
-        servoArm.setDirection(Servo.Direction.REVERSE);
+        //servoClaw.setDirection(Servo.Direction.REVERSE);
+        servoClaw.setDirection(Servo.Direction.REVERSE);
 
 
 
         waitForStart();
         double pos = 0;
-        servoArm.setPosition(0.1);
+        servoClaw.setPosition(0.1);
         sleep(3000);
-        servoArm.setPosition(0);
-        //servoArm.setPosition(0);
+        servoClaw.setPosition(0);
+        //servoClaw.setPosition(0);
         while(opModeIsActive()){
 
         }
