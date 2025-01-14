@@ -39,7 +39,7 @@ public class KodikasRobot {
         backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         motorIntake = hardwareMap.dcMotor.get("coreHexGlisiera");
-
+        motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
         motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
         coreHexIntake = hardwareMap.dcMotor.get("coreHexIntake");

@@ -23,7 +23,7 @@ public class Intake {
     private Telemetry telemetry;
     public enum Position {
         DEFAULT(0),
-        EXTENDED(30);
+        EXTENDED(500);
 
         public final int val;
 
@@ -113,7 +113,9 @@ public class Intake {
     public void stop(){
         motorIntake.setPower(0);
     }
-
+    public DcMotor getIntakeMotor(){
+        return motorIntake;
+    }
 //    public void autoPos(){
 //        setPosition(Position.AUTO);
 //    }
