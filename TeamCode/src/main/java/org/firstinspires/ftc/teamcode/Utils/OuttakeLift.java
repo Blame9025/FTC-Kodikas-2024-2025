@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +33,7 @@ public class OuttakeLift {
 
     public enum PositionGrabber {
         CLOSE(0.3), // gheara prinde game elementul in clesti
-        OPEN(0.6);// gheara robotului in pozitie onitiala cum va sta mereu
+        OPEN(0.75);// gheara robotului in pozitie onitiala cum va sta mereu
 
         public final double val;
 
@@ -94,6 +96,26 @@ public class OuttakeLift {
     public void upArmGrabber(){
 
         setPositionForArmGrabber(PositionArmGrabber.UP);
+
+    }
+
+    public void offCurent(){
+
+
+            ServoController controllerGrabber = servoGrabber.getController();
+            ServoController controllerArmGrabber = servoArmGrabber.getController();
+
+            int portGrabber = servoGrabber.getPortNumber();
+            int portArmGrabber = servoArmGrabber.getPortNumber();
+
+            // Dezactivează semnalul PWM pentru fiecare servo
+//            controllerGrabber.setServoPosition(portGrabber, 0);
+            controllerGrabber.pwmDisable();
+
+//            controllerArmGrabber.setServoPosition(portArmGrabber, 0);
+            controllerArmGrabber.pwmDisable();
+
+
 
     }
     

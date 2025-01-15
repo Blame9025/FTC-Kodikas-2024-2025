@@ -225,12 +225,13 @@ public class ControlTeleghidat extends LinearOpMode {
 
                         shortcutRST = new Thread(() -> {
                             outakeLift.downArmGrabber();
+                            outakeLift.openGrabber();
                             Timing.Timer timer = new Timing.Timer(450, TimeUnit.MILLISECONDS);
                             timer.start();
                             while (!timer.done()) ;
                             outake.retractOuttake();
                             while(outake.getMotorPosition() > 50);
-                            outakeLift.openGrabber();
+
 
                             timer.start();
                             while (!timer.done()) ;
@@ -253,15 +254,24 @@ public class ControlTeleghidat extends LinearOpMode {
                     outakeLift.upArmGrabber();
                 if(gamepad1.left_stick_button)
                     outakeLift.idleArmGrabber();
-                if(Math.abs(gamepad1.right_trigger - gamepad1.left_trigger) > 0.01){
+                if(Math.abs(gamepad1.right_trigger - gamepad1.left_trigger) > 0){
                     double time = getTime();
                     double deltaTimp = time - lastTime;
-                    intake.modifyPosition((int)(
+                    intake.getIntakeMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    intake.getIntakeMotor().setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+                    /*intake.modifyPosition((int)(
                             (gamepad1.right_trigger - gamepad1.left_trigger) *
                                     Config.kAIntake *
                                     deltaTimp)
-                            );
+                            );*/
                     lastTime = time;
+
+                } else if (getTime() - lastTime < 0.2) {
+                    intake.getIntakeMotor().setPower(0);
+                    intake.getIntakeMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    intake.getIntakeMotor().setTargetPosition(0);
+                    intake.getIntakeMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    intake.getIntakeMotor().setPower(1);
                 }
             }
 

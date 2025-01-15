@@ -23,7 +23,7 @@ public class Intake {
     private Telemetry telemetry;
     public enum Position {
         DEFAULT(-80),
-        EXTENDED(225);
+        EXTENDED(270);
 
         public final int val;
 
@@ -128,6 +128,58 @@ public class Intake {
         });
         retract.start();
 
+    }
+
+    public void retractForceIntake(){
+        if(retract != null) if(retract.isAlive()) return;
+        this.intakeLift = robot.getIntakeLiftSession();
+        if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
+            intakeLift.prepareIntakeLift();
+
+        this.outtake = robot.getOutakeSession();
+        if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
+            outtake.grabbSpecimen();
+        }
+        retract = new Thread(() -> {
+            motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motorIntake.setPower(-1);
+            cooldown.start();
+            while(!cooldown.done());
+            motorIntake.setPower(0);
+            motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorIntake.setTargetPosition(0);
+            motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorIntake.setPower(1);
+            intakeLift.retractIntakeLift();
+            stop();
+        });
+        retract.start();
+    }
+
+    public void retractForceIntake(double speed){
+        if(retract != null) if(retract.isAlive()) return;
+        this.intakeLift = robot.getIntakeLiftSession();
+        if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
+            intakeLift.prepareIntakeLift();
+
+        this.outtake = robot.getOutakeSession();
+        if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
+            outtake.grabbSpecimen();
+        }
+        retract = new Thread(() -> {
+            motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motorIntake.setPower(-speed);
+            cooldown.start();
+            while(!cooldown.done());
+            motorIntake.setPower(0);
+            motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorIntake.setTargetPosition(0);
+            motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorIntake.setPower(1);
+            intakeLift.retractIntakeLift();
+            stop();
+        });
+        retract.start();
     }
 
     public void retractIntake(double speed) {
