@@ -39,7 +39,7 @@ public class KodikasRobot {
         backRightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         motorIntake = hardwareMap.dcMotor.get("coreHexGlisiera");
-        motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorOutake1 = hardwareMap.dcMotor.get("motorOutake1");
         motorOutake2 = hardwareMap.dcMotor.get("motorOutake2");
         coreHexIntake = hardwareMap.dcMotor.get("coreHexIntake");
@@ -49,7 +49,6 @@ public class KodikasRobot {
         servoIntake2 = hardwareMap.servo.get("servoIntake2");
         servoClaw = hardwareMap.servo.get("servoGrabber"); // gheara cu care apuca elementul outtake-ul
         servoArmGrabber = hardwareMap.servo.get("servoArmGrabber"); // ridica gheara
-        servoArmGrabber.setDirection(Servo.Direction.REVERSE);
 
        // servoIntake1.setDirection(Servo.Direction.FORWARD);
         servoIntake2.setDirection(Servo.Direction.REVERSE);

@@ -53,9 +53,6 @@ public class Outake {
 
             motorOuttake1.setPower(power);
             motorOuttake2.setPower(power);
-            while(motorOuttake2.isBusy() && motorOuttake1.isBusy());
-            motorOuttake1.setPower(power * 0.25);
-            motorOuttake2.setPower(power * 0.25);
             currentPosition = target.val;
         }
 

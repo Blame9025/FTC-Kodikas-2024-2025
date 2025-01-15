@@ -22,8 +22,8 @@ public class Intake {
     private Timing.Timer cooldown = new Timing.Timer(800,TimeUnit.MILLISECONDS);
     private Telemetry telemetry;
     public enum Position {
-        DEFAULT(0),
-        EXTENDED(500);
+        DEFAULT(-80),
+        EXTENDED(275);
 
         public final int val;
 
@@ -48,12 +48,13 @@ public class Intake {
 
 
     public void setPosition(Position target,boolean back) {
+        setPosition(target,back,1);
+    }
+    public void setPosition(Position target,boolean back,double speed) {
         if (currentPosition != target.val) {
             motorIntake.setTargetPosition(target.val);
             motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorIntake.setPower(back ? -1 : 1);
-            while(motorIntake.isBusy());
-            motorIntake.setPower(back ? -0.25 : 0.25);
+            motorIntake.setPower(back ? -speed : speed);
             currentPosition = target.val;
         }
     }
@@ -63,7 +64,7 @@ public class Intake {
                     Position.DEFAULT.val, Position.EXTENDED.val);
         motorIntake.setTargetPosition(newPos);
         motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorIntake.setPower(newPos > currentPosition ? 1 : -1 );
+        motorIntake.setPower(newPos > currentPosition ? 0.7 : -0.7 );
         currentPosition = newPos;
     }
     Thread extend;
@@ -87,6 +88,26 @@ public class Intake {
         extend.start();
     }
 
+    public void extendIntake(double speed) {
+        if(extend != null) if(extend.isAlive()) return;
+        this.intakeLift = robot.getIntakeLiftSession();
+        this.outtake = robot.getOutakeSession();
+        if(intakeLift.getCurrentPosition() == IntakeLift.Position.DEFAULT)
+            intakeLift.prepareIntakeLift();
+
+        if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
+            outtake.grabbSpecimen();
+        }
+
+        extend = new Thread(() -> {
+            setPosition(Position.EXTENDED,false,speed);
+            cooldown.start();
+            while(!cooldown.done());
+            intakeLift.extractIntakeLift();
+        });
+        extend.start();
+    }
+
     Thread retract;
     public void retractIntake() {
         if(retract != null) if(retract.isAlive()) return;
@@ -100,6 +121,27 @@ public class Intake {
         }
         retract = new Thread(() -> {
             setPosition(Position.DEFAULT,true);
+            cooldown.start();
+            while(!cooldown.done());
+            intakeLift.retractIntakeLift();
+            stop();
+        });
+        retract.start();
+
+    }
+
+    public void retractIntake(double speed) {
+        if(retract != null) if(retract.isAlive()) return;
+        this.intakeLift = robot.getIntakeLiftSession();
+        if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
+            intakeLift.prepareIntakeLift();
+
+        this.outtake = robot.getOutakeSession();
+        if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
+            outtake.grabbSpecimen();
+        }
+        retract = new Thread(() -> {
+            setPosition(Position.DEFAULT,true,speed);
             while(Math.abs(motorIntake.getCurrentPosition() - Position.DEFAULT.val) > 5) {
                 telemetry.addData("Motor encoder position", motorIntake.getCurrentPosition());
                 telemetry.update();
@@ -110,6 +152,7 @@ public class Intake {
         retract.start();
 
     }
+
     public void stop(){
         motorIntake.setPower(0);
     }

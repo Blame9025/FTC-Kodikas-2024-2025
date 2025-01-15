@@ -9,6 +9,7 @@ public class IntakeLift {
         DEFAULT(0.9),
         UP(0.6),
         EXTRACT(0.12),
+        EXTRACTAUTO(0.14),
         AUTO(1);
 
         public final double val;
@@ -45,6 +46,8 @@ public class IntakeLift {
     }
 
     public void extractIntakeLift() {setPosition(Position.EXTRACT);}
+
+    public void extractIntakeLiftAuto() {setPosition(Position.EXTRACTAUTO);}
 
     public void autoServoIntake(){setPosition(Position.AUTO);}
 }

@@ -41,7 +41,8 @@ public class KodiLocalization {
 
     public void start(){
         updateThread = new Thread(() -> {
-
+            x = y = 0;
+            imu.reset();
             while (!updateThread.isInterrupted()){
 
                 double heading = imu.getHeading();

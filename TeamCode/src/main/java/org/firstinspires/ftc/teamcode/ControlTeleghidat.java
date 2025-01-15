@@ -186,7 +186,7 @@ public class ControlTeleghidat extends LinearOpMode {
                     debRB1.start();
                 }*/
                 if(gamepad1.a && debA1.done()){
-                    if(intakeExtended)
+                    if(!intakeExtended)
                         intake.extendIntake();
                     else
                         intake.retractIntake();
