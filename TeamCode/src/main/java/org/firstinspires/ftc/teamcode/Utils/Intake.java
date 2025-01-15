@@ -23,7 +23,7 @@ public class Intake {
     private Telemetry telemetry;
     public enum Position {
         DEFAULT(-80),
-        EXTENDED(275);
+        EXTENDED(225);
 
         public final int val;
 
