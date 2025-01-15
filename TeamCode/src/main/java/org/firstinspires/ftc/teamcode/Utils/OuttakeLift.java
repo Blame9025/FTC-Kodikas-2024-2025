@@ -19,11 +19,12 @@ public class OuttakeLift {
 
     public enum PositionArmGrabber {
         DEFAULT(0),
+        DEFAULTAUTO(0.015),
         SPECIMEN(0.3),
         UP(0.5),
         UP2(0.6),// gheara robotului se ridica ca sa lase game elemntul din gheara HITLER
-        AUTOUP(0.57 ),
-        IDLE(0.8);
+        AUTOUP(0.57),
+        IDLE(0.7);
         public final double val;
 
         PositionArmGrabber(double val) {
@@ -32,13 +33,14 @@ public class OuttakeLift {
     }
 
     public enum PositionGrabber {
-        CLOSE(0.3), // gheara prinde game elementul in clesti
-        OPEN(0.75);// gheara robotului in pozitie onitiala cum va sta mereu
+        CLOSE(0), // gheara prinde game elementul in clesti
+        OPEN(0.2),
+        FULL(1);// gheara robotului in pozitie onitiala cum va sta mereu
 
         public final double val;
 
         PositionGrabber(double val) {
-            this.val = 1 - val;
+            this.val = val;
         }
     }
 
@@ -71,11 +73,23 @@ public class OuttakeLift {
 
     }
 
+    public void openFullGrabber(){
+        setPositionForGrabber(PositionGrabber.FULL);
+
+    }
+
     public void downArmGrabber(){
 
         setPositionForArmGrabber(PositionArmGrabber.DEFAULT);
 
     }
+
+    public void downArmGrabberAuto(){
+
+        setPositionForArmGrabber(PositionArmGrabber.DEFAULTAUTO);
+
+    }
+
     public void idleArmGrabber(){
 
         setPositionForArmGrabber(PositionArmGrabber.IDLE);

@@ -53,259 +53,172 @@ public class BasketPc extends LinearOpMode {
             waitForStart();
 
             outakeLift.closeGrabber(); // sample 1 start
+            outakeLift.idleArmGrabber();
 //            outake.specimenBar();
 //            outakeLift.idleArmGrabber();
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(20,31,-45)
+                    .goTo(22,45.5,-45) // x = 18
                     .execute();
-            while (!pp.finished()){
-                if(isStopRequested()) throw new InterruptedException();
-            }
 
             outake.extendOuttake();
-            outakeLift.up2ArmGrabber();
-            sleep(800);
-
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(20,45,-45) // x = 18
-                    .execute();
+            while (outake.isBusy()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+            outakeLift.upArmGrabber();
+            sleep(300);
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
             }
 
             outakeLift.openGrabber();
-            sleep(350);
+            sleep(600); // sample 1 end
+
+            outakeLift.idleArmGrabber();
+            sleep(400);
 
 
+            // sample 2 start
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(25,29,-85)
+                    .goTo(29,29,-85)
                     .execute();
+
+            outakeLift.closeGrabber();
+            outake.grabbSpecimen();
+            outakeLift.upArmGrabber();
+
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            outakeLift.closeGrabber();
-//            outakeLift.downArmGrabber();
-            outake.grabbSpecimen(); // sample 1 end
-            outakeLift.up2ArmGrabber();
-            sleep(1200);
 
-
-            // sample 2 start
-            intakeLift.extractIntakeLiftAuto();
-            intake.extendIntake(0.7);
-            sleep(1000);
+            intakeLift.extractIntakeLift();
+            intake.extendIntake(1);
+//            sleep(1000);
             coreHex.setPower(1);
 
-            drive.driveRobotCentric(0,-0.3,0);
-            sleep(900);
+            drive.driveRobotCentric(0,-0.25,0);
+            sleep(1200);
             drive.stop();
             sleep(500);
 
             coreHex.setPower(0);
             intakeLift.prepareIntakeLift();
-            sleep(1000);
-            intake.retractForceIntake(0.7);
-            sleep(1000);
+            sleep(400);
+            intake.retractForceIntake(1);
+            sleep(400);
             intakeLift.retractIntakeLift();
 //            outakeLift.closeGrabber();
-            sleep(600);
-
-
-            coreHex.setPower(-1);
-//            outakeLift.downArmGrabber();
-//            sleep(500);
-            outakeLift.openGrabber();
-            sleep(800);
-            coreHex.setPower(1);
             sleep(400);
+
+
             coreHex.setPower(-1);
-            sleep(800);
-            coreHex.setPower(0);
-            outakeLift.downArmGrabber();
+//            outakeLift.downArmGrabberAuto();
             sleep(500);
+            outakeLift.openGrabber();
+            coreHex.setPower(1);
+            sleep(500);
+            coreHex.setPower(-1);
+            sleep(700);
+            coreHex.setPower(0);
+
+            outakeLift.downArmGrabber();
+            sleep(1000);
             outake.retractOuttake();
-            sleep(550);
+            sleep(500);
             outakeLift.closeGrabber();
+            sleep(600);
+            outakeLift.idleArmGrabber();
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(25,45,-45) // x = 18
+                    .execute();
+
+            outake.extendOuttake();
+            while (outake.isBusy()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+            outakeLift.upArmGrabber();
+            sleep(400);
+
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+
+            outakeLift.openGrabber();
+            sleep(300);
+
+            outakeLift.idleArmGrabber();
+            sleep(300);
+            outake.grabbSpecimen();// sample 2 end
+
+            pp = new KodiPursuit(drive,telemetry,loc) // sample 3 start
+                    .goTo(34,55,-85)
+                    .execute();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+
+            intakeLift.extractIntakeLift();
+            intake.extendIntake(1);
+//            sleep(1000);
+            coreHex.setPower(1);
+
+            drive.driveRobotCentric(0,-0.25,0);
+            sleep(1200);
+            drive.stop();
+            sleep(500);
+
+            coreHex.setPower(0);
+            intakeLift.prepareIntakeLift();
+            sleep(400);
+            intake.retractForceIntake(1);
+            sleep(400);
+            intakeLift.retractIntakeLift();
+//            outakeLift.closeGrabber();
+            sleep(400);
+
+
+            coreHex.setPower(-1);
+//            outakeLift.downArmGrabberAuto();
+            sleep(500);
+            outakeLift.openGrabber();
+            coreHex.setPower(1);
+            sleep(500);
+            coreHex.setPower(-1);
+            sleep(700);
+            coreHex.setPower(0);
+
+            outakeLift.downArmGrabber();
+            sleep(1000);
+            outake.retractOuttake();
+            sleep(500);
+            outakeLift.closeGrabber();
+            sleep(600);
+            outakeLift.idleArmGrabber();
             sleep(300);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(20,31,-45)
+                    .goTo(25,45,-45) // x = 18
                     .execute();
-            while (!pp.finished()){
-                if(isStopRequested()) throw new InterruptedException();
-            }
 
             outake.extendOuttake();
-            outakeLift.up2ArmGrabber();
-            sleep(800);
+            while (outake.isBusy()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+            outakeLift.upArmGrabber();
+            sleep(400);
 
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(20,45,-45) // x = 18
-                    .execute();
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
             }
 
             outakeLift.openGrabber();
-            sleep(350);
+            sleep(300); // sample 3 end
 
-
-
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(25,29,-85)
-                    .execute();
-            while (!pp.finished()){
-                if(isStopRequested()) throw new InterruptedException();
-            }
-
-            outakeLift.closeGrabber();
-//            outakeLift.downArmGrabber();
-            outake.grabbSpecimen(); // sample 1 end
-            outakeLift.up2ArmGrabber();
-            sleep(1200);
-
-//            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(20,31,-45)
-//                    .execute();
-//            while (!pp.finished()){
-//                if(isStopRequested()) throw new InterruptedException();
-//            }
-//
-//            outake.extendOuttake();
-//            outakeLift.up2ArmGrabber();
-//            sleep(1000);
-//
-//            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(20,45,-45) // x = 18
-//                    .execute();
-//            while (!pp.finished()){
-//                if(isStopRequested()) throw new InterruptedException();
-//            }
-//
-//            outakeLift.openGrabber();
-//            sleep(350);
-//
-//            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(20,31,-45)
-//                    .execute();
-//            while (!pp.finished()){
-//                if(isStopRequested()) throw new InterruptedException();
-//            }
-//
-//            outakeLift.closeGrabber();
-//            outakeLift.downArmGrabber();
-//            outake.grabbSpecimen();
-//            sleep(1000); // sample 2 end
-
-//            pp = new KodiPursuit(drive,telemetry,loc) // sample 3 start
-////                    .goTo(15,12)
-////                    .goTo(15,12,0)
-////                    .goTo(130,-5)
-////                    .goTo(130,-5,180)
-//                    .goTo(30,47.5,90)
-//                    .execute();
-//            while (!pp.finished() && opModeIsActive());
-//
-//            intake.extendIntake();
-//            intakeLift.extractIntakeLiftAuto();
-//            sleep(1000);
-//            coreHex.setPower(1);
-//
-//            drive.driveRobotCentric(0,0.2,0);
-//            sleep(600);
-//            drive.stop();
-//
-//            coreHex.setPower(0);
-//            intake.retractIntake();
-//            intakeLift.prepareIntakeLift();
-//            sleep(1000);
-//            intakeLift.retractIntakeLift();
-////            outakeLift.closeGrabber();
-//            sleep(600);
-//            coreHex.setPower(-0.75);
-////            outakeLift.downArmGrabber();
-////            sleep(500);
-//            outakeLift.openGrabber();
-//            coreHex.setPower(0);
-//            sleep(300);
-//            outake.retractOuttake();
-//            sleep(550);
-//            outakeLift.closeGrabber();
-//            sleep(300);
-//
-//            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(35,50,-45)
-//                    .execute();
-//            while (!pp.finished() && opModeIsActive());
-//
-//            outake.extendOuttake();
-//            sleep(1200);
-//            outakeLift.up2ArmGrabber();
-//            sleep(400);
-//
-//            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(35,35,-45)
-//                    .execute();
-//            while (!pp.finished() && opModeIsActive());
-//
-//            outakeLift.openGrabber();
-//            sleep(300);
-//
-//            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(35,50,-45)
-//                    .execute();
-//            while (!pp.finished() && opModeIsActive());
-//
-//            outake.grabbSpecimen();
-//            sleep(1000); // sample 3 end
-//
-//            pp = new KodiPursuit(drive,telemetry,loc) // parcare start
-//                    .goTo(100,0,180)
-//                    .goTo(100,-25)
-//                    .execute();
-//            while (!pp.finished() && opModeIsActive());
-//
-//            outake.retractOuttake();
-//            sleep(800);
-//            outakeLift.upArmGrabber(); // parcare end
-//
-
-//            pp = new KodiPursuit(drive,telemetry,loc) //START SECTION SAMPLE 1 DE PE JOS
-//                    .goTo(30,30)
-//                    .goTo(30,30,180)
-//                    //.goTo(30,60)
-//                    .execute();
-//            while (!pp.finished() && opModeIsActive());
-//
-//            outakeLift.downArmGrabber();
-//            sleep(700);
-//            outakeLift.openGrabber();
-//            sleep(400);
-//            outake.retractOuttake();
-//            sleep(1500);
-//            intakeLift.prepareIntakeLift();
-//            sleep(500);
-//            intake.autoPos();
-//            sleep(1000);
-//            coreHex.setPower(1);
-//
-//            drive.driveRobotCentric(0,0.2,0);
-//            sleep(800);
-//            drive.stop();
-//
-//            coreHex.setPower(0);
-//            intakeLift.prepareIntakeLift();
-//            intake.retractIntake();
-//            sleep(1000);
-//
-//            coreHex.setPower(-0.75);
-//            sleep(800);
-//
-//            outakeLift.closeGrabber();
-//            sleep(300); //END SECTION SAMPLE 1 DE PE JOS*/
+            outakeLift.idleArmGrabber();
+            sleep(300);
 
             throw new InterruptedException();
         } catch (InterruptedException e) {

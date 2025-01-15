@@ -97,6 +97,10 @@ public class Outake {
         currentPosition = newPos;
     }
 
+    public boolean isBusy(){
+        return motorOuttake1.isBusy() && motorOuttake2.isBusy();
+    }
+
     public DcMotor getMotorOuttake2(){
         return motorOuttake2;
     }

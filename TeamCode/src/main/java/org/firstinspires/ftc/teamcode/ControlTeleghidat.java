@@ -115,7 +115,8 @@ public class ControlTeleghidat extends LinearOpMode {
             Timing.Timer timerInceput = new Timing.Timer(400,TimeUnit.MILLISECONDS);
             timerInceput.start();
             while (!timerInceput.done());
-            outakeLift.downArmGrabber(); // DE SCHIMBAT NEAPARAT CU IDEL !!!!! XXXXXXXXXX
+            outakeLift.closeGrabber();
+//            outakeLift.downArmGrabber(); // DE SCHIMBAT NEAPARAT CU IDEL !!!!! XXXXXXXXXX
             while(opModeIsActive()){
                 gamepad2.setLedColor(217,65,148, 1000);
                 gamepad1.setLedColor(179,250,60, 1000);
