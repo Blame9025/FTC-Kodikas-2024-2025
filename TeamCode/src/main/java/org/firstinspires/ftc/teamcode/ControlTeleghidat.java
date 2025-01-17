@@ -151,9 +151,9 @@ public class ControlTeleghidat extends LinearOpMode {
                 if(gamepad1.dpad_right){
                     outake.idleOuttake();
                 }
-                if(gamepad1.ps)
+                if(gamepad1.ps){
                     outakeLift.up2ArmGrabber();
-                    outake.grabbSpecimen();
+                    outake.grabbSpecimen();}
                 if(gamepad1.options) {
                     if(opt == null || !opt.isAlive()) {
                         opt = new Thread(() -> {
@@ -269,6 +269,15 @@ public class ControlTeleghidat extends LinearOpMode {
                     stopRetract = false;
                 }*/
                 intake.getIntakeMotor().setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+
+                if(gamepad2.right_bumper){
+                    outakeLift.closeGrabber();
+                    outake.grabbSpecimen();
+                    outakeLift.up2ArmGrabber();
+                    drive.driveRobotCentric(0,0.7,0);
+                    sleep(1000);
+                    drive.stop();
+                }
             }
 
             throw new InterruptedException();
