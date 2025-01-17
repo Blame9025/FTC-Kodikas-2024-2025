@@ -8,8 +8,8 @@ public class IntakeLift {
     public enum Position {
         DEFAULT(0.9),
         UP(0.6),
-        EXTRACT(0.12),
-        EXTRACTAUTO(0.14),
+        EXTRACT(0.14),
+        EXTRACTAUTO(0.15),
         AUTO(1);
 
         public final double val;

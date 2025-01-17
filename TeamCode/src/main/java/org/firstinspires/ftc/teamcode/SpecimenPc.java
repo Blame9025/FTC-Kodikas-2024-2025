@@ -56,27 +56,31 @@ public class SpecimenPc extends LinearOpMode {
             outake.grabbSpecimen();
             outakeLift.up2ArmGrabber();
 
-            drive.driveRobotCentric(0,0.5,0);
-            sleep(1300);
+            drive.driveRobotCentric(0,0.7,0);
+            sleep(1100);
             drive.stop();
 
 
             outakeLift.openGrabber();
             sleep(200);
             outake.retractOuttake();
+
+            drive.driveRobotCentric(0,-0.5,0);
+            sleep(400);
+            drive.stop();
 //            sleep(700);
 
             pp = new KodiPursuit(drive,telemetry,loc)
 //                    .goTo(0,35)  // asta merge
                     .goTo(0,60) // netestat
-                    .goTo(74,60,180)
-                    .goTo(74,135)
-                    .goTo(87,135)
-                    .goTo(87,135,180)
-                    .goTo(87,20)
-                    .goTo(87,135,180)
-                    .goTo(118,135)
-                    .goTo(118,20,180)
+                    .goTo(68,60,180)
+                    .goTo(68,135)
+                    .goTo(90,135)
+                    .goTo(90,135,180)
+                    .goTo(90,20)
+                    .goTo(90,135,180)
+                    .goTo(115,135)
+                    .goTo(115,20,180)
 //                    .goTo(118,50,180)
 //                    .goTo(129,135) // pozitii pentru al 3 lea sample testate MERG!
 //                    .goTo(129,20,180)
@@ -90,7 +94,7 @@ public class SpecimenPc extends LinearOpMode {
 //            sleep(500); // 2 specimen start
             outakeLift.openGrabber(); // 2 SPECIMEN START
 //            sleep(250);
-            outakeLift.specimenArmGrabber(); // pozitia de luat de la human player !!!! DE TESTAT SI MODIFICAT POZTITIA !!!!
+            outakeLift.specimenArmGrabberAuto(); // pozitia de luat de la human player !!!! DE TESTAT SI MODIFICAT POZTITIA !!!!
             sleep(1000);
 
 //            pp = new KodiPursuit(drive,telemetry,loc)
@@ -102,14 +106,14 @@ public class SpecimenPc extends LinearOpMode {
 //            sleep(800);
 
             drive.driveRobotCentric(0,0.3,0);
-            sleep(800);
+            sleep(1200);
             drive.stop();
 
             outakeLift.closeGrabber();
             sleep(300);
             outake.grabbSpecimen();
             sleep(300);
-            outakeLift.autoUp();
+            outakeLift.up2ArmGrabber();
 
 
             pp = new KodiPursuit(drive,telemetry,loc)
@@ -119,14 +123,14 @@ public class SpecimenPc extends LinearOpMode {
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            drive.driveRobotCentric(0,0.5,0);
+            drive.driveRobotCentric(0,0.7,0);
             sleep(800);
             drive.stop();
 
             outakeLift.openGrabber();
             sleep(300);
             outake.retractOuttake();
-            outakeLift.specimenArmGrabber();
+            outakeLift.specimenArmGrabberAuto();
 //            sleep(800); // 2 specimen end
 
             pp = new KodiPursuit(drive,telemetry,loc) // 3 specimen start
@@ -138,7 +142,7 @@ public class SpecimenPc extends LinearOpMode {
             sleep(1000);
 
             drive.driveRobotCentric(0,0.3,0);
-            sleep(1000);
+            sleep(1200);
             drive.stop();
 
             outakeLift.closeGrabber();
@@ -154,7 +158,7 @@ public class SpecimenPc extends LinearOpMode {
                 if(isStopRequested()) throw new InterruptedException();
             }
 
-            drive.driveRobotCentric(0,0.5,0);
+            drive.driveRobotCentric(0,0.7,0);
             sleep(800);
             drive.stop();
 
@@ -169,7 +173,7 @@ public class SpecimenPc extends LinearOpMode {
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
             }
-            outakeLift.specimenArmGrabber();
+            outakeLift.specimenArmGrabberAuto();  
             sleep(1200);
 
             drive.driveRobotCentric(0,0.3,0);

@@ -81,7 +81,7 @@ public class BasketPc extends LinearOpMode {
             // sample 2 start
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(23,26,-85)
+                    .goTo(23,26,-93)
                     .execute();
 
             outakeLift.closeGrabber();
@@ -136,7 +136,7 @@ public class BasketPc extends LinearOpMode {
             outakeLift.idleArmGrabber();
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(25,45,-47) // x = 18
+                    .goTo(21,43.5,-47) // x = 18
                     .execute();
 
             outake.extendOuttake();
@@ -158,7 +158,7 @@ public class BasketPc extends LinearOpMode {
             outake.grabbSpecimen();// sample 2 end
 
             pp = new KodiPursuit(drive,telemetry,loc) // sample 3 start
-                    .goTo(23,47,-85)
+                    .goTo(23,47,-83)
                     .execute();
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -182,7 +182,7 @@ public class BasketPc extends LinearOpMode {
             intakeLift.prepareIntakeLift();
             sleep(400);
             intake.retractForceIntake(1);
-            sleep(400);
+            sleep(800);
             intakeLift.retractIntakeLift();
 //            outakeLift.closeGrabber();
             sleep(400);
@@ -208,7 +208,7 @@ public class BasketPc extends LinearOpMode {
 //            sleep(300);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(22.5,44,-47) // x = 18
+                    .goTo(21,43.5,-47) // x = 18
                     .execute();
 
             outake.extendOuttake();
@@ -226,10 +226,11 @@ public class BasketPc extends LinearOpMode {
             }
 
             outakeLift.openGrabber();
-            sleep(800); // sample 3 end
+            sleep(500); // sample 3 end
 
             outakeLift.idleArmGrabber();
-            sleep(500);
+            outake.retractOuttake();
+            sleep(1500);
 
             throw new InterruptedException();
         } catch (InterruptedException e) {

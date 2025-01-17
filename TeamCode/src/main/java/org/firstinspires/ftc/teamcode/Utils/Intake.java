@@ -82,7 +82,7 @@ public class Intake {
         }
 
         extend = new Thread(() -> {
-            setPosition(Position.EXTENDED,false);
+            extendForceIntake(1);
             cooldown.start();
             while(!cooldown.done());
             intakeLift.extractIntakeLift();
@@ -122,7 +122,7 @@ public class Intake {
             outtake.grabbSpecimen();
         }
         retract = new Thread(() -> {
-            setPosition(Position.DEFAULT,true);
+            retractForceIntake(1);
             cooldown.start();
             while(!cooldown.done());
             intakeLift.retractIntakeLift();

@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @TeleOp
 public class ControlTeleghidat extends LinearOpMode {
 
-    final int DEBUG_TIMER = 150;
+    final int DEBUG_TIMER = 300;
 
     DcMotor coreHexIntake;
     KodikasRobot robot;
@@ -119,24 +119,17 @@ public class ControlTeleghidat extends LinearOpMode {
             outakeLift.closeGrabber();
             outakeLift.downArmGrabber();
 //            outakeLift.downArmGrabber(); // DE SCHIMBAT NEAPARAT CU IDEL !!!!! XXXXXXXXXX
+            intake.getIntakeMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             while(opModeIsActive()){
                 gamepad2.setLedColor(217,65,148, 1000);
                 gamepad1.setLedColor(179,250,60, 1000);
-                double dist = (distanceSensor1.getDistance(DistanceUnit.CM) + distanceSensor2.getDistance(DistanceUnit.CM)) * 0.5;
-                if(gamepad2.right_bumper){
-                    drive.driveRobotCentric(
-                            0,
-                            -0.17 * Math.signum((int)((14-dist))),
-                            0
-                    );
-                }
-                else {
-                    drive.driveRobotCentric(
-                            -driverOp.getLeftX() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
-                            -driverOp.getLeftY() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
-                            -driverOp.getRightX() * ((outake.getMotorPosition() > 900 || intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT) ? 0.75 : 1)
-                    );
-                }
+                //double dist = (distanceSensor1.getDistance(DistanceUnit.CM) + distanceSensor2.getDistance(DistanceUnit.CM)) * 0.5;
+
+                drive.driveRobotCentric(
+                        -driverOp.getLeftX() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
+                        -driverOp.getLeftY() * (outake.getMotorPosition() > 900 ? 0.75 : 1),
+                        -driverOp.getRightX() * ((outake.getMotorPosition() > 900 || intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT) ? 0.75 : 1)
+                );
                 if(gamepad1.dpad_up){
                     outake.modifyPosition(true, false);
                 }
@@ -160,6 +153,7 @@ public class ControlTeleghidat extends LinearOpMode {
                 }
                 if(gamepad1.ps)
                     outakeLift.up2ArmGrabber();
+                    outake.grabbSpecimen();
                 if(gamepad1.options) {
                     if(opt == null || !opt.isAlive()) {
                         opt = new Thread(() -> {
@@ -257,7 +251,7 @@ public class ControlTeleghidat extends LinearOpMode {
                     outakeLift.upArmGrabber();
                 if(gamepad1.left_stick_button)
                     outakeLift.idleArmGrabber();
-                if(Math.abs(gamepad1.right_trigger - gamepad1.left_trigger) > 0){
+                /*if(Math.abs(gamepad1.right_trigger - gamepad1.left_trigger) > 0){
                     double time = getTime();
                     double deltaTimp = time - lastTime;
                     intake.getIntakeMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -273,7 +267,8 @@ public class ControlTeleghidat extends LinearOpMode {
                     intake.getIntakeMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     intake.getIntakeMotor().setPower(1);
                     stopRetract = false;
-                }
+                }*/
+                intake.getIntakeMotor().setPower(gamepad1.right_trigger - gamepad1.left_trigger);
             }
 
             throw new InterruptedException();

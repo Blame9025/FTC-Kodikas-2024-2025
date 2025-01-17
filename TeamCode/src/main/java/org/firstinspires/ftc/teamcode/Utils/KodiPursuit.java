@@ -113,6 +113,10 @@ public class KodiPursuit {
 
                 double lastDistance = 2e9;
 
+                if(!Double.isNaN(targetPoint.theta)) targetTheta = targetPoint.theta;
+
+                double lastError = 2e9;
+
                 while (!kill && !check){
 
                     scH.updateCoef(Config.hA, Config.hV, Config.hBr);
@@ -175,6 +179,16 @@ public class KodiPursuit {
                                 && Math.abs(lastDistance-distance) < Config.minimumRate){
                             check = true;
                         }
+                        if(!Double.isNaN(targetPoint.theta) &&
+                                Math.abs(errorTheta) > Config.toleranceR
+                                && Math.abs(lastError-errorTheta) > Config.minimumRate){
+                            check = false;
+                        }
+                        if(check){
+                            scH.resetSpeed();
+                            scV.resetSpeed();
+                            scR.resetSpeed();
+                        }
                     }
                     else{
                         if(deltaDist < Config.targetR){
@@ -186,11 +200,7 @@ public class KodiPursuit {
 
                 }
 
-                scR.resetSpeed();
-
-                double lastError = 2e9;
-
-                while(!kill && !Double.isNaN(targetPoint.theta)){
+                /*while(!kill && !Double.isNaN(targetPoint.theta)){
 
                     scR.updateCoef(Config.rA, Config.rV, Config.rBr);
 
@@ -219,7 +229,7 @@ public class KodiPursuit {
 
                     lastError = error;
 
-                }
+                }*/
 
                 lastPoint = targetPoint;
             }
