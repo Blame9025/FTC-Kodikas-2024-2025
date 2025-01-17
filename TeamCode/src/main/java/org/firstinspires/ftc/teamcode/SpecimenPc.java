@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.Utils.OuttakeLift;
 
 import java.util.concurrent.TimeUnit;
 
-//4 SPECIMEN + PARCARE
 @Autonomous
 public class SpecimenPc extends LinearOpMode {
 
@@ -28,7 +27,6 @@ public class SpecimenPc extends LinearOpMode {
     KodiPursuit pp;
     KodiLocalization loc;
     KodiDistance dist;
-    Timing.Timer timer;
 
     public void initHW(){
 
@@ -54,53 +52,38 @@ public class SpecimenPc extends LinearOpMode {
 
             waitForStart();
 
-            timer = new Timing.Timer( 29, TimeUnit.SECONDS);
-            timer.start();
-
-//            outakeLift.closeGrabber();
-//            outake.specimenBar();
-//            outakeLift.idleArmGrabber();
-
             outakeLift.closeGrabber();
             outake.grabbSpecimen();
             outakeLift.up2ArmGrabber();
 
-//            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(0,30)
-//                    .goTo(0,30,0)
-//                    .execute();
-//            while (!pp.finished() && opModeIsActive()){
-//                if(isStopRequested() || timer.done()) throw new InterruptedException();
-//            }
-
             drive.driveRobotCentric(0,0.5,0);
-            sleep(1000);
+            sleep(1300);
             drive.stop();
 
 
             outakeLift.openGrabber();
-            sleep(350);
+            sleep(200);
             outake.retractOuttake();
-            sleep(700);
+//            sleep(700);
 
             pp = new KodiPursuit(drive,telemetry,loc)
 //                    .goTo(0,35)  // asta merge
                     .goTo(0,60) // netestat
-                    .goTo(76,60,0)
-                    .goTo(76,135)
+                    .goTo(74,60,180)
+                    .goTo(74,135)
                     .goTo(87,135)
-                    .goTo(87,135,0)
+                    .goTo(87,135,180)
                     .goTo(87,20)
-                    .goTo(87,135,0)
+                    .goTo(87,135,180)
                     .goTo(118,135)
-                    .goTo(118,20)
-                    .goTo(118,135,0)
-                    .goTo(135,135) // pozitii pentru al 3 lea sample testate MERG!
-                    .goTo(135,20,0)
-                    .goTo(135,50,180)
+                    .goTo(118,20,180)
+//                    .goTo(118,50,180)
+//                    .goTo(129,135) // pozitii pentru al 3 lea sample testate MERG!
+//                    .goTo(129,20,180)
+//                    .goTo(129,50,180)
                     .execute();
-            while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested() || timer.done()) throw new InterruptedException();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
             }
 
 //            outake.retractOuttake(); // !!!! DE VERIFICAT POZITIA !!!!
@@ -111,12 +94,12 @@ public class SpecimenPc extends LinearOpMode {
             sleep(1000);
 
 //            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(125,40,180)
+//                    .goTo(118,20,180)
 //                    .execute();
-//            while (!pp.finished() && opModeIsActive()){
-//                if(isStopRequested() || timer.done()) throw new InterruptedException();
+//            while (!pp.finished()){
+//                if(isStopRequested()) throw new InterruptedException();
 //            }
-//            sleep(1200);
+//            sleep(800);
 
             drive.driveRobotCentric(0,0.3,0);
             sleep(800);
@@ -125,58 +108,50 @@ public class SpecimenPc extends LinearOpMode {
             outakeLift.closeGrabber();
             sleep(300);
             outake.grabbSpecimen();
+            sleep(300);
             outakeLift.autoUp();
-            sleep(1000);
 
 
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(-10,30,0)
                     .execute();
-            while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested() || timer.done()) throw new InterruptedException();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
             }
 
             drive.driveRobotCentric(0,0.5,0);
             sleep(800);
             drive.stop();
 
-//            pp = new KodiPursuit(drive,telemetry,loc)
-//                    .goTo(130,40)
-//                    .goTo(130,40,0)
-//                    .goTo(-10,30)
-//                    .goTo(-10,30,0)
-//                    .execute();
-//            while (!pp.finished() && opModeIsActive());
-
             outakeLift.openGrabber();
             sleep(300);
             outake.retractOuttake();
-            sleep(800); // 2 specimen end
+            outakeLift.specimenArmGrabber();
+//            sleep(800); // 2 specimen end
 
             pp = new KodiPursuit(drive,telemetry,loc) // 3 specimen start
                     .goTo(68,30,180)
                     .execute();
-            while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested() || timer.done()) throw new InterruptedException();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
             }
-            outakeLift.specimenArmGrabber();
-            sleep(1200);
+            sleep(1000);
 
             drive.driveRobotCentric(0,0.3,0);
-            sleep(600);
+            sleep(1000);
             drive.stop();
 
             outakeLift.closeGrabber();
             sleep(300);
             outake.grabbSpecimen();
             outakeLift.up2ArmGrabber();
-            sleep(800);
+            sleep(800);   // DE SCHIMBAT MAI IN JOS MAI EFICIENT
 
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(-18,30,0)
                     .execute();
-            while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested() || timer.done()) throw new InterruptedException();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
             }
 
             drive.driveRobotCentric(0,0.5,0);
@@ -191,14 +166,14 @@ public class SpecimenPc extends LinearOpMode {
             pp = new KodiPursuit(drive,telemetry,loc) // 4 specimen start
                     .goTo(68,30,180)
                     .execute();
-            while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested() || timer.done()) throw new InterruptedException();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
             }
             outakeLift.specimenArmGrabber();
             sleep(1200);
 
             drive.driveRobotCentric(0,0.3,0);
-            sleep(600);
+            sleep(1000);
             drive.stop();
 
             outakeLift.closeGrabber();
@@ -210,8 +185,8 @@ public class SpecimenPc extends LinearOpMode {
             pp = new KodiPursuit(drive,telemetry,loc)
                     .goTo(-25,30,0)
                     .execute();
-            while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested() || timer.done()) throw new InterruptedException();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
             }
 
             drive.driveRobotCentric(0,0.5,0);
@@ -226,8 +201,8 @@ public class SpecimenPc extends LinearOpMode {
             pp = new KodiPursuit(drive,telemetry,loc) // parcare start
                     .goTo(125,10,0)
                     .execute();
-            while (!pp.finished() && opModeIsActive()){
-                if(isStopRequested() || timer.done()) throw new InterruptedException();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
             } // parcare end
 
 

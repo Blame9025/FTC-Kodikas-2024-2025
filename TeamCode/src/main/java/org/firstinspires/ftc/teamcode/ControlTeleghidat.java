@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @TeleOp
 public class ControlTeleghidat extends LinearOpMode {
 
-    final int DEBUG_TIMER = 300;
+    final int DEBUG_TIMER = 150;
 
     DcMotor coreHexIntake;
     KodikasRobot robot;
@@ -39,6 +39,7 @@ public class ControlTeleghidat extends LinearOpMode {
     double lastTime;
 
     boolean intakeExtended;
+    boolean stopRetract = false;
     boolean intakeToStart = false;
     boolean grabberOpened = false;
     boolean specimen = false;
@@ -116,6 +117,7 @@ public class ControlTeleghidat extends LinearOpMode {
             timerInceput.start();
             while (!timerInceput.done());
             outakeLift.closeGrabber();
+            outakeLift.downArmGrabber();
 //            outakeLift.downArmGrabber(); // DE SCHIMBAT NEAPARAT CU IDEL !!!!! XXXXXXXXXX
             while(opModeIsActive()){
                 gamepad2.setLedColor(217,65,148, 1000);
@@ -260,19 +262,17 @@ public class ControlTeleghidat extends LinearOpMode {
                     double deltaTimp = time - lastTime;
                     intake.getIntakeMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     intake.getIntakeMotor().setPower(gamepad1.right_trigger - gamepad1.left_trigger);
-                    /*intake.modifyPosition((int)(
-                            (gamepad1.right_trigger - gamepad1.left_trigger) *
-                                    Config.kAIntake *
-                                    deltaTimp)
-                            );*/
                     lastTime = time;
+                    stopRetract = true;
 
-                } else if (getTime() - lastTime < 0.2) {
+                }
+                if (stopRetract) {
                     intake.getIntakeMotor().setPower(0);
                     intake.getIntakeMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     intake.getIntakeMotor().setTargetPosition(0);
                     intake.getIntakeMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     intake.getIntakeMotor().setPower(1);
+                    stopRetract = false;
                 }
             }
 

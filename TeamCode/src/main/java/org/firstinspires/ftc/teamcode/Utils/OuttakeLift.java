@@ -19,12 +19,12 @@ public class OuttakeLift {
 
     public enum PositionArmGrabber {
         DEFAULT(0),
-        DEFAULTAUTO(0.015),
-        SPECIMEN(0.3),
-        UP(0.5),
-        UP2(0.6),// gheara robotului se ridica ca sa lase game elemntul din gheara HITLER
-        AUTOUP(0.57),
-        IDLE(0.7);
+        DEFAULTAUTO(0.115),
+        SPECIMEN(0.4),
+        UP(0.6),
+        UP2(0.77),// gheara robotului se ridica ca sa lase game elemntul din gheara HITLER
+        AUTOUP(0.67),
+        IDLE(0.75);
         public final double val;
 
         PositionArmGrabber(double val) {

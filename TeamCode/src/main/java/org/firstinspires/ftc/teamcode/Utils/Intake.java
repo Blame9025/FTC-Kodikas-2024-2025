@@ -20,10 +20,12 @@ public class Intake {
     private DcMotor coreHex;
     private Outake outtake;
     private Timing.Timer cooldown = new Timing.Timer(800,TimeUnit.MILLISECONDS);
+
+    private Timing.Timer cooldown2 = new Timing.Timer(600,TimeUnit.MILLISECONDS);
     private Telemetry telemetry;
     public enum Position {
         DEFAULT(-80),
-        EXTENDED(280);
+        EXTENDED(240);
 
         public final int val;
 
@@ -131,29 +133,7 @@ public class Intake {
     }
 
     public void retractForceIntake(){
-        if(retract != null) if(retract.isAlive()) return;
-        this.intakeLift = robot.getIntakeLiftSession();
-        if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
-            intakeLift.prepareIntakeLift();
-
-        this.outtake = robot.getOutakeSession();
-        if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
-            outtake.grabbSpecimen();
-        }
-        retract = new Thread(() -> {
-            motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorIntake.setPower(-1);
-            cooldown.start();
-            while(!cooldown.done());
-            motorIntake.setPower(0);
-            motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motorIntake.setTargetPosition(0);
-            motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorIntake.setPower(1);
-            intakeLift.retractIntakeLift();
-            stop();
-        });
-        retract.start();
+        retractForceIntake(1.0);
     }
 
     public void retractForceIntake(double speed){
@@ -180,6 +160,34 @@ public class Intake {
             stop();
         });
         retract.start();
+    }
+    public void extendForceIntake(){
+        extendForceIntake(1.0);
+    }
+    public void extendForceIntake(double speed){
+        if(extend != null) if(extend.isAlive()) return;
+        this.intakeLift = robot.getIntakeLiftSession();
+        if(intakeLift.getCurrentPosition() == IntakeLift.Position.EXTRACT)
+            intakeLift.prepareIntakeLift();
+
+        this.outtake = robot.getOutakeSession();
+        if(outtake.getMotorPosition() == Outake.Position.DEFAULT.val){
+            outtake.grabbSpecimen();
+        }
+        extend = new Thread(() -> {
+            motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motorIntake.setPower(speed);
+            cooldown2.start();
+            while(!cooldown2.done());
+            motorIntake.setPower(0);
+            motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorIntake.setTargetPosition(Position.EXTENDED.val);
+            motorIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorIntake.setPower(1);
+            intakeLift.extractIntakeLiftAuto();
+            stop();
+        });
+        extend.start();
     }
 
     public void retractIntake(double speed) {
