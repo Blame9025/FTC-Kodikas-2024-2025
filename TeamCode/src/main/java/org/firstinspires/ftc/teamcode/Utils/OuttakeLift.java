@@ -22,8 +22,8 @@ public class OuttakeLift {
         DEFAULTAUTO(0.115),
         SPECIMEN(0.23),
         SPECIMENAUTO(0.45),
-        UP(0.6),
-        UP2(0.5),// gheara robotului se ridica ca sa lase game elemntul din gheara HITLER
+        UP(0.42),
+        UP2(0.5),// gheara robotului se ridica ca sa lase game elemntul din gheara H
         AUTOUP(0.67),
         IDLE(0.75);
         public final double val;

@@ -22,8 +22,8 @@ public class Config {
     public static double vV = 1, vA = 2, vBr = 15;
     public static double rV = 0.8, rA = 2, rBr = 15;
 
-    public static double toleranceXY = 4.5;
+    public static double toleranceXY = 3.5;
     public static double toleranceR = 3;
 
-    public static double minimumRate = 5;
+    public static double minimumRate = 1.5;
 }

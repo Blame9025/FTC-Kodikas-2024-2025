@@ -58,7 +58,7 @@ public class BasketPc extends LinearOpMode {
 //            outakeLift.idleArmGrabber();
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(22,45.5,-45) // x = 18
+                    .goTo(22,43.5,-45) // x = 18
                     .execute();
 
             outake.extendOuttake();
@@ -136,7 +136,7 @@ public class BasketPc extends LinearOpMode {
             outakeLift.idleArmGrabber();
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(21,43.5,-47) // x = 18
+                    .goTo(20,43,-45) // x = 18
                     .execute();
 
             outake.extendOuttake();
@@ -158,7 +158,7 @@ public class BasketPc extends LinearOpMode {
             outake.grabbSpecimen();// sample 2 end
 
             pp = new KodiPursuit(drive,telemetry,loc) // sample 3 start
-                    .goTo(23,47,-83)
+                    .goTo(23,47,-80)
                     .execute();
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -208,7 +208,7 @@ public class BasketPc extends LinearOpMode {
 //            sleep(300);
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(21,43.5,-47) // x = 18
+                    .goTo(20,43,-45) // x = 18
                     .execute();
 
             outake.extendOuttake();

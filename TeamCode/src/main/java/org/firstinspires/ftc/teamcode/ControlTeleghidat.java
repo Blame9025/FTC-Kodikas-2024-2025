@@ -140,8 +140,8 @@ public class ControlTeleghidat extends LinearOpMode {
                 }
                 if(!gamepad1.share && gamepad1.dpad_down && forcedReset)
                 {
-                    outake.getMotorOuttake1().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    outake.getMotorOuttake2().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    //outake.getMotorOuttake1().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    //outake.getMotorOuttake2().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     forcedReset = false;
                 }
                 if(gamepad1.dpad_left) {
