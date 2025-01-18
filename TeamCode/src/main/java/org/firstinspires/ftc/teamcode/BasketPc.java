@@ -58,7 +58,7 @@ public class BasketPc extends LinearOpMode {
 //            outakeLift.idleArmGrabber();
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(22,43.5,-45) // x = 18
+                    .goTo(22,43.5,-46) // x = 18
                     .execute();
 
             outake.extendOuttake();
@@ -70,9 +70,10 @@ public class BasketPc extends LinearOpMode {
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
             }
+            sleep(300);
 
             outakeLift.openGrabber();
-            sleep(600); // sample 1 end
+            sleep(400); // sample 1 end
 
             outakeLift.idleArmGrabber();
             sleep(600);
@@ -86,6 +87,8 @@ public class BasketPc extends LinearOpMode {
 
             outakeLift.closeGrabber();
             outake.grabbSpecimen();
+            intakeLift.extractIntakeLift();
+            intake.extendForceIntake(1);
 //            outakeLift.upArmGrabber();
 
             while (!pp.finished()){
@@ -93,11 +96,6 @@ public class BasketPc extends LinearOpMode {
             }
 
 
-            intakeLift.extractIntakeLift();
-            intake.extendForceIntake(1);
-            sleep(630);
-            intakeLift.extractIntakeLift();
-            sleep(300);
 //            sleep(1000);
             coreHex.setPower(1);
             sleep(700);
@@ -110,6 +108,11 @@ public class BasketPc extends LinearOpMode {
             coreHex.setPower(0);
             intakeLift.prepareIntakeLift();
             sleep(400);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(18,38,-45) // x = 18
+                    .execute();
+
             intake.retractForceIntake(1);
             sleep(800); // sleep de 400 NU MERGE
             intakeLift.retractIntakeLift();
@@ -135,10 +138,6 @@ public class BasketPc extends LinearOpMode {
             sleep(600);
             outakeLift.idleArmGrabber();
 
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(20,43,-45) // x = 18
-                    .execute();
-
             outake.extendOuttake();
             while (outake.isBusy()){
                 if(isStopRequested()) throw new InterruptedException();
@@ -149,26 +148,30 @@ public class BasketPc extends LinearOpMode {
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
             }
+            drive.driveRobotCentric(0,0.5,0);
+            sleep(100);
+            drive.stop();
+            sleep(500);
 
             outakeLift.openGrabber();
-            sleep(300);
+            sleep(400);
 
             outakeLift.idleArmGrabber();
             sleep(300);
-            outake.grabbSpecimen();// sample 2 end
 
             pp = new KodiPursuit(drive,telemetry,loc) // sample 3 start
                     .goTo(23,47,-80)
                     .execute();
+
+            outakeLift.closeGrabber();
+            outake.grabbSpecimen();
+            intakeLift.extractIntakeLift();
+            intake.extendForceIntake(1);
+//            outakeLift.upArmGrabber();
+
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
             }
-
-
-            intake.extendForceIntake(1);
-            sleep(630);
-            intakeLift.extractIntakeLift();
-            sleep(400);
 //            sleep(1000);
             coreHex.setPower(1);
             sleep(700);
@@ -177,6 +180,10 @@ public class BasketPc extends LinearOpMode {
             sleep(1700);
             drive.stop();
             sleep(500);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(18,38,-45) // x = 18
+                    .execute();
 
             coreHex.setPower(0);
             intakeLift.prepareIntakeLift();
@@ -207,10 +214,6 @@ public class BasketPc extends LinearOpMode {
 //            outakeLift.idleArmGrabber();
 //            sleep(300);
 
-            pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(20,43,-45) // x = 18
-                    .execute();
-
             outake.extendOuttake();
             sleep(300);
             outakeLift.idleArmGrabber();
@@ -224,13 +227,26 @@ public class BasketPc extends LinearOpMode {
             while (!pp.finished()){
                 if(isStopRequested()) throw new InterruptedException();
             }
+            drive.driveRobotCentric(0,0.5,0);
+            sleep(100);
+            drive.stop();
+            sleep(500);
 
             outakeLift.openGrabber();
-            sleep(500); // sample 3 end
+            sleep(400); // sample 3 end
 
             outakeLift.idleArmGrabber();
             outake.retractOuttake();
-            sleep(1500);
+
+            pp = new KodiPursuit(drive,telemetry,loc)
+                    .goTo(130,-10,180) // x = 18
+                    .execute();
+            while (!pp.finished()){
+                if(isStopRequested()) throw new InterruptedException();
+            }
+            drive.driveRobotCentric(0,1,0);
+
+            sleep(1000);
 
             throw new InterruptedException();
         } catch (InterruptedException e) {
