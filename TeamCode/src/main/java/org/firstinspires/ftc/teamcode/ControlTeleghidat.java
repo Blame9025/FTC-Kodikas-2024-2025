@@ -274,8 +274,9 @@ public class ControlTeleghidat extends LinearOpMode {
                     outakeLift.closeGrabber();
                     outake.grabbSpecimen();
                     outakeLift.up2ArmGrabber();
-                    drive.driveRobotCentric(0,0.7,0);
-                    sleep(1000);
+                    sleep(600);
+                    drive.driveRobotCentric(0,0.5,0);
+                    sleep(700);
                     drive.stop();
                 }
             }

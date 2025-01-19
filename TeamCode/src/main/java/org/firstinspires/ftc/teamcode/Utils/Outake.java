@@ -17,7 +17,7 @@ public class Outake {
         DEFAULT(0),
         SPECIMENAUTO(500),
         IDLE(600),
-        GRABBSPECIMEN(420),
+        GRABBSPECIMEN(420), // H
         SPECIMEN(800), // specimen bar
         BASKET1(1600),
         EXTENDED(2620);
