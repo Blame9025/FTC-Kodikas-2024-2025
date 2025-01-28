@@ -82,7 +82,7 @@ public class BasketPc extends LinearOpMode {
             // sample 2 start
 
             pp = new KodiPursuit(drive,telemetry,loc)
-                    .goTo(23,26,-88)
+                    .goTo(23,26,-90)
                     .execute();
 
             outakeLift.closeGrabber();
@@ -160,7 +160,7 @@ public class BasketPc extends LinearOpMode {
             sleep(300);
 
             pp = new KodiPursuit(drive,telemetry,loc) // sample 3 start
-                    .goTo(23,47,-82)
+                    .goTo(23,47,-83)
                     .execute();
 
             outakeLift.closeGrabber();

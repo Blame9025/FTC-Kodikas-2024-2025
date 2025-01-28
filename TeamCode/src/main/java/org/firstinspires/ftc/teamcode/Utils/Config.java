@@ -20,7 +20,7 @@ public class Config {
 
     public static double hV = 1, hA = 2, hBr = 15;
     public static double vV = 1, vA = 2, vBr = 15;
-    public static double rV = 0.7, rA = 1.7, rBr = 15;
+    public static double rV = 0.8, rA = 2, rBr = 20;
 
     public static double toleranceXY = 3.5;
     public static double toleranceR = 2;

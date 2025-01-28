@@ -20,7 +20,7 @@ public class OuttakeLift {
     public enum PositionArmGrabber {
         DEFAULT(0),
         DEFAULTAUTO(0.115),
-        SPECIMEN(0.23),
+        SPECIMEN(0.2275),
         SPECIMENAUTO(0.45),
         UP(0.42),
         UP2(0.5),// gheara robotului se ridica ca sa lase game elemntul din gheara H
